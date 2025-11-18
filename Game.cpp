@@ -12,10 +12,32 @@
 	this->drawAll();
 	while (true) {
 		Keypress e = ConsoleView::get_keypress();
-		if (e == Keypress::NONE);
-		else if (e == Keypress::ESC) return Mode::PAUSED;
-		else if (this->player1 && (e == Keypress::UP_1 || e == Keypress::DOWN_1 || e == Keypress::LEFT_1 || e == Keypress::RIGHT_1)) this->player1->direction = Player::get_moving_offset(e);
-		else if (this->player2 && (e == Keypress::UP_2 || e == Keypress::DOWN_2 || e == Keypress::LEFT_2 || e == Keypress::RIGHT_2)) this->player2->direction = Player::get_moving_offset(e);
+		switch (e) {
+		case Keypress::UP_1:
+		case Keypress::DOWN_1:
+		case Keypress::LEFT_1:
+		case Keypress::RIGHT_1:
+		case Keypress::STAY_1:
+			this->player1->direction = Player::get_moving_offset(e);
+			break;
+		case Keypress::UP_2:
+		case Keypress::DOWN_2:
+		case Keypress::LEFT_2:
+		case Keypress::RIGHT_2:
+		case Keypress::STAY_2:
+			this->player2->direction = Player::get_moving_offset(e);
+			break;
+		case Keypress::DISPOSE_1:
+			break;
+		case Keypress::DISPOSE_2:
+			break;
+		case Keypress::ESC:
+			return Mode::PAUSED;
+		case Keypress::NONE:
+			break;
+		default:
+			break;
+		}
 
 		handle_tick();
 		Sleep(TICK);
