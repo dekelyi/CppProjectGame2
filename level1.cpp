@@ -1,6 +1,5 @@
 #include "Game.h"
 #include "Object.h"
-#include "player.h"
 #include "Obstacle.h"
 
 

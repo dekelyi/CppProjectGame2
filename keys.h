@@ -15,6 +15,10 @@ enum class Keypress {
 	STAY_2 = 'K',
 	DISPOSE_2 = 'O',
 
+	_1 = '1',
+	_8 = '8',
+	_9 = '9',
+
 	ESC = 27,
 	NONE = 0,
 };
