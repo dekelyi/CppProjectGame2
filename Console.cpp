@@ -10,7 +10,6 @@
 
 using std::cout, std::endl;
 
-
 void gotoxy(V pos) {
 	std::cout.flush();
 	COORD coord;
@@ -27,52 +26,21 @@ void showCursor(bool show) {
 	SetConsoleCursorInfo(hStdOut, &curInfo);
 }
 
-static BOOL SetConsoleSize(int cols, int rows) {
-	HWND hWnd;
-	HANDLE hConOut;
-	CONSOLE_FONT_INFO fi;
-	CONSOLE_SCREEN_BUFFER_INFO bi;
-	int w, h, bw, bh;
-	RECT rect = { 0, 0, 0, 0 };
-	COORD coord = { 0, 0 };
-	hWnd = GetConsoleWindow();
-	if (hWnd) {
-		hConOut = GetStdHandle(STD_OUTPUT_HANDLE);
-		if (hConOut && hConOut != (HANDLE)-1) {
-			if (GetCurrentConsoleFont(hConOut, FALSE, &fi)) {
-				if (GetClientRect(hWnd, &rect)) {
-					w = rect.right - rect.left;
-					h = rect.bottom - rect.top;
-					if (GetWindowRect(hWnd, &rect)) {
-						bw = rect.right - rect.left - w;
-						bh = rect.bottom - rect.top - h;
-						if (GetConsoleScreenBufferInfo(hConOut, &bi)) {
-							coord.X = bi.dwSize.X;
-							coord.Y = bi.dwSize.Y;
-							if (coord.X < cols || coord.Y < rows) {
-								if (coord.X < cols) {
-									coord.X = cols;
-								}
-								if (coord.Y < rows) {
-									coord.Y = rows;
-								}
-								if (!SetConsoleScreenBufferSize(hConOut, coord)) {
-									return FALSE;
-								}
-							}
-							return SetWindowPos(hWnd, NULL, rect.left, rect.top, cols * fi.dwFontSize.X + bw, rows * fi.dwFontSize.Y + bh, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
-						}
-					}
-				}
-			}
-		}
-	}
-	return FALSE;
-}
-
 void cls() {
 	system("cls");
 }
+
+class DownWriter {
+	V startPos;
+	V curPos;
+public:
+	DownWriter(V _startPos) : startPos(_startPos), curPos(_startPos) {}
+	void writeline(const std::string& line) {
+		gotoxy(curPos);
+		std::cout << line;
+		curPos.setY(curPos.getY() + 1);
+	}
+};
 
 namespace ConsoleView {
 	void init() {
@@ -105,20 +73,20 @@ namespace ConsoleView {
 
 	void menu() {
 		ConsoleView::init();
-		gotoxy(V(10, 5));
-		std::cout << "Welcome to the Game!" << std::endl;
-		std::cout << "(1) Start a new game" << std::endl;
-		std::cout << "(8) Instruction and manual" << std::endl;
-		std::cout << "(9) Exit" << std::endl;
+		DownWriter w = { V(10, 5) };
+		w.writeline("Welcome to the Game!");
+		w.writeline("(1) Start a new game");
+		w.writeline("(8) Instruction and manual");
+		w.writeline("(9) Exit");
 	}
 
 	void manual() {
 		ConsoleView::init();
-		gotoxy(V(5, 5));
-		std::cout << "Instructions:" << std::endl;
-		std::cout << "Player 1 controls: W (up), A (left), S (stay), D (right), X (down), E (dispose)" << std::endl;
-		std::cout << "Player 2 controls: I (up), J (left), K (stay), L (right), M (down), O (dispose)" << std::endl;
-		std::cout << "Press any key to return to the main menu..." << std::endl;
+		DownWriter w = { V(10, 5) };
+		w.writeline("Instructions:");
+		w.writeline("Player 1 controls: W (up), A (left), S (stay), D (right), X (down), E (dispose)");
+		w.writeline("Player 2 controls: I (up), J (left), K (stay), L (right), M (down), O (dispose)");
+		w.writeline("Press any key to return to the main menu...");
 		_getch();
 	}
 

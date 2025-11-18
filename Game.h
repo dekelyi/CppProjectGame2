@@ -44,6 +44,5 @@ public:
 		return nullptr;
 	}
 
-	void main();
 	Mode run();
 };

@@ -37,43 +37,7 @@
 			break;
 		}
 
-		handle_tick();
+		this->handle_tick();
 		Sleep(TICK);
 	}
 }
-
- Mode pause_menu() {
-	 Mode mode = Mode::PAUSED;
-	 ConsoleView::pause();
-	 while (mode == Mode::PAUSED) {
-		 Keypress e = ConsoleView::get_keypress();
-		 if (e == Keypress::ESC) mode = Mode::RUNNING;
-		 if (e == Keypress::DOWN_1) mode = Mode::MENU;
-	 }
-	 return mode;
- }
-
- Mode start_menu() {
-	 Mode mode = Mode::MENU;
-	 ConsoleView::menu();
-	 while (mode == Mode::MENU) {
-		 Keypress e = ConsoleView::get_keypress();
-		 if (e == Keypress::_1) mode = Mode::RUNNING;
-		 if (e == Keypress::_8) {
-			 ConsoleView::manual();
-			 ConsoleView::menu();
-		 }
-		 if (e == Keypress::_9 || e == Keypress::ESC) mode = Mode::EXIT;
-	 }
-	 return mode;
- }
-
- void Game::main() {
-	 Mode mode = Mode::MENU;
-	 while ((bool)mode) {
-		 if (mode == Mode::RUNNING) mode = this->run();
-		 if (mode == Mode::PAUSED) mode = pause_menu();
-		 if (mode == Mode::MENU) mode = start_menu();
-	 }
-	 ConsoleView::deinit();
- }

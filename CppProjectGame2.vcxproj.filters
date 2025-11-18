@@ -16,15 +16,15 @@
     <Filter Include="Views">
       <UniqueIdentifier>{44be4971-1a88-40db-8edb-ad9226695fe0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{2c5030ba-b191-4bf2-bb49-cb7d5a1199fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Types">
+      <UniqueIdentifier>{dfb37f2a-6fa1-441e-b780-aa5a76119429}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CppProjectGame2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Console.cpp">
@@ -36,25 +36,34 @@
     <ClCompile Include="keys.h">
       <Filter>Views</Filter>
     </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Runner.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Object.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Obstacle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Console.h">
       <Filter>Views</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Obstacle.h">
+      <Filter>Types</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
