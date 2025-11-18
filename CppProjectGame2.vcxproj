@@ -128,19 +128,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CppProjectGame2.cpp" />
+    <ClCompile Include="level1.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapObj.cpp" />
-    <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="player.cpp" />
-    <ClCompile Include="Screen.cpp" />
+    <ClCompile Include="Console.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapObj.h" />
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="player.h" />
-    <ClInclude Include="Screen.h" />
+    <ClInclude Include="Console.h" />
     <ClInclude Include="Vector.h" />
+    <ClInclude Include="View.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

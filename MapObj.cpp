@@ -1,6 +1,4 @@
-#include <iostream>
 #include "MapObj.h"
-#include "Screen.h"
 #include "Map.h"
 #include "Vector.h"
 

@@ -1,25 +1,40 @@
 #include <conio.h>
-#include "Screen.h"
 #include "Map.h"
-#include "MapObj.h"
 #include "player.h"
-#include "Obstacle.h"
+
+#define ESC 27
 
 void Map::init() {
-	cls();
-	hideCursor();
-	player1.setPosition(V(10, 10));
-	this->addObject(new MapObject(V(20, 20), V(10,1), (char)ObjType::WALL));
-	this->addObject(new Obstacle(V(5, 5), V(1, 1)));
-	this->addObject(&player1);
+	for (View* view : views) view->init();
 }
 
-void Map::loop() {
-	hideCursor();
+ Mode Map::run() {
+	this->drawAll();
 	while (true) {
 		if (_kbhit()) {
 			char ch = _getch();
-			player1.handle_input(this, ch);
+			if (ch == ESC) return Mode::PAUSED;
+			else player1.handle_input(this, ch);
 		}
 	}
 }
+
+ void Map::main() {
+	 Mode mode = Mode::RUNNING;
+	 while (mode == Mode::RUNNING) {
+		 this->init();
+		 mode = this->run();
+		 if (mode == Mode::PAUSED) {
+			 for (View* view : views) view->pause();
+			 while (mode == Mode::PAUSED) {
+				 if (_kbhit()) {
+					 char ch = _getch();
+					 if (ch == ESC) {
+						 mode = Mode::RUNNING;
+					 }
+					 if (ch == 'x' || ch == 'X') mode = Mode::MENU;
+				 }
+			 }
+		 }
+	 }
+ }

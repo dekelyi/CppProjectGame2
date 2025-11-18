@@ -2,8 +2,14 @@
 #include <iostream>
 #include <windows.h> // Required for Windows API console functions
 #include <cstdlib>
+#include <conio.h>
 #include "Vector.h"
+#include "Console.h"
+#include "MapObj.h"
+
+#define ESC 27
 using std::cout, std::endl;
+
 
 void gotoxy(V pos) {
 	std::cout.flush();
@@ -25,8 +31,14 @@ void cls() {
 	system("cls");
 }
 
-void drawAt(V pos, V size, char glyph) {
+void ConsoleView::init() {
+	cls();
+	hideCursor();
+}
+
+void ConsoleView::drawAt(V pos, V size, const MapObject* obj) {
 	if (size == V()) return;
+	char glyph = obj ? obj->getGlyph() : ' ';
 	gotoxy(pos);
 	for (int y = 0; y < size.getY(); y++) {
 		for (int x = 0; x < size.getX(); x++) {
@@ -34,4 +46,10 @@ void drawAt(V pos, V size, char glyph) {
 		}
 		gotoxy(V(pos.getX(), pos.getY() + y + 1));
 	}
+}
+
+void ConsoleView::pause() {
+	cls();
+	gotoxy(V(0, 26));
+	std::cout << "Game paused, press ESC again to continue or X to go back to the main menu" << std::endl;
 }
