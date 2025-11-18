@@ -1,0 +1,43 @@
+#pragma once
+#include "Vector.h"
+
+class MapObject {
+protected:
+	V pos;
+	V size;
+	char glyph;
+
+public:
+	MapObject() : pos(V(-1,-1)), size(V(1, 1)), glyph(' ') {}
+	MapObject(V _size, char _glyph) : pos(V(-1, -1)), size(_size), glyph(_glyph) {}
+	MapObject(V _pos, V _size, char _glyph) : pos(_pos), size(_size), glyph(_glyph) {}
+
+	inline void setPosition(V _pos) { pos = _pos; }
+	inline V getPosition() const { return pos; }
+	inline void setSize(V _size) { size = _size; }
+	inline V getSize() const { return size; }
+	inline void setGlyph(char _glyph) { glyph = _glyph; }
+	inline char getGlyph() const { return glyph; }
+
+	inline void makeInvisible() {
+		setSize(V(-1,-1));
+		setPosition(V(-1,-1));
+	}
+
+	inline void move(V offset) { pos = pos + offset; }
+	inline bool is_at(V pos) {
+		return (
+			pos.getX() >= getPosition().getX() &&
+			pos.getY() >= getPosition().getY() &&
+			pos.getX() < getPosition().getX() + getSize().getX() &&
+			pos.getY() < getPosition().getY() + getSize().getY()
+		);
+	}
+
+	virtual bool handle_collision(MapObject* other) { return false; }
+};
+
+enum class ObjType : char {
+	FLOOR = '#',
+	WALL = 'W',
+};
