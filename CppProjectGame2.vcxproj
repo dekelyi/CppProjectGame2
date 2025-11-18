@@ -128,7 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CppProjectGame2.cpp" />
-    <ClCompile Include="keys.h" />
+    <ClCompile Include="prelude.h" />
     <ClCompile Include="level1.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Object.cpp" />

@@ -1,5 +1,6 @@
 #pragma once
 #include "Vector.h"
+#include "Console.h"
 
 class Game;
 
@@ -21,10 +22,8 @@ public:
 	inline void setGlyph(char _glyph) { glyph = _glyph; }
 	inline char getGlyph() const { return glyph; }
 
-	inline void makeInvisible() {
-		setSize(V(-1,-1));
-		setPosition(V(-1,-1));
-	}
+	inline void draw() const { ConsoleView::drawAt(pos, size, glyph); }
+	inline void clear() const { ConsoleView::drawAt(pos, size, ' '); }
 
 	inline void move(V offset) { pos = pos + offset; }
 	inline bool is_at(V pos) {
@@ -37,7 +36,6 @@ public:
 	}
 
 	bool can_move(Game* game, V dir);
-
 	bool try_move(Game* game, V dir);
 
 	virtual bool handle_collision(Game* game,MapObject* other, V dir) { return false; }

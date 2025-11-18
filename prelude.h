@@ -1,5 +1,12 @@
 #pragma once
 
+enum class Mode {
+	EXIT = 0,
+	RUNNING,
+	PAUSED,
+	MENU,
+};
+
 enum class Keypress {
 	UP_1 = 'W',
 	DOWN_1 = 'X',

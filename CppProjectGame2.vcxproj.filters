@@ -33,7 +33,7 @@
     <ClCompile Include="level1.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="keys.h">
+    <ClCompile Include="prelude.h">
       <Filter>Views</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">

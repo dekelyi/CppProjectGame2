@@ -1,17 +1,9 @@
 #pragma once
 #include "Vector.h"
-#include "Object.h"
-#include "keys.h"
-
-enum class Mode {
-	EXIT = 0,
-	RUNNING,
-	PAUSED,
-	MENU,
-};
+#include "prelude.h"
 
 namespace ConsoleView {
-	void drawAt(V pos, V size, const MapObject* glyph);
+	void drawAt(V pos, V size, char glyph);
 
 	void init();
 	void deinit();

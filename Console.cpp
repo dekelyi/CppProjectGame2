@@ -5,8 +5,7 @@
 #include <conio.h>
 #include "Vector.h"
 #include "Console.h"
-#include "Object.h"
-#include "keys.h"
+#include "prelude.h"
 
 using std::cout, std::endl;
 
@@ -53,9 +52,8 @@ namespace ConsoleView {
 		showCursor(true);
 	}
 
-	void drawAt(V pos, V size, const MapObject* obj) {
+	void drawAt(V pos, V size, const char glyph) {
 		if (size == V() || pos == V()) return;
-		char glyph = obj ? obj->getGlyph() : ' ';
 		gotoxy(pos);
 		for (int y = 0; y < size.getY(); y++) {
 			for (int x = 0; x < size.getX(); x++) {

@@ -1,7 +1,7 @@
 #include "Game.h"
 #include "player.h"
 #include "Console.h"
-#include "keys.h"
+#include "prelude.h"
 #include <windows.h>
 
 #define TICK 100

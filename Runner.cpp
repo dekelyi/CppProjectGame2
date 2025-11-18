@@ -1,6 +1,6 @@
 #include "Game.h"
 #include "Console.h"
-#include "keys.h"
+#include "prelude.h"
 
 Mode pause_menu() {
 	Mode mode = Mode::PAUSED;
