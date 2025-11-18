@@ -19,11 +19,11 @@ void gotoxy(V pos) {
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
-void hideCursor() {
+void showCursor(bool show) {
 	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO curInfo;
 	GetConsoleCursorInfo(hStdOut, &curInfo);
-	curInfo.bVisible = FALSE; // Set to TRUE to make it visible
+	curInfo.bVisible = show; // Set to TRUE to make it visible
 	SetConsoleCursorInfo(hStdOut, &curInfo);
 }
 
@@ -33,7 +33,12 @@ void cls() {
 
 void ConsoleView::init() {
 	cls();
-	hideCursor();
+	showCursor(false);
+}
+
+void ConsoleView::deinit() {
+	cls();
+	showCursor(true);
 }
 
 void ConsoleView::drawAt(V pos, V size, const MapObject* obj) {
@@ -50,6 +55,6 @@ void ConsoleView::drawAt(V pos, V size, const MapObject* obj) {
 
 void ConsoleView::pause() {
 	cls();
-	gotoxy(V(0, 26));
+	gotoxy(V(10,5));
 	std::cout << "Game paused, press ESC again to continue or X to go back to the main menu" << std::endl;
 }

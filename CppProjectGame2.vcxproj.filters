@@ -56,8 +56,5 @@
     <ClInclude Include="Console.h">
       <Filter>Views</Filter>
     </ClInclude>
-    <ClInclude Include="View.h">
-      <Filter>Views</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

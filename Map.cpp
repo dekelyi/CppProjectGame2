@@ -1,14 +1,12 @@
 #include <conio.h>
 #include "Map.h"
 #include "player.h"
+#include "Console.h"
 
 #define ESC 27
 
-void Map::init() {
-	for (View* view : views) view->init();
-}
-
  Mode Map::run() {
+	ConsoleView::init();
 	this->drawAll();
 	while (true) {
 		if (_kbhit()) {
@@ -22,10 +20,9 @@ void Map::init() {
  void Map::main() {
 	 Mode mode = Mode::RUNNING;
 	 while (mode == Mode::RUNNING) {
-		 this->init();
 		 mode = this->run();
 		 if (mode == Mode::PAUSED) {
-			 for (View* view : views) view->pause();
+			 ConsoleView::pause();
 			 while (mode == Mode::PAUSED) {
 				 if (_kbhit()) {
 					 char ch = _getch();
@@ -37,4 +34,5 @@ void Map::init() {
 			 }
 		 }
 	 }
+	 ConsoleView::deinit();
  }
