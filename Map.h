@@ -31,6 +31,11 @@ public:
 		for (MapObject* obj : map_objects)
 			drawObj(obj);
 	}
+
+	inline void handle_tick() {
+		for (MapObject* obj : map_objects)
+			obj->handle_tick(this);
+	}
 	
 	MapObject* get_object_at(V pos) {
 		for (MapObject* obj : map_objects)
@@ -38,6 +43,8 @@ public:
 				return obj;
 		return nullptr;
 	}
+
+
 
 	void main();
 	Mode run();

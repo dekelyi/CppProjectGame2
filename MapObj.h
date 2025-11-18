@@ -41,6 +41,7 @@ public:
 	bool try_move(Map* map, V dir);
 
 	virtual bool handle_collision(Map* map,MapObject* other, V dir) { return false; }
+	virtual void handle_tick(Map* map) {};
 };
 
 enum class ObjType : char {

@@ -9,6 +9,10 @@ class Player : public MapObject {
 	Player(char _glyph) : MapObject(V(1, 1), _glyph) {}
 	Player() : MapObject(V(1, 1), '@') {}
 
+	virtual void handle_tick(Map* map) override {
+		this->try_move(map, this->direction);
+	}
+
 	static V get_moving_offset(Keypress e) {
 		switch (e) {
 		case Keypress::UP_1: case Keypress::UP_2: return V(0, -1);

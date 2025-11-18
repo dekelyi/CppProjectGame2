@@ -17,8 +17,7 @@
 		else if (this->player1 && (e == Keypress::UP_1 || e == Keypress::DOWN_1 || e == Keypress::LEFT_1 || e == Keypress::RIGHT_1)) this->player1->direction = Player::get_moving_offset(e);
 		else if (this->player2 && (e == Keypress::UP_2 || e == Keypress::DOWN_2 || e == Keypress::LEFT_2 || e == Keypress::RIGHT_2)) this->player2->direction = Player::get_moving_offset(e);
 
-		if (this->player1) this->player1->try_move(this, this->player1->direction);
-		if (this->player2) this->player2->try_move(this, this->player2->direction);
+		handle_tick();
 		Sleep(TICK);
 	}
 }
