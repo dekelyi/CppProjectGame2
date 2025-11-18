@@ -1,6 +1,8 @@
 #pragma once
 #include "Vector.h"
 
+class Map;
+
 class MapObject {
 protected:
 	V pos;
@@ -34,7 +36,11 @@ public:
 		);
 	}
 
-	virtual bool handle_collision(MapObject* other) { return false; }
+	bool can_move(Map* map, V dir);
+
+	bool try_move(Map* map, V dir);
+
+	virtual bool handle_collision(Map* map,MapObject* other, V dir) { return false; }
 };
 
 enum class ObjType : char {

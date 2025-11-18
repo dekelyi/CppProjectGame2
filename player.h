@@ -14,23 +14,12 @@ class Player : public MapObject {
 		return V(0, 0); // no movement
 	}
 
-	inline bool can_move(Map* map, V dir) {
-		auto obj = map->get_object_at(pos + dir);
-		return obj ? obj->handle_collision(this) : true;
-	}
-
 	public:
 	Player(char _glyph, char* _keys) : MapObject(V(1, 1), _glyph), keys(_keys) {}
 
 	bool handle_input(Map* map, char input) {
 		V dir = get_moving_offset(toupper(input));
-		if (dir != V(0, 0) && can_move(map, dir)) {
-			map->clearObj(this);
-			move(dir);
-			map->drawObj(this);
-			return true;
-		}
-		return false;
+		return try_move(map, dir);
 	}
 };
 
