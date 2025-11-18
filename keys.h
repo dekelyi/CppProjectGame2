@@ -1,0 +1,21 @@
+#pragma once
+
+enum class Keypress {
+	UP_1 = 'W',
+	DOWN_1 = 'X',
+	LEFT_1 = 'A',
+	RIGHT_1 = 'D',
+	STAY_1 = 'S',
+	DISPOSE_1 = 'E',
+
+	UP_2 = 'L',
+	DOWN_2 = 'M',
+	LEFT_2 = 'J',
+	RIGHT_2 = 'I',
+	STAY_2 = 'K',
+	DISPOSE_2 = 'O',
+
+	ESC = 27,
+	NONE = 0,
+};
+

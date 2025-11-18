@@ -36,6 +36,9 @@
     <ClCompile Include="level1.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="keys.h">
+      <Filter>Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MapObj.h">

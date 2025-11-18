@@ -2,12 +2,21 @@
 #include <vector>
 #include "MapObj.h"
 #include "Console.h"
+#include "player.h"
 
 class Map {
 	std::vector<MapObject*> map_objects;
 
 public:
-	Map() {};
+	Player* player1;
+	Player* player2;
+
+	Map() {
+		player1 = new Player('$');
+		//player2 = new Player('@');
+		addObject(player1);
+		//addObject(player2);
+	};
 
 	inline void addObject(MapObject* obj) {
 		map_objects.push_back(obj);

@@ -2,18 +2,24 @@
 #include "Map.h"
 #include "player.h"
 #include "Console.h"
+#include "keys.h"
+#include <windows.h>
 
-#define ESC 27
+#define TICK 100
 
  Mode Map::run() {
 	ConsoleView::init();
 	this->drawAll();
 	while (true) {
-		if (_kbhit()) {
-			char ch = _getch();
-			if (ch == ESC) return Mode::PAUSED;
-			else player1.handle_input(this, ch);
-		}
+		Keypress e = ConsoleView::get_keypress();
+		if (e == Keypress::NONE);
+		else if (e == Keypress::ESC) return Mode::PAUSED;
+		else if (this->player1 && (e == Keypress::UP_1 || e == Keypress::DOWN_1 || e == Keypress::LEFT_1 || e == Keypress::RIGHT_1)) this->player1->direction = Player::get_moving_offset(e);
+		else if (this->player2 && (e == Keypress::UP_2 || e == Keypress::DOWN_2 || e == Keypress::LEFT_2 || e == Keypress::RIGHT_2)) this->player2->direction = Player::get_moving_offset(e);
+
+		if (this->player1) this->player1->try_move(this, this->player1->direction);
+		if (this->player2) this->player2->try_move(this, this->player2->direction);
+		Sleep(TICK);
 	}
 }
 
@@ -24,13 +30,9 @@
 		 if (mode == Mode::PAUSED) {
 			 ConsoleView::pause();
 			 while (mode == Mode::PAUSED) {
-				 if (_kbhit()) {
-					 char ch = _getch();
-					 if (ch == ESC) {
-						 mode = Mode::RUNNING;
-					 }
-					 if (ch == 'x' || ch == 'X') mode = Mode::MENU;
-				 }
+				 Keypress e = ConsoleView::get_keypress();
+				 if (e == Keypress::ESC) mode = Mode::RUNNING;
+				 if (e == Keypress::DOWN_1) mode = Mode::MENU;
 			 }
 		 }
 	 }
