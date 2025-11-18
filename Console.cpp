@@ -43,7 +43,7 @@ namespace ConsoleView {
 	}
 
 	void drawAt(V pos, V size, const MapObject* obj) {
-		if (size == V()) return;
+		if (size == V() || pos == V()) return;
 		char glyph = obj ? obj->getGlyph() : ' ';
 		gotoxy(pos);
 		for (int y = 0; y < size.getY(); y++) {

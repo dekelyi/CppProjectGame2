@@ -34,7 +34,6 @@
 		case Keypress::ESC:
 			return Mode::PAUSED;
 		case Keypress::NONE:
-			break;
 		default:
 			break;
 		}

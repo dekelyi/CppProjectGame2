@@ -8,10 +8,10 @@ enum class Keypress {
 	STAY_1 = 'S',
 	DISPOSE_1 = 'E',
 
-	UP_2 = 'L',
+	UP_2 = 'I',
 	DOWN_2 = 'M',
 	LEFT_2 = 'J',
-	RIGHT_2 = 'I',
+	RIGHT_2 = 'L',
 	STAY_2 = 'K',
 	DISPOSE_2 = 'O',
 

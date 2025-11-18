@@ -10,7 +10,7 @@ class Player : public MapObject {
 	Player() : MapObject(V(1, 1), '@') {}
 
 	virtual void handle_tick(Game* game) override {
-		this->try_move(game, this->direction);
+		if (!this->try_move(game, this->direction)) this->direction = V(0,0);
 	}
 
 	static V get_moving_offset(Keypress e) {

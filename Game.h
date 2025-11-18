@@ -13,9 +13,9 @@ public:
 
 	Game() {
 		player1 = new Player('$');
-		//player2 = new Player('@');
+		player2 = new Player('@');
 		addObject(player1);
-		//addObject(player2);
+		addObject(player2);
 	};
 
 	inline void addObject(MapObject* obj) {
