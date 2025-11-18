@@ -1,12 +1,12 @@
-#include "Map.h"
+#include "Game.h"
 #include "Console.h"
 
-void init_level1(Map* map); // level1.cpp
+void init_level1(Game* game); // level1.cpp
 
 int main()
 {
-	Map map;
-	init_level1(&map);
-	map.main();
+	Game game;
+	init_level1(&game);
+	game.main();
 	return 0;
 }

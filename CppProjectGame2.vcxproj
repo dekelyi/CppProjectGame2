@@ -130,16 +130,15 @@
     <ClCompile Include="CppProjectGame2.cpp" />
     <ClCompile Include="keys.h" />
     <ClCompile Include="level1.cpp" />
-    <ClCompile Include="Map.cpp" />
-    <ClCompile Include="MapObj.cpp" />
-    <ClCompile Include="player.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Object.cpp" />
     <ClCompile Include="Console.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Map.h" />
-    <ClInclude Include="MapObj.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="Obstacle.h" />
-    <ClInclude Include="player.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>

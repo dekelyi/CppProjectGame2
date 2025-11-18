@@ -1,7 +1,7 @@
 #pragma once
 #include "Vector.h"
 
-class Map;
+class Game;
 
 class MapObject {
 protected:
@@ -36,12 +36,12 @@ public:
 		);
 	}
 
-	bool can_move(Map* map, V dir);
+	bool can_move(Game* game, V dir);
 
-	bool try_move(Map* map, V dir);
+	bool try_move(Game* game, V dir);
 
-	virtual bool handle_collision(Map* map,MapObject* other, V dir) { return false; }
-	virtual void handle_tick(Map* map) {};
+	virtual bool handle_collision(Game* game,MapObject* other, V dir) { return false; }
+	virtual void handle_tick(Game* game) {};
 };
 
 enum class ObjType : char {

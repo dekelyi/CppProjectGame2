@@ -1,6 +1,6 @@
 #pragma once
 #include "Vector.h"
-#include "MapObj.h"
+#include "Object.h"
 #include "keys.h"
 
 enum class Mode {

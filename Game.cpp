@@ -1,5 +1,5 @@
 #include <conio.h>
-#include "Map.h"
+#include "Game.h"
 #include "player.h"
 #include "Console.h"
 #include "keys.h"
@@ -7,7 +7,7 @@
 
 #define TICK 100
 
- Mode Map::run() {
+ Mode Game::run() {
 	ConsoleView::init();
 	this->drawAll();
 	while (true) {
@@ -22,7 +22,7 @@
 	}
 }
 
- void Map::main() {
+ void Game::main() {
 	 Mode mode = Mode::RUNNING;
 	 while (mode == Mode::RUNNING) {
 		 mode = this->run();

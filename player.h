@@ -1,5 +1,5 @@
 #pragma once
-#include "MapObj.h"
+#include "Object.h"
 #include "keys.h"
 
 class Player : public MapObject {
@@ -9,8 +9,8 @@ class Player : public MapObject {
 	Player(char _glyph) : MapObject(V(1, 1), _glyph) {}
 	Player() : MapObject(V(1, 1), '@') {}
 
-	virtual void handle_tick(Map* map) override {
-		this->try_move(map, this->direction);
+	virtual void handle_tick(Game* game) override {
+		this->try_move(game, this->direction);
 	}
 
 	static V get_moving_offset(Keypress e) {

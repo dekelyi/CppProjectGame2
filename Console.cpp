@@ -5,7 +5,7 @@
 #include <conio.h>
 #include "Vector.h"
 #include "Console.h"
-#include "MapObj.h"
+#include "Object.h"
 #include "keys.h"
 
 using std::cout, std::endl;

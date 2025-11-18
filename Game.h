@@ -1,17 +1,17 @@
 #pragma once
 #include <vector>
-#include "MapObj.h"
+#include "Object.h"
 #include "Console.h"
 #include "player.h"
 
-class Map {
+class Game {
 	std::vector<MapObject*> map_objects;
 
 public:
 	Player* player1;
 	Player* player2;
 
-	Map() {
+	Game() {
 		player1 = new Player('$');
 		//player2 = new Player('@');
 		addObject(player1);

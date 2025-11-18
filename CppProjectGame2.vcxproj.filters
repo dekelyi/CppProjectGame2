@@ -21,13 +21,10 @@
     <ClCompile Include="CppProjectGame2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MapObj.cpp">
+    <ClCompile Include="Object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="player.cpp">
+    <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Console.cpp">
@@ -41,16 +38,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MapObj.h">
+    <ClInclude Include="Object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Map.h">
+    <ClInclude Include="Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="player.h">
+    <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Obstacle.h">
