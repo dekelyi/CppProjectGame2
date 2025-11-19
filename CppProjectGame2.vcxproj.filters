@@ -39,11 +39,11 @@
     <ClCompile Include="Object.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="Runner.cpp">
+    <ClCompile Include="Menu.cpp">
       <Filter>Views</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Base</Filter>
+    <ClCompile Include="GameView.cpp">
+      <Filter>Views</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -56,14 +56,17 @@
     <ClInclude Include="Vector.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Base</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Types</Filter>
     </ClInclude>
     <ClInclude Include="Obstacle.h">
       <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="GameView.h">
+      <Filter>Views</Filter>
+    </ClInclude>
+    <ClInclude Include="Room.h">
+      <Filter>Base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "GameView.h"
 #include "Console.h"
 #include "prelude.h"
 
@@ -28,7 +28,7 @@ Mode start_menu() {
 	return mode;
 }
 
-void start_menu(Game* game) {
+void start_menu(GameView* game) {
 	Mode mode = Mode::MENU;
 	while ((bool)mode) {
 		if (mode == Mode::RUNNING) mode = game->run();

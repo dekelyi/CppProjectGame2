@@ -2,7 +2,7 @@
 #include "Vector.h"
 #include "Console.h"
 
-class Game;
+class GameRoom;
 
 class MapObject {
 protected:
@@ -35,14 +35,9 @@ public:
 		);
 	}
 
-	bool can_move(Game* game, V dir);
-	bool try_move(Game* game, V dir);
+	bool can_move(GameRoom* game, V dir);
+	bool try_move(GameRoom* game, V dir);
 
-	virtual bool handle_collision(Game* game,MapObject* other, V dir) { return false; }
-	virtual void handle_tick(Game* game) {};
-};
-
-enum class ObjType : char {
-	FLOOR = '#',
-	WALL = 'W',
+	virtual bool handle_collision(GameRoom* room,MapObject* other, V dir) { return false; }
+	virtual void handle_tick(GameRoom* room) {};
 };

@@ -1,21 +1,21 @@
 #include "Object.h"
-#include "Game.h"
+#include "GameView.h"
 #include "Vector.h"
 
-bool MapObject::can_move(Game* game, V dir) {
+bool MapObject::can_move(GameRoom* room, V dir) {
 	V dest = pos + dir;
 	// check if in bounds
 	if (dest.getX() < 0 || dest.getY() < 0
-		|| dest.getX() >= 80 || dest.getY() >= 25)
+		|| dest.getX() >= SIZE_X || dest.getY() >= SIZE_Y)
 		return false;
 
-	auto obj = game->get_object_at(dest);
+	auto obj = room->get_object_at(dest);
 	if (obj)
-		return obj->handle_collision(game, this, dir);
+		return obj->handle_collision(room, this, dir);
 	else return true;
 }
 
-bool MapObject::try_move(Game* game, V dir) {
+bool MapObject::try_move(GameRoom* game, V dir) {
 	if (dir == V(0, 0)) return false;
 	if (can_move(game, dir)) {
 		this->clear();

@@ -1,5 +1,9 @@
 #pragma once
 
+#define SIZE_X 80
+#define SIZE_Y 20
+#define HUD_SPACE_TOP 5
+
 enum class Mode {
 	EXIT = 0,
 	RUNNING,
@@ -30,3 +34,9 @@ enum class Keypress {
 	NONE = 0,
 };
 
+enum class ObjType : char {
+	PLAYER_1 = '$',
+	PLAYER_2 = '&',
+	WALL = 'W',
+	OBSTCALE = '*',
+};

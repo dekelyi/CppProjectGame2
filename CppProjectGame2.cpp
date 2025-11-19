@@ -1,11 +1,11 @@
-#include "Game.h"
+#include "GameView.h"
 
-void start_menu(Game* game); // runner.cpp
-void init_level1(Game* game); // level1.cpp
+void start_menu(GameView* game); // menu.cpp
+void init_level1(GameView* game); // level1.cpp
 
 int main()
 {
-	Game game;
+	GameView game;
 	init_level1(&game);
 	start_menu(&game);
 	return 0;

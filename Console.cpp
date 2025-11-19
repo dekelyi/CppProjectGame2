@@ -29,22 +29,23 @@ void cls() {
 	system("cls");
 }
 
-class DownWriter {
-	V startPos;
-	V curPos;
-public:
-	DownWriter(V _startPos) : startPos(_startPos), curPos(_startPos) {}
-	void writeline(const std::string& line) {
-		gotoxy(curPos);
-		std::cout << line;
-		curPos.setY(curPos.getY() + 1);
-	}
-};
+void Writer::writeline(const std::string& line) {
+	gotoxy(pos);
+	std::cout << line;
+	pos.setY(pos.getY() + 1);
+}
 
 namespace ConsoleView {
 	void init() {
 		cls();
 		showCursor(false);
+
+		// Enable ANSI escape codes
+		HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+		DWORD dwMode = 0;
+		GetConsoleMode(hStdOut, &dwMode);
+		dwMode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+		SetConsoleMode(hStdOut, dwMode);
 	}
 
 	void deinit() {
@@ -52,15 +53,18 @@ namespace ConsoleView {
 		showCursor(true);
 	}
 
-	void drawAt(V pos, V size, const char glyph) {
+	void drawAt(V pos, V size, const char glyph, const std::string atr, bool padding) {
 		if (size == V() || pos == V()) return;
+		if (padding) pos = pos + V(0, HUD_SPACE_TOP); // HUD padding
+		cout << atr << endl;
 		gotoxy(pos);
 		for (int y = 0; y < size.getY(); y++) {
 			for (int x = 0; x < size.getX(); x++) {
 				std::cout << glyph;
 			}
-			gotoxy(V(pos.getX(), pos.getY() + y + 1));
+			gotoxy(pos + V(0, y + 1));
 		}
+		cout << RESET << endl;
 	}
 
 	void pause() {
@@ -71,7 +75,7 @@ namespace ConsoleView {
 
 	void menu() {
 		ConsoleView::init();
-		DownWriter w = { V(10, 5) };
+		Writer w = { V(10, 5) };
 		w.writeline("Welcome to the Game!");
 		w.writeline("(1) Start a new game");
 		w.writeline("(8) Instruction and manual");
@@ -80,7 +84,7 @@ namespace ConsoleView {
 
 	void manual() {
 		ConsoleView::init();
-		DownWriter w = { V(10, 5) };
+		Writer w = { V(10, 5) };
 		w.writeline("Instructions:");
 		w.writeline("Player 1 controls: W (up), A (left), S (stay), D (right), X (down), E (dispose)");
 		w.writeline("Player 2 controls: I (up), J (left), K (stay), L (right), M (down), O (dispose)");
