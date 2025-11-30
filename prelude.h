@@ -39,4 +39,5 @@ enum class ObjType : char {
 	PLAYER_2 = '&',
 	WALL = 'W',
 	OBSTCALE = '*',
+	KEY = 'K',
 };

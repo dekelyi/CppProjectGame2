@@ -1,13 +1,14 @@
 #pragma once
 #include "Object.h"
+#include "Collectible.h"
 #include "prelude.h"
 
-class Player : public MapObject {
+class Collector;
+
+class Player : public virtual Collector, public virtual MapObject {
 	V direction = V(0, 0);
 public:
-
 	Player(char _glyph) : MapObject(V(1, 1), _glyph) {}
-	Player() : MapObject(V(1, 1), '@') {}
 
 	virtual void handle_tick(GameRoom* room) override {
 		if (!this->try_move(room, this->direction)) this->direction = V(0, 0);
@@ -25,5 +26,12 @@ public:
 
 	inline void handle_movement(Keypress e) {
 		this->direction = this->get_moving_offset(e);
+	}
+
+	virtual V getFreeNextPositon(GameRoom* room, std::vector<V> vnot) override {
+		// Try to dump collectible behind the player
+		V behind = this->getPosition() - this->direction;
+		vnot.push_back(behind);
+		return Collector::getFreeNextPositon(room, vnot);
 	}
 };

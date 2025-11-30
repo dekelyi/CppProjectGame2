@@ -15,9 +15,9 @@ bool MapObject::can_move(GameRoom* room, V dir) {
 	else return true;
 }
 
-bool MapObject::try_move(GameRoom* game, V dir) {
+bool MapObject::try_move(GameRoom* room, V dir) {
 	if (dir == V(0, 0)) return false;
-	if (can_move(game, dir)) {
+	if (can_move(room, dir)) {
 		this->clear();
 		move(dir);
 		this->draw();

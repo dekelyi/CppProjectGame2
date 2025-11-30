@@ -127,15 +127,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Collectible.cpp" />
     <ClCompile Include="CppProjectGame2.cpp" />
     <ClCompile Include="prelude.h" />
-    <ClCompile Include="level1.cpp" />
+    <ClCompile Include="levels.cpp" />
     <ClCompile Include="GameView.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Menu.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Collectible.h" />
     <ClInclude Include="GameView.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Obstacle.h" />

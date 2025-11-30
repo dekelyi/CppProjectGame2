@@ -5,12 +5,20 @@
 #include <windows.h>
 #include <format>
 
+using namespace std;
+
 #define TICK 100
 
 void GameView::drawHUD() {
 	Writer wr(V(5, 1));
-	wr.writeline(std::format(" PLAYER 1 ({}) INVERTORY: ", (char)ObjType::PLAYER_1));
-	wr.writeline(std::format(" PLAYER 2 ({}) INVERTORY: ", (char)ObjType::PLAYER_2));
+	wr.writeline(format(" PLAYER 1 ({}) INVERTORY: {}", this->player1->getGlyph(), this->player1->getCollectibleGlyph()));
+	wr.writeline(format(" PLAYER 2 ({}) INVERTORY: {}", this->player2->getGlyph(), this->player2->getCollectibleGlyph()));
+
+	wr = Writer(V(SIZE_X - 10, 1));
+	size_t nroom = this->current_room_index + 1,
+		lroom = this->rooms.size();
+	wr.writeline(format("ROOM: {}/{}", nroom,lroom));
+	wr.writeline(string(nroom, (char)178) + string(lroom-nroom, (char)176));
 	ConsoleView::drawAt(V(0, HUD_SPACE_TOP - 1), V(SIZE_X, 1), ' ', UNDERSCORE, false);
 }
 
@@ -31,8 +39,10 @@ Mode GameView::handle_keypress(Keypress e) {
 			this->player2->handle_movement(e);
 			break;
 		case Keypress::DISPOSE_1:
+			this->player1->dump_collectible(this->current_room());
 			break;
 		case Keypress::DISPOSE_2:
+			this->player2->dump_collectible(this->current_room());
 			break;
 		case Keypress::ESC:
 			return Mode::PAUSED;
@@ -51,6 +61,7 @@ Mode GameView::handle_keypress(Keypress e) {
 	while (mode == Mode::RUNNING) {
 		Sleep(TICK);
 		this->handle_tick();
+		this->drawHUD();
 		Keypress e = ConsoleView::get_keypress();
 		mode = this->handle_keypress(e);
 	}

@@ -30,7 +30,7 @@
     <ClCompile Include="Console.cpp">
       <Filter>Views</Filter>
     </ClCompile>
-    <ClCompile Include="level1.cpp">
+    <ClCompile Include="levels.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
     <ClCompile Include="prelude.h">
@@ -44,6 +44,9 @@
     </ClCompile>
     <ClCompile Include="GameView.cpp">
       <Filter>Views</Filter>
+    </ClCompile>
+    <ClCompile Include="Collectible.cpp">
+      <Filter>Types</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -67,6 +70,9 @@
     </ClInclude>
     <ClInclude Include="Room.h">
       <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Collectible.h">
+      <Filter>Types</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

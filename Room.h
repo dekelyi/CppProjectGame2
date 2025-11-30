@@ -1,13 +1,13 @@
 #pragma once
-#pragma once
 #include <vector>
 #include "Object.h"
-#include "Console.h"
 #include "player.h"
 
 class GameRoom {
-	std::vector<MapObject*> map_objects;
 	friend class GameView;
+
+	std::vector<MapObject*> map_objects;
+
 public:
 	Player* player1;
 	Player* player2;
@@ -19,6 +19,10 @@ public:
 
 	inline void addObject(MapObject* obj) {
 		map_objects.push_back(obj);
+	}
+
+	inline void removeObject(MapObject* obj) {
+		map_objects.erase(std::remove(map_objects.begin(), map_objects.end(), obj));
 	}
 
 	MapObject* get_object_at(V pos) {
