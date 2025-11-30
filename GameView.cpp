@@ -19,8 +19,14 @@ void GameView::drawHUD() {
 		lroom = this->rooms.size();
 	wr.writeline(format("ROOM: {}/{}", nroom,lroom));
 	wr.writeline(string(nroom, (char)178) + string(lroom-nroom, (char)176));
-	ConsoleView::drawAt(V(0, HUD_SPACE_TOP - 1), V(SIZE_X, 1), ' ', UNDERSCORE, false);
 }
+
+void drawBorders() {
+	ConsoleView::drawAt(V(0, HUD_SPACE_TOP - 1), V(SIZE_X, 1), ' ', UNDERSCORE, false);
+	ConsoleView::drawAt(V(0, HUD_SPACE_TOP + SIZE_Y), V(SIZE_X, 1), '-', "", false);
+	ConsoleView::drawAt(V(SIZE_X, 0), V(1, SIZE_Y + HUD_SPACE_TOP), '|', "", false);
+}
+
 
 Mode GameView::handle_keypress(Keypress e) {
 	switch (e) {
@@ -54,8 +60,9 @@ Mode GameView::handle_keypress(Keypress e) {
 }
 
  Mode GameView::run() {
-	 Mode mode = Mode::RUNNING;
+	Mode mode = Mode::RUNNING;
 	ConsoleView::init();
+	drawBorders();
 	this->drawHUD();
 	this->drawAll();
 	while (mode == Mode::RUNNING) {
