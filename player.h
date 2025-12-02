@@ -3,11 +3,11 @@
 #include "Collectible.h"
 #include "prelude.h"
 
-class Collector;
 
-class Player : public virtual Collector, public virtual MapObject {
+class Player : public MapObject {
 	V direction = V(0, 0);
 public:
+	Collectible* collectible = nullptr;
 	Player(char _glyph) : MapObject(V(1, 1), _glyph) {}
 
 	virtual void handle_tick(GameRoom* room) override {
@@ -28,10 +28,12 @@ public:
 		this->direction = this->get_moving_offset(e);
 	}
 
-	virtual V getFreeNextPositon(GameRoom* room, std::vector<V> vnot) override {
-		// Try to dump collectible behind the player
-		V behind = this->getPosition() - this->direction;
-		vnot.push_back(behind);
-		return Collector::getFreeNextPositon(room, vnot);
+	// Collectible stuff
+	inline char getCollectibleGlyph() const {
+		return (collectible != nullptr) ? collectible->getGlyph() : ' ';
 	}
+
+	void dump_collectible(GameRoom* room);
+
+	V getDumpPosition(GameRoom* room);
 };
