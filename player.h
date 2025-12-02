@@ -11,7 +11,15 @@ public:
 	Player(char _glyph) : MapObject(V(1, 1), _glyph) {}
 
 	virtual void handle_tick(GameRoom* room) override {
-		if (!this->try_move(room, this->direction)) this->direction = V(0, 0);
+		if (this->direction != V(0,0) && !this->try_move(room, this->direction))
+			this->direction = V(0, 0);
+	}
+
+	virtual bool handle_collision(GameRoom* room, MapObject* other, V dir) override {
+		if (dir == this->direction) {
+			return true;
+		}
+		else return MapObject::handle_collision(room, other, dir);
 	}
 
 	V get_moving_offset(Keypress e) {

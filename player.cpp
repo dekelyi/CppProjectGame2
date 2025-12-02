@@ -17,4 +17,5 @@ V Player::getDumpPosition(GameRoom* room) {
 	for (V v : arr)
 		if (room->get_object_at(this->getPosition() + v) == nullptr)
 			return v;
+	return V(0, 0);
 }

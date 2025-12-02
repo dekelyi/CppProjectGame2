@@ -1,12 +1,10 @@
 #include "GameView.h"
 
-void _main(GameView* game); // menu.cpp
+void _main(void (*fn)(GameView*)); // menu.cpp
 void init_levels(GameView* game); // level1.cpp
 
 int main()
 {
-	GameView game;
-	init_levels(&game);
-	_main(&game);
+	_main(init_levels);
 	return 0;
 }

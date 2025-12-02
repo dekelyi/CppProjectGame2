@@ -28,15 +28,20 @@ Mode start_menu() {
 	return mode;
 }
 
-void _main(GameView* game) {
+
+void _main(void (*fn)(GameView*)) {
 	Mode mode = Mode::MENU;
 	while ((bool)mode) {
-		if (mode == Mode::RUNNING) mode = game->run();
+		if (mode == Mode::RUNNING) {
+			GameView game;
+			fn(&game);
+			mode = game.run();
+		}
 		if (mode == Mode::PAUSED) mode = pause_menu();
 		if (mode == Mode::MENU) mode = start_menu();
 		if (mode == Mode::WINNING) {
 			ConsoleView::won_game();
-			while (ConsoleView::get_keypress() != Keypress::NONE);
+			while (ConsoleView::get_keypress() == Keypress::NONE);
 			mode = start_menu();
 		}
 	}

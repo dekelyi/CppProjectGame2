@@ -17,7 +17,11 @@ void drawBorders() {
 
 Mode GameView::check_room() {
 	if (current_room()->count_players() == 0) {
-		if (current_room()->last_moved_through == current_room()->entry_point)
+		int count_rooms_with_players = 0;
+		for (GameRoom* room : this->rooms)
+			if (room->count_players() > 0) count_rooms_with_players++;
+		if (count_rooms_with_players == 0) return Mode::WINNING;
+		if (current_room()->last_moved_through->dest == DoorDest::PREV)
 			current_room_index--;
 		else current_room_index++;
 		// redraw room
