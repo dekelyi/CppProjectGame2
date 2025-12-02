@@ -19,6 +19,7 @@ namespace ConsoleView {
 	void init();
 	void deinit();
 	void pause();
+	void won_game();
 	void menu();
 	void manual();
 

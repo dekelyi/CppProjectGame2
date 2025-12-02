@@ -73,6 +73,13 @@ namespace ConsoleView {
 		std::cout << "Game paused, press ESC again to continue or X to go back to the main menu" << std::endl;
 	}
 
+	void won_game() {
+		ConsoleView::init();
+		Writer w = { V(10, 5) };
+		w.writeline("You won the Game");
+		w.writeline("press any key to return to the main menu");
+	}
+
 	void menu() {
 		ConsoleView::init();
 		Writer w = { V(10, 5) };

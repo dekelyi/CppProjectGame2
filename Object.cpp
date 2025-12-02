@@ -20,7 +20,7 @@ bool MapObject::try_move(GameRoom* room, V dir) {
 	if (can_move(room, dir)) {
 		this->clear();
 		move(dir);
-		this->draw();
+		if (room->is_object_at_room(this)) this->draw();
 		return true;
 	}
 	return false;

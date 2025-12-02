@@ -22,7 +22,7 @@ void Collector::dump_collectible(GameRoom* room) {
 	collectible = nullptr;
 }
 
-V Collector::getFreeNextPositon(GameRoom* room, std::vector<V> vnot) {
+V Collector::getFreeNextPositon(GameRoom* room, V pos, std::vector<V> vnot) {
 	std::vector<V> arr = { V(0,-1), V(0,1), V(-1,0), V(1,0) };
 	for (V vn : vnot)
 		arr.erase(std::remove(arr.begin(), arr.end(), vn), arr.end());

@@ -2,7 +2,6 @@
 #include "prelude.h"
 #include "Object.h"
 class Obstacle : public MapObject {
-	//char glyph = '*';
 public:
 	Obstacle(V _pos, V _size) : MapObject(_pos, _size, (char)ObjType::OBSTCALE) {}
 

@@ -9,6 +9,28 @@ using namespace std;
 
 #define TICK 100
 
+void drawBorders() {
+	ConsoleView::drawAt(V(0, HUD_SPACE_TOP - 1), V(SIZE_X, 1), ' ', UNDERSCORE, false);
+	ConsoleView::drawAt(V(0, HUD_SPACE_TOP + SIZE_Y), V(SIZE_X, 1), '-', "", false);
+	ConsoleView::drawAt(V(SIZE_X, 0), V(1, SIZE_Y + HUD_SPACE_TOP), '|', "", false);
+}
+
+Mode GameView::check_room() {
+	if (current_room()->count_players() == 0) {
+		if (current_room()->last_moved_through == current_room()->entry_point)
+			current_room_index--;
+		else current_room_index++;
+		// redraw room
+		if (current_room() != nullptr) {
+			ConsoleView::init();
+			drawBorders();
+			drawAll();
+		}
+		else return Mode::WINNING;
+	}
+	return Mode::RUNNING;
+}
+
 void GameView::drawHUD() {
 	Writer wr(V(5, 1));
 	wr.writeline(format(" PLAYER 1 ({}) INVERTORY: {}", this->player1->getGlyph(), this->player1->getCollectibleGlyph()));
@@ -21,11 +43,6 @@ void GameView::drawHUD() {
 	wr.writeline(string(nroom, (char)178) + string(lroom-nroom, (char)176));
 }
 
-void drawBorders() {
-	ConsoleView::drawAt(V(0, HUD_SPACE_TOP - 1), V(SIZE_X, 1), ' ', UNDERSCORE, false);
-	ConsoleView::drawAt(V(0, HUD_SPACE_TOP + SIZE_Y), V(SIZE_X, 1), '-', "", false);
-	ConsoleView::drawAt(V(SIZE_X, 0), V(1, SIZE_Y + HUD_SPACE_TOP), '|', "", false);
-}
 
 
 Mode GameView::handle_keypress(Keypress e) {
@@ -68,6 +85,7 @@ Mode GameView::handle_keypress(Keypress e) {
 	while (mode == Mode::RUNNING) {
 		Sleep(TICK);
 		this->handle_tick();
+		if ((mode = this->check_room()) != Mode::RUNNING) return mode;
 		this->drawHUD();
 		Keypress e = ConsoleView::get_keypress();
 		mode = this->handle_keypress(e);

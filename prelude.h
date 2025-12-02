@@ -9,6 +9,7 @@ enum class Mode {
 	RUNNING,
 	PAUSED,
 	MENU,
+	WINNING,
 };
 
 enum class Keypress {

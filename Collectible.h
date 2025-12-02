@@ -25,7 +25,6 @@ public:
 };
 
 class Key : public Collectible {
-	//char glyph = 'K';
 public:
 	Key(V _pos, V _size) : Collectible(_pos, _size, (char)ObjType::KEY) {}
 };

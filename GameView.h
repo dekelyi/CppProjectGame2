@@ -6,7 +6,7 @@
 #include "Room.h"
 
 class GameView {
-	std::vector<GameRoom> rooms;
+	std::vector<GameRoom*> rooms;
 	size_t current_room_index = 0;
 
 public:
@@ -19,12 +19,18 @@ public:
 		add_room();
 	}
 
-	inline void add_room() {
-		rooms.push_back(GameRoom(player1, player2));
+	inline GameRoom* add_room() {
+		auto room = new GameRoom(player1, player2);
+		if (rooms.size() > 0) {
+			room->prev = rooms[rooms.size() - 1];
+			room->prev->next = room;
+		}
+		rooms.push_back(room);
+		return room;
 	}
 
 	inline GameRoom* current_room() {
-		return &rooms[current_room_index];
+		return (current_room_index < rooms.size()) ? rooms[current_room_index] : nullptr;
 	}
 
 	inline void drawAll() {
@@ -32,12 +38,12 @@ public:
 			obj->draw();
 	}
 
-	inline void handle_tick() {
-		for (MapObject* obj : current_room()->map_objects)
-			obj->handle_tick(this->current_room());
-	}
-
 	Mode handle_keypress(Keypress e);
 	Mode run();
+	Mode check_room();
+	void handle_tick() {
+		for (MapObject* obj : current_room()->map_objects)
+			obj->handle_tick(current_room());
+	}
 	void drawHUD();
 };

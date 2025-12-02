@@ -2,6 +2,9 @@
 #include <vector>
 #include "Object.h"
 #include "player.h"
+#include "Door.h"
+
+class Door;
 
 class GameRoom {
 	friend class GameView;
@@ -9,12 +12,15 @@ class GameRoom {
 	std::vector<MapObject*> map_objects;
 
 public:
+	GameRoom* next;
+	GameRoom* prev;
+	Door* entry_point;
+	Door* exit_point;
 	Player* player1;
 	Player* player2;
+	Door* last_moved_through;
 
 	GameRoom(Player* _player1, Player* _player2) : player1(_player1), player2(_player2) {
-		addObject(player1);
-		addObject(player2);
 	}
 
 	inline void addObject(MapObject* obj) {
@@ -30,5 +36,20 @@ public:
 			if (obj->is_at(pos))
 				return obj;
 		return nullptr;
+	}
+
+	inline bool is_object_at_room(MapObject* val) {
+		for (MapObject* obj : map_objects)
+			if (obj == val) return true;
+		return false;
+	}
+
+	int count_players() {
+		int count_players = 0;
+		for (MapObject* obj : map_objects) {
+			Player* p = dynamic_cast<Player*>(obj);
+			if (p != nullptr) count_players++;
+		}
+		return count_players;
 	}
 };
