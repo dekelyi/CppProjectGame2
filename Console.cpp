@@ -64,7 +64,7 @@ namespace ConsoleView {
 			}
 			gotoxy(pos + V(0, y + 1));
 		}
-		cout << RESET << endl;
+		cout << A_RESET << endl;
 	}
 
 	void pause() {

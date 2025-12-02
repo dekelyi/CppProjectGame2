@@ -6,7 +6,7 @@ class GameRoom;
 
 class Collectible : public MapObject {
 public:
-	Collectible(V _pos, V _size, char _glyph) : MapObject(_pos, _size, _glyph) {};
+	Collectible(V _pos, V _size, char _glyph) : MapObject(_pos, _size, _glyph) { attr = A_FOREGROUND_MAGENTA;  };
 
 	virtual bool handle_collision(GameRoom* room, MapObject* other, V dir) override;
 };

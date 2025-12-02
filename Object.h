@@ -9,6 +9,7 @@ protected:
 	V pos;
 	V size;
 	char glyph;
+	std::string attr = "";
 
 public:
 	MapObject() : pos(V(-1,-1)), size(V(1, 1)), glyph(' ') {}
@@ -22,7 +23,7 @@ public:
 	inline void setGlyph(char _glyph) { glyph = _glyph; }
 	inline char getGlyph() const { return glyph; }
 
-	inline void draw() const { ConsoleView::drawAt(pos, size, glyph); }
+	inline void draw() const { ConsoleView::drawAt(pos, size, glyph, attr); }
 	inline void clear() const { ConsoleView::drawAt(pos, size, ' '); }
 
 	inline void move(V offset) { pos = pos + offset; }

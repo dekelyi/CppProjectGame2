@@ -6,9 +6,10 @@
 
 class Player : public MapObject {
 	V direction = V(0, 0);
+
 public:
 	Collectible* collectible = nullptr;
-	Player(char _glyph) : MapObject(V(1, 1), _glyph) {}
+	Player(char _glyph) : MapObject(V(1, 1), _glyph) { attr = A_FOREGROUND_CYAN; }
 
 	virtual void handle_tick(GameRoom* room) override {
 		if (this->direction != V(0,0) && !this->try_move(room, this->direction))
