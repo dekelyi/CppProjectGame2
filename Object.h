@@ -4,6 +4,12 @@
 
 class GameRoom;
 
+enum M_CODE {
+	CAN_MOVE,
+	CANT_MOVE,
+	MOVED
+};
+
 class MapObject {
 protected:
 	V pos;
@@ -36,9 +42,9 @@ public:
 		);
 	}
 
-	bool can_move(GameRoom* game, V dir);
-	bool try_move(GameRoom* game, V dir);
+	bool try_move(GameRoom* game, V dir, bool draw = true);
+	M_CODE can_move(GameRoom* game, V dir, bool draw=true);
+	virtual M_CODE handle_collision(GameRoom* room,MapObject* obj, V dir, bool draw=true) { return CANT_MOVE; }
 
-	virtual bool handle_collision(GameRoom* room,MapObject* other, V dir) { return false; }
 	virtual void handle_tick(GameRoom* room) {};
 };

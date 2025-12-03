@@ -26,5 +26,5 @@ public:
 		this->draw();
 	}
 
-	virtual bool handle_collision(GameRoom* room, MapObject* other, V dir) override;
+	virtual M_CODE handle_collision(GameRoom* room, MapObject* other, V dir, bool draw=true) override;
 };
