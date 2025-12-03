@@ -24,7 +24,7 @@ public:
 
 	GameRoom(Player* _player1, Player* _player2) : player1(_player1), player2(_player2) {}
 	~GameRoom() {
-		for (auto o : map_objects) delete o;
+		for (auto o : map_objects) if (o != player1 && o != player2) delete o;
 	}
 
 	inline void addObject(MapObject* obj) {

@@ -39,6 +39,7 @@ void _main(void (*init)(GameView*)) {
 	while ((bool)mode) {
 		switch (mode) {
 		case Mode::RUNNING:
+			if (game) delete game;
 			game = new GameView();
 			init(game);
 		case Mode::CONTINUE:
@@ -60,5 +61,6 @@ void _main(void (*init)(GameView*)) {
 			break;
 		}
 	}
+	if (game) delete game;
 	ConsoleView::deinit();
 }

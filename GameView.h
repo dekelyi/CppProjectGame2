@@ -20,6 +20,13 @@ public:
 	}
 
 	~GameView() {
+		GameRoom* node = head, *tmp;
+		while (node) {
+			tmp = node->next;
+			delete node;
+			node = tmp;
+		}
+
 		delete player1;
 		delete player2;
 	}
