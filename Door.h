@@ -38,5 +38,6 @@ public:
 		return (isLocked()) ? A_FOREGROUND_RED : A_FOREGROUND_GREEN;
 	}
 
+	bool try_unlock(MapObject* obj);
 	virtual M_CODE handle_collision(GameRoom* room, MapObject* other, V dir) override;
 };

@@ -1,7 +1,5 @@
 #pragma once
-#include <vector>
 #include "Object.h"
-#include "Console.h"
 #include "player.h"
 #include "Room.h"
 

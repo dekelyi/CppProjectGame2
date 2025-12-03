@@ -1,12 +1,18 @@
 #pragma once
 #include "Door.h"
+#include "Collectible.h"
 #include "Room.h"
 
 M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, V dir) {
 	// If door is locked, block passage
 	if (isLocked()) {
-		room->msg = getMsg();
-		return CANT_MOVE;
+		if (try_unlock(obj)) {
+			this->draw();
+		}
+		else {
+			room->msg = getMsg();
+			return CANT_MOVE;
+		}
 	}
 
 	room->removeObject(obj);
@@ -22,4 +28,17 @@ M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, V dir) {
 
 	obj->try_move(other_room, dir);
 	return MOVED;
+}
+
+bool Door::try_unlock(MapObject* obj) {
+	Player* p = dynamic_cast<Player*>(obj);
+	if (p && p->collectible) {
+		Key* key = dynamic_cast<Key*>(p->collectible);
+		if (key) {
+			p->collectible = nullptr;
+			keys_collected++;
+			if (keys_collected == keys_required) return true;
+		}
+	}
+	return false;
 }
