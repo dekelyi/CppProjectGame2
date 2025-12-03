@@ -4,8 +4,10 @@
 
 M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, V dir) {
 	// If door is locked, block passage
-	if (state == DoorState::LOCKED)
+	if (isLocked()) {
+		room->msg = getMsg();
 		return CANT_MOVE;
+	}
 
 	room->removeObject(obj);
 	obj->clear();

@@ -20,6 +20,7 @@ public:
 	Player* player1;
 	Player* player2;
 	bool is_current = false;
+	std::string msg = "";
 
 	GameRoom(Player* _player1, Player* _player2) : player1(_player1), player2(_player2) {}
 

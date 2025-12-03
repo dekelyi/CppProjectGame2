@@ -2,12 +2,9 @@
 #include "player.h"
 #include "Console.h"
 #include "prelude.h"
-#include <windows.h>
 #include <format>
 
 using namespace std;
-
-#define TICK 100
 
 void drawBorders() {
 	ConsoleView::drawAt(V(0, HUD_SPACE_TOP - 1), V(SIZE_X, 1), ' ', A_UNDERSCORE, false);
@@ -42,6 +39,18 @@ void GameView::drawHUD() {
 	Writer wr(V(5, 1));
 	wr.writeline(format(" PLAYER 1 ({}) INVERTORY: {}", this->player1->getGlyph(), this->player1->getCollectibleGlyph()));
 	wr.writeline(format(" PLAYER 2 ({}) INVERTORY: {}", this->player2->getGlyph(), this->player2->getCollectibleGlyph()));
+	if (!this->current->msg.empty()) {
+		if (msg_count == 0) {
+			wr.writeline(std::string(this->current->msg.size(), ' '));
+			this->current->msg = "";
+			msg_count = -1;
+		}
+		else {
+			wr.writeline(this->current->msg);
+			if (msg_count == -1) msg_count = MSG_TICKS;
+			else msg_count--;
+		}
+	}
 
 	wr = Writer(V(SIZE_X - 10, 1));
 	size_t nroom = this->i,
@@ -90,7 +99,7 @@ Mode GameView::handle_keypress(Keypress e) {
 	this->drawHUD();
 	this->drawAll();
 	while (mode == Mode::RUNNING) {
-		Sleep(TICK);
+		console_sleep(TICK);
 		this->handle_tick();
 		if ((mode = this->check_room()) != Mode::RUNNING) return mode;
 		this->drawHUD();

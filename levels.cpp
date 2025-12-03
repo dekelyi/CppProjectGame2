@@ -22,7 +22,7 @@ void init_level2(GameView* game) {
 	room->addObject(new Obstacle(V(30, 10), V(1, 1)));
 	room->addObject(new Key(V(40,15), V(1, 1)));
 	room->addObject(new Door(V(0, 0), V(1, 1), DoorDest::PREV));
-	room->addObject(new Door(V(70, 19), V(1, 1), DoorDest::NEXT));
+	room->addObject(new Door(V(70, 19), V(1, 1), DoorDest::NEXT, 1));
 }
 
 void init_levels(GameView* game) {

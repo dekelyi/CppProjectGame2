@@ -10,6 +10,7 @@ class GameView {
 	GameRoom* last;
 	GameRoom* current;
 	size_t s = 0, i = 1;
+	int msg_count = -1;
 
 public:
 	Player* player1;

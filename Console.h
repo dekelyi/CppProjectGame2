@@ -15,6 +15,8 @@
 #define A_BOLD ANSI_ESC "1m"
 #define A_RESET ANSI_ESC "0m"
 
+void console_sleep(int ms);
+
 class Writer {
 	V pos;
 public:
@@ -31,7 +33,6 @@ namespace ConsoleView {
 	void won_game();
 	void menu();
 	void manual();
-
 
 	Keypress get_keypress();
 };

@@ -9,6 +9,10 @@
 
 using std::cout, std::endl;
 
+void console_sleep(int ms) {
+	Sleep(ms);
+}
+
 void gotoxy(V pos) {
 	std::cout.flush();
 	COORD coord;

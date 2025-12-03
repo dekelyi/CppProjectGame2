@@ -4,6 +4,9 @@
 #define SIZE_Y 20
 #define HUD_SPACE_TOP 5
 
+#define TICK 100
+#define MSG_TICKS 10
+
 enum class Mode {
 	EXIT = 0,
 	RUNNING,
