@@ -10,6 +10,9 @@ class Player : public MapObject {
 public:
 	Collectible* collectible = nullptr;
 	Player(char _glyph) : MapObject(V(1, 1), _glyph) { attr = A_FOREGROUND_CYAN; }
+	~Player() {
+		if (collectible) delete collectible;
+	}
 
 	virtual void handle_tick(GameRoom* room) override {
 		if (this->direction != V(0,0) && !this->try_move(room, this->direction))

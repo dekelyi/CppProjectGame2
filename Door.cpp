@@ -35,6 +35,7 @@ bool Door::try_unlock(MapObject* obj) {
 	if (p && p->collectible) {
 		Key* key = dynamic_cast<Key*>(p->collectible);
 		if (key) {
+			delete p->collectible;
 			p->collectible = nullptr;
 			keys_collected++;
 			if (keys_collected == keys_required) return true;

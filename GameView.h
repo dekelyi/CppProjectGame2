@@ -4,9 +4,9 @@
 #include "Room.h"
 
 class GameView {
-	GameRoom* head;
-	GameRoom* last;
-	GameRoom* current;
+	GameRoom* head = nullptr;
+	GameRoom* last = nullptr;
+	GameRoom* current = nullptr;
 	size_t s = 0, i = 1;
 	int msg_count = -1;
 
@@ -17,6 +17,11 @@ public:
 	GameView() {
 		player1 = new Player((char)ObjType::PLAYER_1);
 		player2 = new Player((char)ObjType::PLAYER_2);
+	}
+
+	~GameView() {
+		delete player1;
+		delete player2;
 	}
 
 	inline GameRoom* add_room() {

@@ -7,7 +7,7 @@ Mode pause_menu() {
 	ConsoleView::pause();
 	while (mode == Mode::PAUSED) {
 		Keypress e = ConsoleView::get_keypress();
-		if (e == Keypress::ESC) mode = Mode::RUNNING;
+		if (e == Keypress::ESC) mode = Mode::CONTINUE;
 		if (e == Keypress::H) mode = Mode::MENU;
 	}
 	return mode;
@@ -33,20 +33,31 @@ Mode start_menu() {
 }
 
 
-void _main(void (*fn)(GameView*)) {
+void _main(void (*init)(GameView*)) {
 	Mode mode = Mode::MENU;
+	GameView* game = nullptr;
 	while ((bool)mode) {
-		if (mode == Mode::RUNNING) {
-			GameView game;
-			fn(&game);
-			mode = game.run();
-		}
-		if (mode == Mode::PAUSED) mode = pause_menu();
-		if (mode == Mode::MENU) mode = start_menu();
-		if (mode == Mode::WINNING) {
+		switch (mode) {
+		case Mode::RUNNING:
+			game = new GameView();
+			init(game);
+		case Mode::CONTINUE:
+			mode = game->run();
+			break;
+		case Mode::PAUSED:
+			mode = pause_menu();
+			break;
+		case Mode::MENU:
+			mode = start_menu();
+			break;
+		case Mode::WINNING:
 			ConsoleView::won_game();
 			while (ConsoleView::get_keypress() == Keypress::NONE);
-			mode = start_menu();
+			mode = Mode::MENU;
+			break;
+		default:
+			mode = Mode::EXIT;
+			break;
 		}
 	}
 	ConsoleView::deinit();

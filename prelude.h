@@ -11,6 +11,7 @@ enum class Mode {
 	EXIT = 0,
 	RUNNING,
 	PAUSED,
+	CONTINUE,
 	MENU,
 	WINNING,
 };
