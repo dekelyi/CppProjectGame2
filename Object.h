@@ -30,7 +30,7 @@ public:
 	inline char getGlyph() const { return glyph; }
 	virtual inline std::string getAttr() const { return attr; }
 
-	inline void draw() const { ConsoleView::drawAt(pos, size, glyph, getAttr()); }
+	inline void draw() const { ConsoleView::drawAt(pos, size, glyph, ConsoleView::colors ? getAttr() : ""); }
 	inline void clear() const { ConsoleView::drawAt(pos, size, ' '); }
 
 	inline void move(V offset) { pos = pos + offset; }

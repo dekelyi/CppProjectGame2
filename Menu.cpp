@@ -8,7 +8,7 @@ Mode pause_menu() {
 	while (mode == Mode::PAUSED) {
 		Keypress e = ConsoleView::get_keypress();
 		if (e == Keypress::ESC) mode = Mode::RUNNING;
-		if (e == Keypress::DOWN_1) mode = Mode::MENU;
+		if (e == Keypress::H) mode = Mode::MENU;
 	}
 	return mode;
 }
@@ -19,6 +19,10 @@ Mode start_menu() {
 	while (mode == Mode::MENU) {
 		Keypress e = ConsoleView::get_keypress();
 		if (e == Keypress::_1) mode = Mode::RUNNING;
+		if (e == Keypress::_7) {
+			ConsoleView::colors = !ConsoleView::colors;
+			ConsoleView::menu();
+		}
 		if (e == Keypress::_8) {
 			ConsoleView::manual();
 			ConsoleView::menu();

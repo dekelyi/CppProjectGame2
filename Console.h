@@ -2,7 +2,6 @@
 #include <string>
 #include "Vector.h"
 #include "prelude.h"
-#include <cstdio>
 
 #define ANSI_ESC "\033["
 #define A_FOREGROUND_RED ANSI_ESC "31m"
@@ -15,6 +14,7 @@
 #define A_BOLD ANSI_ESC "1m"
 #define A_RESET ANSI_ESC "0m"
 
+
 void console_sleep(int ms);
 
 class Writer {
@@ -25,6 +25,8 @@ public:
 };
 
 namespace ConsoleView {
+	extern bool colors;
+
 	void drawAt(V pos, V size, char glyph, const std::string atr="", bool padding=true);
 
 	void init();

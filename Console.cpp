@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <cstdlib>
 #include <conio.h>
+#include <format>
 #include "Vector.h"
 #include "Console.h"
 #include "prelude.h"
@@ -40,6 +41,8 @@ void Writer::writeline(const std::string& line) {
 }
 
 namespace ConsoleView {
+	bool colors = true;
+
 	void init() {
 		cls();
 		showCursor(false);
@@ -74,7 +77,7 @@ namespace ConsoleView {
 	void pause() {
 		cls();
 		gotoxy(V(10, 5));
-		std::cout << "Game paused, press ESC again to continue or X to go back to the main menu" << std::endl;
+		std::cout << "Game paused, press ESC again to continue or H to go back to the main menu" << std::endl;
 	}
 
 	void won_game() {
@@ -89,6 +92,7 @@ namespace ConsoleView {
 		Writer w = { V(10, 5) };
 		w.writeline("Welcome to the Game!");
 		w.writeline("(1) Start a new game");
+		w.writeline(std::format("(7) Colors: turn {}", colors ? "off" : "on"));
 		w.writeline("(8) Instruction and manual");
 		w.writeline("(9) Exit");
 	}
