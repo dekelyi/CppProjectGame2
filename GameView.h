@@ -6,8 +6,10 @@
 #include "Room.h"
 
 class GameView {
-	std::vector<GameRoom*> rooms;
-	size_t current_room_index = 0;
+	GameRoom* head;
+	GameRoom* last;
+	GameRoom* current;
+	size_t s = 0, i = 1;
 
 public:
 	Player* player1;
@@ -16,25 +18,41 @@ public:
 	GameView() {
 		player1 = new Player((char)ObjType::PLAYER_1);
 		player2 = new Player((char)ObjType::PLAYER_2);
-		add_room();
 	}
 
 	inline GameRoom* add_room() {
 		auto room = new GameRoom(player1, player2);
-		if (rooms.size() > 0) {
-			room->prev = rooms[rooms.size() - 1];
+		if (last) {
+			room->prev = last;
 			room->prev->next = room;
+			last = room;
 		}
-		rooms.push_back(room);
+		else {
+			current = last = head = room;
+			current->is_current = true;
+		}
+		s++;
 		return room;
 	}
 
-	inline GameRoom* current_room() {
-		return (current_room_index < rooms.size()) ? rooms[current_room_index] : nullptr;
+	inline void advance_room() {
+		current->is_current = false;
+		if (current->next)
+			current = current->next;
+		current->is_current = true;
+		i++;
+	}
+
+	inline void goback_room() {
+		current->is_current = false;
+		if (current->prev)
+			current = current->prev;
+		current->is_current = true;
+		i--; // assume i>0
 	}
 
 	inline void drawAll() {
-		for (MapObject* obj : current_room()->map_objects)
+		for (MapObject* obj : current->map_objects)
 			obj->draw();
 	}
 
@@ -42,8 +60,8 @@ public:
 	Mode run();
 	Mode check_room();
 	void handle_tick() {
-		for (MapObject* obj : current_room()->map_objects)
-			obj->handle_tick(current_room());
+		for (MapObject* obj : current->map_objects)
+			obj->handle_tick(current);
 	}
 	void drawHUD();
 };

@@ -16,26 +16,26 @@ public:
 	GameRoom* prev;
 	Door* entry_point;
 	Door* exit_point;
+	Door* last_moved_through;
 	Player* player1;
 	Player* player2;
-	Door* last_moved_through;
+	bool is_current = false;
 
 	GameRoom(Player* _player1, Player* _player2) : player1(_player1), player2(_player2) {}
 
 	inline void addObject(MapObject* obj) {
 		map_objects.push_back(obj);
+		Door* door = dynamic_cast<Door*>(obj);
+		if (door) {
+			if (door->dest == DoorDest::NEXT)
+				this->exit_point = door;
+			else
+				this->entry_point = door;
+		}
 	}
 
 	inline void removeObject(MapObject* obj) {
 		map_objects.erase(std::remove(map_objects.begin(), map_objects.end(), obj));
-	}
-
-	inline void addDoor(Door* door) {
-		this->addObject((MapObject*)door);
-		if (door->dest == DoorDest::NEXT)
-			this->exit_point = door;
-		else
-			this->entry_point = door;
 	}
 
 	MapObject* get_object_at(V pos) {

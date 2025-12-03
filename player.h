@@ -16,9 +16,9 @@ public:
 			this->direction = V(0, 0);
 	}
 
-	virtual M_CODE handle_collision(GameRoom* room, MapObject* other, V dir, bool draw=true) override {
+	virtual M_CODE handle_collision(GameRoom* room, MapObject* other, V dir) override {
 		if (dir == this->direction) {
-			return try_move(room, dir, draw) ? CAN_MOVE : CANT_MOVE;
+			return try_move(room, dir) ? CAN_MOVE : CANT_MOVE;
 		}
 		else return MapObject::handle_collision(room, other, dir);
 	}

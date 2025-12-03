@@ -42,9 +42,9 @@ public:
 		);
 	}
 
-	bool try_move(GameRoom* game, V dir, bool draw = true);
-	M_CODE can_move(GameRoom* game, V dir, bool draw=true);
-	virtual M_CODE handle_collision(GameRoom* room,MapObject* obj, V dir, bool draw=true) { return CANT_MOVE; }
+	bool try_move(GameRoom* game, V dir);
+	M_CODE can_move(GameRoom* game, V dir);
+	virtual M_CODE handle_collision(GameRoom* room,MapObject* obj, V dir) { return CANT_MOVE; }
 
 	virtual void handle_tick(GameRoom* room) {};
 };

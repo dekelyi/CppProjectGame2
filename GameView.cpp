@@ -16,16 +16,19 @@ void drawBorders() {
 }
 
 Mode GameView::check_room() {
-	if (current_room()->count_players() == 0) {
+	if (current->count_players() == 0) {
 		int count_rooms_with_players = 0;
-		for (GameRoom* room : this->rooms)
+		GameRoom* room = this->head;
+		while (room) {
 			if (room->count_players() > 0) count_rooms_with_players++;
+			room = room->next;
+		};
 		if (count_rooms_with_players == 0) return Mode::WINNING;
-		if (current_room()->last_moved_through->dest == DoorDest::PREV)
-			current_room_index--;
-		else current_room_index++;
+		if (current->last_moved_through->dest == DoorDest::PREV)
+			goback_room();
+		else advance_room();
 		// redraw room
-		if (current_room() != nullptr) {
+		if (current != nullptr) {
 			ConsoleView::init();
 			drawBorders();
 			drawAll();
@@ -41,8 +44,8 @@ void GameView::drawHUD() {
 	wr.writeline(format(" PLAYER 2 ({}) INVERTORY: {}", this->player2->getGlyph(), this->player2->getCollectibleGlyph()));
 
 	wr = Writer(V(SIZE_X - 10, 1));
-	size_t nroom = this->current_room_index + 1,
-		lroom = this->rooms.size();
+	size_t nroom = this->i,
+		lroom = this->s;
 	wr.writeline(format("ROOM: {}/{}", nroom,lroom));
 	wr.writeline(string(nroom, (char)178) + string(lroom-nroom, (char)176));
 }
@@ -66,10 +69,10 @@ Mode GameView::handle_keypress(Keypress e) {
 			this->player2->handle_movement(e);
 			break;
 		case Keypress::DISPOSE_1:
-			this->player1->dump_collectible(this->current_room());
+			this->player1->dump_collectible(this->current);
 			break;
 		case Keypress::DISPOSE_2:
-			this->player2->dump_collectible(this->current_room());
+			this->player2->dump_collectible(this->current);
 			break;
 		case Keypress::ESC:
 			return Mode::PAUSED;
