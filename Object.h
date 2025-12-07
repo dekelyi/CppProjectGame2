@@ -14,24 +14,27 @@ class MapObject {
 protected:
 	V pos;
 	V size;
+
 	char glyph;
 	std::string attr = "";
 
 public:
+	unsigned short speed = 1;
+
 	MapObject() : pos(V(-1,-1)), size(V(1, 1)), glyph(' ') {}
 	MapObject(V _size, char _glyph) : pos(V(-1, -1)), size(_size), glyph(_glyph) {}
 	MapObject(V _pos, V _size, char _glyph) : pos(_pos), size(_size), glyph(_glyph) {}
 
 	inline void setPosition(V _pos) { pos = _pos; }
-	inline V getPosition() const { return pos; }
+	virtual inline V getPosition() const { return pos; }
 	inline void setSize(V _size) { size = _size; }
-	inline V getSize() const { return size; }
+	virtual inline V getSize() const { return size; }
 	inline void setGlyph(char _glyph) { glyph = _glyph; }
 	inline char getGlyph() const { return glyph; }
 	virtual inline std::string getAttr() const { return attr; }
 
-	inline void draw() const { ConsoleView::drawAt(pos, size, glyph, ConsoleView::colors ? getAttr() : ""); }
-	inline void clear() const { ConsoleView::drawAt(pos, size, ' '); }
+	inline void draw() const { ConsoleView::drawAt(getPosition(), getSize(), glyph, ConsoleView::colors ? getAttr() : ""); }
+	inline void clear() const { ConsoleView::drawAt(getPosition(), size, ' '); }
 
 	inline void move(V offset) { pos = pos + offset; }
 	inline bool is_at(V pos) {

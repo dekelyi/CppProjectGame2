@@ -6,11 +6,11 @@
 class GameView {
 	GameRoom* head = nullptr;
 	GameRoom* last = nullptr;
-	GameRoom* current = nullptr;
 	size_t s = 0, i = 1;
 	int msg_count = -1;
 
 public:
+	GameRoom* current = nullptr;
 	Player* player1;
 	Player* player2;
 

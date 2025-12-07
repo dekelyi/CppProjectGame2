@@ -15,6 +15,10 @@ M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, V dir) {
 		}
 	}
 
+	if (!this->size.is_ortho_direction(dir)) {
+		return CANT_MOVE;
+	}
+
 	room->removeObject(obj);
 	obj->clear();
 

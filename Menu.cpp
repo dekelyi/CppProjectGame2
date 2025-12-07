@@ -15,15 +15,15 @@ Mode pause_menu() {
 
 Mode start_menu() {
 	Mode mode = Mode::MENU;
-	ConsoleView::menu();
+	ConsoleView::menu(); // draw
 	while (mode == Mode::MENU) {
 		Keypress e = ConsoleView::get_keypress();
 		if (e == Keypress::_1) mode = Mode::RUNNING;
-		if (e == Keypress::_7) {
+		if (e == Keypress::_7) { // disable/enable colors
 			ConsoleView::colors = !ConsoleView::colors;
 			ConsoleView::menu();
 		}
-		if (e == Keypress::_8) {
+		if (e == Keypress::_8) { // print manual
 			ConsoleView::manual();
 			ConsoleView::menu();
 		}
@@ -42,6 +42,8 @@ void _main(void (*init)(GameView*)) {
 			if (game) delete game;
 			game = new GameView();
 			init(game);
+			mode = game->run();
+			break;
 		case Mode::CONTINUE:
 			mode = game->run();
 			break;

@@ -7,6 +7,8 @@
 #define TICK 100
 #define MSG_TICKS 10
 
+#define N_MAX_PLAYERS 2
+
 enum class Mode {
 	EXIT = 0,
 	RUNNING,
@@ -47,4 +49,5 @@ enum class ObjType : char {
 	WALL = 'W',
 	OBSTCALE = '*',
 	KEY = 'K',
+	SPRING = '#'
 };

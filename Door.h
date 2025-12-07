@@ -16,12 +16,13 @@ class Room;
 
 class Door : public MapObject {
 public:
+	S size;
 	const DoorDest dest;
 	const unsigned short keys_required = 0;
 	unsigned short keys_collected = 0;
 
-	Door(V _pos, V _size, DoorDest _type, unsigned short keys=0)
-		: MapObject(_pos, _size, 'D'), dest(_type), keys_required(keys) {
+	Door(V _pos, S _size, DoorDest _type, unsigned short keys=0)
+		: MapObject(_pos, _size, 'D'), dest(_type), keys_required(keys), size(_size) {
 	}
 
 	inline bool isLocked() const {

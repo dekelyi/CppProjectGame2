@@ -137,6 +137,8 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="Spring.cpp" />
+    <ClCompile Include="Spring.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collectible.h" />

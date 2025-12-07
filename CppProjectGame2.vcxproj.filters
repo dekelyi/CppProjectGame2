@@ -54,6 +54,12 @@
     <ClCompile Include="Player.cpp">
       <Filter>Types</Filter>
     </ClCompile>
+    <ClCompile Include="Spring.h">
+      <Filter>Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Spring.cpp">
+      <Filter>Types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console.h">
