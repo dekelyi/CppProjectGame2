@@ -25,6 +25,9 @@ public:
 		inline V operator*(unsigned short n) const {
 			return V(getX() * n, getY() * n);
 		}
+		inline int operator*(const V& other) const {
+			return (getX() * other.getX()) + (getY() * other.getY());
+		}
 		inline bool operator==(const V& other) const {
 			return (getX() == other.getX()) && (getY() == other.getY());
 		}
@@ -32,8 +35,13 @@ public:
 			return !(*this == other);
 		}
 
+
 		inline bool is_out_of_bounds() {
 			return this->getX() < 0 || this->getY() < 0 || this->getX() >= SIZE_X || this->getY() >= SIZE_Y;
+		}
+
+		inline bool is_same_direction(const V& other) {
+			return (*this * other) != 0;
 		}
 };
 
@@ -52,11 +60,6 @@ public:
 	void setY(int _x) = delete;
 
 	void setLength(int _x) { length = _x; }
-
-	inline bool is_same_direction(V v) {
-		return (d == SH) ? v.getX() && !v.getY() :
-			(d == SV) ? v.getY() && !v.getX() : true;
-	}
 
 	inline bool is_ortho_direction(V v) {
 		return (d == SH) ? v.getY() && !v.getX() :

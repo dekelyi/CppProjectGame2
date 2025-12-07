@@ -3,7 +3,7 @@
 #include "Collectible.h"
 #include "Room.h"
 
-M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, V dir) {
+M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
 	// If door is locked, block passage
 	if (isLocked()) {
 		if (try_unlock(obj)) {
@@ -15,7 +15,7 @@ M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, V dir) {
 		}
 	}
 
-	if (!this->size.is_ortho_direction(dir)) {
+	if (!this->size.is_ortho_direction(move.dir)) {
 		return CANT_MOVE;
 	}
 
@@ -30,7 +30,7 @@ M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, V dir) {
 	obj->setPosition(other_door->getPosition());
 	room->last_moved_through = this;
 
-	obj->try_move(other_room, dir);
+	obj->try_move(other_room, move);
 	return MOVED;
 }
 

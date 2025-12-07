@@ -46,7 +46,7 @@ void Player::dump_collectible(GameRoom* room) {
 V Player::getDumpPosition(GameRoom* room) {
 	// FIXME: out of bounds
 	std::vector<V> arr = { V(0,-1), V(0,1), V(-1,0), V(1,0) };
-	arr.erase(std::remove(arr.begin(), arr.end(), this->direction), arr.end());
+	//arr.erase(std::remove(arr.begin(), arr.end(), this->direction), arr.end());
 	for (V v : arr) {
 		V p = this->getPosition() + v;
 		if (!p.is_out_of_bounds() && room->get_object_at(p) == nullptr)

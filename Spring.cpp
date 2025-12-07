@@ -1,21 +1,25 @@
 #include "Spring.h"
 
-M_CODE Spring::handle_collision(GameRoom* room, MapObject* other, V dir) {
+M_CODE Spring::handle_collision(GameRoom* room, MapObject* other, Move& move) {
 	Player* p = dynamic_cast<Player*>(other);
-	if (!size.is_same_direction(dir) || p == nullptr || (compression_dir != V(0,0) && compression_dir != dir)) return MapObject::handle_collision(room, other, dir);
+	if (!size.is_same_direction(move.dir) || p == nullptr || (compression_dir != V(0,0) && compression_dir != move.dir)) return MapObject::handle_collision(room, other, move);
 
-	if (compression_dir == V(0, 0)) compression_dir = dir;
+	if (compression_dir == V(0, 0)) compression_dir = move.dir;
 	this->clear();
 	add_force(p);
 	compressed++;
 
-	if (compressed == size.length - 1) {
-		p->speed = compressed;
-		compressed = 0;
+	if (compressed == size.length) {
+		Move new_move;
+		new_move.dir = V(-move.dir.getX(), -move.dir.getY());
+		new_move.speed = compressed;
+		new_move.duartion = compressed * compressed;
+		p->moves.remove(move);
+		p->moves.push_back(new_move);
+
+		compressed--; // FIXME - expanding
 		force[0] = force[1] = nullptr;
-		compression_dir = V(0, 0);
-		p->direction = V(-p->direction.getX(), -p->direction.getY());
-		p->try_move(room, p->direction);
+		//compression_dir = V(0, 0);
 		this->draw();
 		return MOVED;
 	}

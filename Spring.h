@@ -22,7 +22,7 @@ public:
 		return (compression_dir == V(1, 0) || compression_dir == V(0, 1)) ? (MapObject::getPosition() + compression_dir * compressed) : MapObject::getPosition();
 	}
 
-	virtual M_CODE handle_collision(GameRoom* room, MapObject* other, V dir) override;
+	virtual M_CODE handle_collision(GameRoom* room, MapObject* other, Move& move) override;
 	virtual inline std::string getAttr() const override {
 		return (compressed > 0) ? A_FOREGROUND_RED : A_FOREGROUND_GREEN;
 	}
