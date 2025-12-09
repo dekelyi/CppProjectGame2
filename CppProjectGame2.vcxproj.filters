@@ -89,5 +89,8 @@
     <ClInclude Include="Door.h">
       <Filter>Types</Filter>
     </ClInclude>
+    <ClInclude Include="Switch.h">
+      <Filter>Types</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

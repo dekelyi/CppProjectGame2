@@ -4,6 +4,7 @@
 #include "Collectible.h"
 #include "Door.h"
 #include "Spring.h"
+#include "Switch.h"
 
 void init_level1(GameView* game) {
 	GameRoom* room = game->add_room();
@@ -12,8 +13,13 @@ void init_level1(GameView* game) {
 	room->addObject(new Obstacle(V(5, 5), S1));
 	room->addObject(new Key(V(20,18), S1));
 	room->addObject(new Obstacle(V(20, 10), S1));
-	room->addObject(new Door(V(70, 18), S(2, S::SV), DoorDest::NEXT));
-	room->addObject(new Spring(V(50, 10), S(5, S::SH)));
+	room->addObject(new Spring(V(30, 19), S(5, S::SH)));
+
+	auto condition_switch = new Condition(Condition::SWITCH, 1);
+	auto door = new Door(V(70, 18), S(2, S::SV), DoorDest::NEXT);
+	room->addObject(new Switch(V(50, 10), SwitchDoor(door, condition_switch)));
+	door->conditions.push_back(condition_switch);
+	room->addObject(door);
 }
 
 void init_level2(GameView* game) {

@@ -2,8 +2,11 @@
 #include "Player.h"
 
 M_CODE Spring::handle_collision(GameRoom* room, MapObject* other, Move& move) {
-	if (!size.is_same_direction(move.dir) || compression_dir != move.dir || !dynamic_cast<Player*>(other))
-		return MapObject::handle_collision(room, other, move);
+	if (
+		!size.is_same_direction(move.dir) || // same axis 
+		(compression_dir != V(0,0) && compression_dir != move.dir) || // same direction
+		!dynamic_cast<Player*>(other) // a player
+		) return MapObject::handle_collision(room, other, move);
 
 	if (compression_dir == V(0, 0)) compression_dir = move.dir;
 	this->clear();

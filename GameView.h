@@ -63,6 +63,9 @@ public:
 	}
 
 	inline void drawAll() {
+		if (current->entry_point) current->entry_point->setGlyph('0' + i - 1);
+		if (current->exit_point) current->exit_point->setGlyph('0' + i + 1);
+
 		for (MapObject* obj : current->map_objects)
 			obj->draw();
 	}

@@ -41,8 +41,8 @@ bool Door::try_unlock(MapObject* obj) {
 		if (key) {
 			delete p->collectible;
 			p->collectible = nullptr;
-			keys_collected++;
-			if (keys_collected == keys_required) return true;
+			conditions.front()->collected++;
+			return !isLocked();
 		}
 	}
 	return false;

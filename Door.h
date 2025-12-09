@@ -12,26 +12,47 @@ enum class DoorDest {
 	PREV
 };
 
+struct Condition {
+	enum Kind { KEYS, SWITCH } kind;
+	int required;
+	int collected = 0;
+};
+
+inline std::string get_condition_str(Condition& c) {
+	switch (c.kind) {
+	case Condition::KEYS: return "keys";
+	case Condition::SWITCH: return "switches";
+	}
+}
+
 class Room;
 
 class Door : public MapObject {
 public:
 	S size;
 	const DoorDest dest;
-	const unsigned short keys_required = 0;
-	unsigned short keys_collected = 0;
+	std::list<Condition*> conditions = { new Condition(Condition::KEYS, 0) };
 
-	Door(V _pos, S _size, DoorDest _type, unsigned short keys=0)
-		: MapObject(_pos, _size, 'D'), dest(_type), keys_required(keys), size(_size) {
+	inline Door(V _pos, S _size, DoorDest _type, unsigned short keys=0)
+		: MapObject(_pos, _size, 'D'), dest(_type), size(_size) {
+		conditions.front()->required = keys;
+	}
+
+	inline ~Door() {
+		for (auto c : conditions) delete c;
 	}
 
 	inline bool isLocked() const {
-		return keys_required > 0 && keys_collected != keys_required;
+		for (auto c : conditions)
+			if (c->collected < c->required)
+				return true;
+		return false;
 	}
 
 	inline std::string getMsg() const {
-		if (keys_required > 0 && keys_collected != keys_required)
-			return std::format("You need {} more keys to open the door", keys_required - keys_collected);
+		for (auto c : conditions)
+			if (c->collected < c->required)
+				return std::format("You need {} more {} to open the door", c->required - c->collected, get_condition_str(*c));
 		return "";
 	}
 

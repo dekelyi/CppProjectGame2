@@ -49,5 +49,7 @@ enum class ObjType : char {
 	WALL = 'W',
 	OBSTCALE = '*',
 	KEY = 'K',
-	SPRING = '#'
+	SPRING = '#',
+	SWITCH_OFF = '\\',
+	SWITCH_ON = '/'
 };
