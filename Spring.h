@@ -2,14 +2,12 @@
 #include "prelude.h"
 #include "Vector.h"
 #include "Object.h"
-#include "Player.h"
-#include <array>
 
 class Spring : public MapObject {
 	S size;
 	unsigned short compressed = 0;
-	std::array<Player*, N_MAX_PLAYERS> force;
-	V compression_dir;
+	MapObject* force = nullptr;
+	V compression_dir = V(0,0);
 public:
 
 	Spring(V pos, S _size)
@@ -23,15 +21,17 @@ public:
 		return (compression_dir == V(1, 0) || compression_dir == V(0, 1)) ? (MapObject::getPosition() + compression_dir * compressed) : MapObject::getPosition();
 	}
 
-	inline size_t count_force() const {
-		size_t c = 0;
-		for (auto p : force)
-			if (p) c++;
-		return c;
+	inline Move&& create_new_move() {
+		return {
+			V(-compression_dir.getX(), -compression_dir.getY()), // pos
+			(unsigned short)(compressed * compressed), // duartion
+			compressed, // speed
+			Move::EVENT // kind
+		};
 	}
 
 	virtual inline void handle_tick(GameRoom* room) override {
-		if (count_force() == 0) {
+		if (!force) {
 			if (compressed > 0) {
 				this->clear();
 				compressed--;
@@ -40,6 +40,13 @@ public:
 			else if (compression_dir != V(0,0))
 				compression_dir = V(0, 0);
 		}
+		else if (!force->is_moving_to(compression_dir)) {
+			force->moves.remove_if([&](Move& m) { return m.dir.is_same_direction(compression_dir); });
+			Move move = create_new_move();
+			force->moves.push_back(move);
+			force->try_move(room, move);
+			force = nullptr;
+		}
 		MapObject::handle_tick(room);
 	}
 
@@ -47,11 +54,5 @@ public:
 	virtual M_CODE handle_collision(GameRoom* room, MapObject* other, Move& move) override;
 	virtual inline std::string getAttr() const override {
 		return (compressed > 0) ? A_FOREGROUND_RED : A_FOREGROUND_GREEN;
-	}
-
-	inline void add_force(Player* p) {
-		if (force[0] == nullptr) force[0] = p;
-		else if (force[0] == p) return;
-		else force[1] = p;
 	}
 };

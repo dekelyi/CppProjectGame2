@@ -61,7 +61,7 @@ namespace ConsoleView {
 	}
 
 	void drawAt(V pos, V size, const char glyph, const std::string atr, bool padding) {
-		if (size == V() || pos == V()) return;
+		if (size == V()) return;
 		if (padding) pos = pos + V(0, HUD_SPACE_TOP); // HUD padding
 		cout << atr << endl;
 		gotoxy(pos);

@@ -23,6 +23,8 @@ struct Move {
 
 class MapObject {
 protected:
+	friend class Spring;
+
 	V pos;
 	V size;
 	std::list<Move> moves;
@@ -54,6 +56,13 @@ public:
 			pos.getX() < getPosition().getX() + getSize().getX() &&
 			pos.getY() < getPosition().getY() + getSize().getY()
 		);
+	}
+
+	inline bool is_moving_to(const V& pos) const {
+		for (const Move& move : moves)
+			if ((move.dir * pos) > 0)
+				return true;
+		return false;
 	}
 
 	bool try_move(GameRoom* game, Move& dir);

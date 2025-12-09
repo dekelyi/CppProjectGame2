@@ -5,8 +5,6 @@
 
 
 class Player : public MapObject {
-	friend class Spring; 
-
 public:
 	Collectible* collectible = nullptr;
 
@@ -30,7 +28,7 @@ public:
 		for (auto& m: moves)
 			if (m.kind == Move::EVENT && m.dir.is_same_direction(dir)) return;
 		moves.remove_if([](const Move& m) { return m.kind == Move::KEYPRESS; });
-		moves.push_back({ dir , USHRT_MAX, 1, Move::KEYPRESS });
+		if (dir != V(0, 0))moves.push_back({ dir , USHRT_MAX, 1, Move::KEYPRESS });
 	}
 
 	virtual M_CODE handle_collision(GameRoom* room, MapObject* other, Move& move) override;
