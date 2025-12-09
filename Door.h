@@ -56,7 +56,7 @@ public:
 		return "";
 	}
 
-	virtual inline std::string getAttr() const override {
+	virtual inline const std::string& getAttr() const override {
 		return (isLocked()) ? A_FOREGROUND_RED : A_FOREGROUND_GREEN;
 	}
 

@@ -60,7 +60,7 @@ namespace ConsoleView {
 		showCursor(true);
 	}
 
-	void drawAt(V pos, V size, const char glyph, const std::string atr, bool padding) {
+	void drawAt(V pos, const V& size, const char glyph, const std::string& atr = "", const bool padding = true) {
 		if (size == V()) return;
 		if (padding) pos = pos + V(0, HUD_SPACE_TOP); // HUD padding
 		cout << atr << endl;

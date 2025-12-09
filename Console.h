@@ -27,7 +27,7 @@ public:
 namespace ConsoleView {
 	extern bool colors;
 
-	void drawAt(V pos, V size, char glyph, const std::string atr="", bool padding=true);
+	void drawAt(V pos, const V& size, const char glyph, const std::string& atr="", const bool padding=true);
 
 	void init();
 	void deinit();
