@@ -4,7 +4,7 @@
 
 Mode pause_menu() {
 	Mode mode = Mode::PAUSED;
-	ConsoleView::pause();
+	ConsoleView::pause(); // draw
 	while (mode == Mode::PAUSED) {
 		Keypress e = ConsoleView::get_keypress();
 		if (e == Keypress::ESC) mode = Mode::CONTINUE;
@@ -32,7 +32,9 @@ Mode start_menu() {
 	return mode;
 }
 
-
+/**
+* Display main menu runnig main game loop
+*/
 void _main(void (*init)(GameView*)) {
 	Mode mode = Mode::MENU;
 	GameView* game = nullptr;

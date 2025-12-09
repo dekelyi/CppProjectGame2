@@ -6,28 +6,32 @@
 
 class Door;
 
+/** A single game room */
 class GameRoom {
 	friend class GameView;
-
-	std::vector<MapObject*> map_objects;
+	std::vector<MapObject*> map_objects; // all objects currently in this room
 
 public:
+	// linked lsit
 	GameRoom* next;
 	GameRoom* prev;
+	// move-between-doors-stuff
 	Door* entry_point;
 	Door* exit_point;
 	Door* last_moved_through;
+
 	Player* player1;
 	Player* player2;
+
 	bool is_current = false;
 	std::string msg = "";
 
 	GameRoom(Player* _player1, Player* _player2) : player1(_player1), player2(_player2) {}
-	~GameRoom() {
+	inline ~GameRoom() {
 		for (auto o : map_objects) if (o != player1 && o != player2) delete o;
 	}
 
-	inline void addObject(MapObject* obj) {
+	inline void add_object(MapObject* obj) {
 		map_objects.push_back(obj);
 		Door* door = dynamic_cast<Door*>(obj);
 		if (door) {
@@ -38,11 +42,11 @@ public:
 		}
 	}
 
-	inline void removeObject(MapObject* obj) {
+	inline void remove_object(MapObject* obj) {
 		map_objects.erase(std::remove(map_objects.begin(), map_objects.end(), obj));
 	}
 
-	MapObject* get_object_at(V pos) {
+	inline MapObject* get_object_at(V pos) {
 		for (MapObject* obj : map_objects)
 			if (obj->is_at(pos))
 				return obj;
@@ -55,7 +59,7 @@ public:
 		return false;
 	}
 
-	int count_players() {
+	inline int count_players() {
 		int count_players = 0;
 		for (MapObject* obj : map_objects) {
 			Player* p = dynamic_cast<Player*>(obj);

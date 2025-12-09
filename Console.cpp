@@ -8,20 +8,23 @@
 #include "Console.h"
 #include "prelude.h"
 
-using std::cout, std::endl;
+using std::cout, std::endl, std::string, std::format;
 
-void console_sleep(int ms) {
-	Sleep(ms);
-}
-
+// --------- INTERNAL FUNCTIONS --------------------
+/**
+goto a position in the screen
+*/
 void gotoxy(V pos) {
-	std::cout.flush();
+	cout.flush();
 	COORD coord;
 	coord.X = pos.getX();
 	coord.Y = pos.getY();
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
+/**
+Show or hide curesor
+*/
 void showCursor(bool show) {
 	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO curInfo;
@@ -30,13 +33,26 @@ void showCursor(bool show) {
 	SetConsoleCursorInfo(hStdOut, &curInfo);
 }
 
+/**
+clear the screen
+*/
 void cls() {
 	system("cls");
 }
 
-void Writer::writeline(const std::string& line) {
+// --------- EXPORT FUNCTIONS -----------------
+
+/**
+Sleep for ms miliseconds
+*/
+void console_sleep(int ms) {
+	Sleep(ms);
+}
+
+// Writer
+void Writer::writeline(const string& line) {
 	gotoxy(pos);
-	std::cout << line;
+	cout << line;
 	pos.setY(pos.getY() + 1);
 }
 
@@ -60,14 +76,14 @@ namespace ConsoleView {
 		showCursor(true);
 	}
 
-	void drawAt(V pos, const V& size, const char glyph, const std::string& atr = "", const bool padding = true) {
+	void drawAt(V pos, const V& size, const char glyph, const string& atr = "", const bool padding = true) {
 		if (size == V()) return;
 		if (padding) pos = pos + V(0, HUD_SPACE_TOP); // HUD padding
 		cout << atr << endl;
 		gotoxy(pos);
 		for (int y = 0; y < size.getY(); y++) {
 			for (int x = 0; x < size.getX(); x++) {
-				std::cout << glyph;
+				cout << glyph;
 			}
 			gotoxy(pos + V(0, y + 1));
 		}
@@ -77,7 +93,7 @@ namespace ConsoleView {
 	void pause() {
 		cls();
 		gotoxy(V(10, 5));
-		std::cout << "Game paused, press ESC again to continue or H to go back to the main menu" << std::endl;
+		cout << "Game paused, press ESC again to continue or H to go back to the main menu" << endl;
 	}
 
 	void won_game() {
@@ -92,7 +108,7 @@ namespace ConsoleView {
 		Writer w = { V(10, 5) };
 		w.writeline("Welcome to the Game!");
 		w.writeline("(1) Start a new game");
-		w.writeline(std::format("(7) Colors: turn {}", colors ? "off" : "on"));
+		w.writeline(format("(7) Colors: turn {}", colors ? "off" : "on"));
 		w.writeline("(8) Instruction and manual");
 		w.writeline("(9) Exit");
 	}
@@ -105,6 +121,12 @@ namespace ConsoleView {
 		w.writeline("Player 2 controls: I (up), J (left), K (stay), L (right), M (down), O (dispose)");
 		w.writeline("Press any key to return to the main menu...");
 		_getch();
+	}
+
+	void draw_borders() {
+		ConsoleView::drawAt(V(0, HUD_SPACE_TOP - 1), V(SIZE_X, 1), ' ', A_UNDERSCORE, false);
+		ConsoleView::drawAt(V(0, SIZE_Y), V(SIZE_X, 1), '-');
+		ConsoleView::drawAt(V(SIZE_X, 0), V(1, SIZE_Y), '|');
 	}
 
 	Keypress get_keypress() {

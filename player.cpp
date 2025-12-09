@@ -34,7 +34,7 @@ M_CODE Player::handle_collision(GameRoom* room, MapObject* other, Move& move)
 void Player::dump_collectible(GameRoom* room) {
 	if (collectible == nullptr) return;
 	collectible->setPosition(this->getPosition() + this->getDumpPosition(room));
-	room->addObject(collectible);
+	room->add_object(collectible);
 	collectible->draw();
 	collectible = nullptr;
 }

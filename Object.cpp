@@ -2,6 +2,9 @@
 #include "GameView.h"
 #include "Vector.h"
 
+/**
+Checks if the object can move in a specific way, considering other objects in the way
+*/
 M_CODE MapObject::can_move(GameRoom* room, Move& move) {
 	V dest = pos + move.dir;
 	// check if in bounds
@@ -14,6 +17,9 @@ M_CODE MapObject::can_move(GameRoom* room, Move& move) {
 	else return CAN_MOVE;
 }
 
+/**
+Try to move in a specific way and draws the outcome
+*/
 bool MapObject::try_move(GameRoom* room, Move& m) {
 	if (m.dir == V(0, 0)) return false;
 	if (m.speed > 1) {
@@ -37,6 +43,9 @@ bool MapObject::try_move(GameRoom* room, Move& m) {
 	return false;
 }
 
+/**
+Move one iteration each tick
+*/
 void MapObject::handle_tick(GameRoom* room) {
 	std::vector<Move> remove;
 	for (Move& m : moves) {

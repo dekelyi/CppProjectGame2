@@ -1,6 +1,9 @@
 #pragma once
 #include "prelude.h"
 
+// Vector scace represting position and size
+
+// A vector in R^2 represting position/size
 class V {
 	int x;
 	int y;
@@ -45,9 +48,14 @@ public:
 		}
 };
 
+// Size vector
 class S : public V {
 public:
-	enum SD { SH, SV, SB } d;
+	enum SD {
+		SH, // horizontal
+		SV, // vertical
+		SB // block
+	} d;
 	int length;
 
 	S(int _l, SD _d) : length(_l), d(_d) {}

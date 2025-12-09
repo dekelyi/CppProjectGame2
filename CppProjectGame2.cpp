@@ -1,9 +1,8 @@
 #include "GameView.h"
 
-void _main(void (*fn)(GameView*)); // menu.cpp
+void _main(void (*fn)(GameView*)); // Runner.cpp
 void init_levels(GameView* game); // level1.cpp
 
-#include "Vector.h"
 int main()
 {
 	_main(init_levels);

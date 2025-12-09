@@ -1,8 +1,12 @@
+/**
+* Console view helpers and drawers
+*/
 #pragma once
 #include <string>
 #include "Vector.h"
 #include "prelude.h"
 
+/** --- CONSTANTS - ANSI CODES */
 #define ANSI_ESC "\033["
 #define A_FOREGROUND_RED ANSI_ESC "31m"
 #define A_FOREGROUND_GREEN ANSI_ESC "32m"
@@ -14,9 +18,14 @@
 #define A_BOLD ANSI_ESC "1m"
 #define A_RESET ANSI_ESC "0m"
 
-
+/**
+Sleep for ms miliseconds
+*/
 void console_sleep(int ms);
 
+/**
+* A Writer that starts with some padding and retains it
+*/
 class Writer {
 	V pos;
 public:
@@ -35,6 +44,7 @@ namespace ConsoleView {
 	void won_game();
 	void menu();
 	void manual();
+	void draw_borders();
 
 	Keypress get_keypress();
 };

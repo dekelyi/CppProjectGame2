@@ -14,7 +14,7 @@ M_CODE Spring::handle_collision(GameRoom* room, MapObject* other, Move& move) {
 
 	compressed++;
 	if (compressed == size.length) {
-		move = create_new_move();
+		move = create_compressed_move();
 		force = nullptr;
 		this->draw();
 		return CAN_MOVE;
@@ -22,4 +22,24 @@ M_CODE Spring::handle_collision(GameRoom* room, MapObject* other, Move& move) {
 
 	this->draw();
 	return CAN_MOVE;
+}
+
+void Spring::handle_tick(GameRoom* room) {
+	if (!force) {
+		if (compressed > 0) {
+			this->clear();
+			compressed--;
+			this->draw();
+		}
+		else if (compression_dir != V(0, 0))
+			compression_dir = V(0, 0);
+	}
+	else if (!force->is_moving_to(compression_dir)) {
+		force->moves.remove_if([&](Move& m) { return m.dir.is_same_direction(compression_dir); });
+		Move move = create_compressed_move();
+		force->moves.push_back(move);
+		force->try_move(room, move);
+		force = nullptr;
+	}
+	MapObject::handle_tick(room);
 }

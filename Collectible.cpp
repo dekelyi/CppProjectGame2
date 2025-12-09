@@ -7,7 +7,7 @@ M_CODE Collectible::handle_collision(GameRoom* room, MapObject* other, Move& mov
 	Player* p = dynamic_cast<Player*>(other);
 	if (p != nullptr && p->collectible == nullptr) {
 		p->collectible = this;
-		room->removeObject(this);
+		room->remove_object(this);
 		return CAN_MOVE;
 	}
 	return CANT_MOVE;

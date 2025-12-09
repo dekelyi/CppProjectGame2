@@ -31,7 +31,9 @@ class Door : public MapObject {
 public:
 	S size;
 	const DoorDest dest;
-	std::list<Condition*> conditions = { new Condition(Condition::KEYS, 0) };
+	std::list<Condition*> conditions = {
+		new Condition(Condition::KEYS, 0) // keys
+	};
 
 	inline Door(V _pos, S _size, DoorDest _type, unsigned short keys=0)
 		: MapObject(_pos, _size, 'D'), dest(_type), size(_size) {

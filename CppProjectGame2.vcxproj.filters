@@ -39,7 +39,7 @@
     <ClCompile Include="Object.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="Menu.cpp">
+    <ClCompile Include="Runner.cpp">
       <Filter>Views</Filter>
     </ClCompile>
     <ClCompile Include="GameView.cpp">
@@ -92,5 +92,9 @@
     <ClInclude Include="Switch.h">
       <Filter>Types</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="BONUS.txt" />
+    <Text Include="README.txt" />
   </ItemGroup>
 </Project>
