@@ -9,7 +9,7 @@ class Spring : public MapObject {
 	MapObject* force = nullptr;
 	V compression_dir = V(0,0);
 
-	inline Move&& create_compressed_move() {
+	inline Move create_compressed_move() {
 		return {
 			V(-compression_dir.getX(), -compression_dir.getY()), // pos
 			(unsigned short)(compressed * compressed), // duartion
@@ -30,7 +30,7 @@ public:
 		return (compression_dir == V(1, 0) || compression_dir == V(0, 1)) ? (MapObject::getPosition() + compression_dir * compressed) : MapObject::getPosition();
 	}
 
-	virtual inline const std::string& getAttr() const override {
+	virtual inline const std::string getAttr() const override {
 		return (compressed > 0) ? A_FOREGROUND_RED : A_FOREGROUND_GREEN;
 	}
 

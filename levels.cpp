@@ -30,9 +30,15 @@ void init_level2(GameView* game) {
 	room->add_object(new Door(V(70, 19), S1, DoorDest::NEXT, 2));
 }
 
+void init_level3(GameView* game) {
+	GameRoom* room = game->add_room();
+	room->add_object(new Door(V(70, 19), S1, DoorDest::NEXT));
+}
+
 void init_levels(GameView* game) {
 	init_level1(game);
 	init_level2(game);
+	init_level3(game);
 
 	game->player1->setPosition(V(40, 10));
 	game->player2->setPosition(V(42, 10));

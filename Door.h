@@ -22,6 +22,7 @@ inline std::string get_condition_str(Condition& c) {
 	switch (c.kind) {
 	case Condition::KEYS: return "keys";
 	case Condition::SWITCH: return "switches";
+	default: return "";
 	}
 }
 
@@ -58,7 +59,7 @@ public:
 		return "";
 	}
 
-	virtual inline const std::string& getAttr() const override {
+	virtual inline const std::string getAttr() const override {
 		return (isLocked()) ? A_FOREGROUND_RED : A_FOREGROUND_GREEN;
 	}
 

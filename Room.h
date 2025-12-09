@@ -13,15 +13,15 @@ class GameRoom {
 
 public:
 	// linked lsit
-	GameRoom* next;
-	GameRoom* prev;
+	GameRoom* next = nullptr;
+	GameRoom* prev = nullptr;
 	// move-between-doors-stuff
-	Door* entry_point;
-	Door* exit_point;
-	Door* last_moved_through;
+	Door* entry_point = nullptr;
+	Door* exit_point = nullptr;
+	Door* last_moved_through = nullptr;
 
-	Player* player1;
-	Player* player2;
+	Player* player1 = nullptr;
+	Player* player2 = nullptr;
 
 	bool is_current = false;
 	std::string msg = "";

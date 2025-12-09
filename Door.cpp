@@ -30,7 +30,7 @@ M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
 	Door* other_door = (dest == DoorDest::NEXT) ? other_room->entry_point : other_room->exit_point;
 
 	other_room->add_object(obj);
-	obj->setPosition(other_door->getPosition());
+	obj->setPosition(other_door ? other_door->getPosition() : V(0,0));
 	room->last_moved_through = this;
 
 	// move the object in the next room

@@ -44,7 +44,7 @@ public:
 	virtual inline V getSize() const { return size; }
 	inline void setGlyph(const char _glyph) { glyph = _glyph; }
 	inline char getGlyph() const { return glyph; }
-	virtual inline const std::string& getAttr() const { return attr; }
+	virtual inline const std::string getAttr() const { return attr; }
 	inline void move(const V& offset) { pos = pos + offset; }
 
 	// Drawing stuff
