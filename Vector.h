@@ -36,11 +36,11 @@ public:
 		}
 
 
-		inline bool is_out_of_bounds() {
+		inline bool is_out_of_bounds() const {
 			return this->getX() < 0 || this->getY() < 0 || this->getX() >= SIZE_X || this->getY() >= SIZE_Y;
 		}
 
-		inline bool is_same_direction(const V& other) {
+		inline bool is_same_direction(const V& other) const {
 			return (*this * other) != 0;
 		}
 };

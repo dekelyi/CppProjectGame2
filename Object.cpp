@@ -41,7 +41,7 @@ void MapObject::handle_tick(GameRoom* room) {
 	std::vector<Move> remove;
 	for (Move& m : moves) {
 		m.duartion--;
-		if (!this->try_move(room, m) || m.duartion == 0) {
+		if (m.duartion == 0 || !this->try_move(room, m) || m.duartion == 0) {
 			remove.push_back(m);
 		}
 	}
