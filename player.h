@@ -6,7 +6,6 @@
 
 class Player : public MapObject {
 	friend class Spring; 
-	Move* auto_movement = nullptr;
 
 public:
 	Collectible* collectible = nullptr;
@@ -27,13 +26,14 @@ public:
 	}
 
 	inline void handle_movement(Keypress e) {
-		if (auto_movement) {
-			moves.remove(*auto_movement);
-			auto_movement = nullptr;
-		}
-		moves.push_back({ this->get_moving_offset(e) , USHRT_MAX, 1 });
-		auto_movement = &moves.back();
+		V dir = this->get_moving_offset(e);
+		for (auto& m: moves)
+			if (m.kind == Move::EVENT && m.dir.is_same_direction(dir)) return;
+		moves.remove_if([](const Move& m) { return m.kind == Move::KEYPRESS; });
+		moves.push_back({ dir , USHRT_MAX, 1, Move::KEYPRESS });
 	}
+
+	virtual M_CODE handle_collision(GameRoom* room, MapObject* other, Move& move) override;
 
 	// Collectible stuff
 	inline char getCollectibleGlyph() const {

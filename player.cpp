@@ -2,6 +2,15 @@
 #include "Collectible.h"
 #include "Room.h"
 
+M_CODE Player::handle_collision(GameRoom* room, MapObject* other, Move& move)
+{
+	Player* p = dynamic_cast<Player*>(other);
+	if (p && move.kind == Move::EVENT) {
+		return try_move(room, move);
+	}
+	else return MapObject::handle_collision(room, other, move);
+}
+
 /**
  * @brief Drop the currently held collectible into the provided room.
  *

@@ -3,7 +3,7 @@
 #include "Vector.h"
 
 M_CODE MapObject::can_move(GameRoom* room, Move& move) {
-	V dest = pos + move.dir * move.speed;
+	V dest = pos + move.dir;
 	// check if in bounds
 	if (dest.is_out_of_bounds())
 		return CANT_MOVE;
@@ -16,18 +16,17 @@ M_CODE MapObject::can_move(GameRoom* room, Move& move) {
 
 bool MapObject::try_move(GameRoom* room, Move& m) {
 	if (m.dir == V(0, 0)) return false;
-	M_CODE c = can_move(room, m);
 	if (m.speed > 1) {
-		short req_speed = (c == CAN_MOVE) ? m.speed : -1;
-		for (int i = m.speed - 1; i >= 1; i--) {
-			m.speed = i;
-			c = can_move(room, m);
-			if (c != CAN_MOVE) req_speed = -1;
-			else if (req_speed == -1) req_speed = i;
+		bool r = true;
+		int speed = m.speed, i = 1;
+		m.speed = 1;
+		for (; r && i <= speed; i++) {
+			r = r && try_move(room, m);
 		}
-		if (req_speed == -1) return c;
-		else m.speed = req_speed;
+		m.speed = i - 1;
+		return (m.speed) ? true : false;
 	}
+	M_CODE c = can_move(room, m);
 	if (c == CAN_MOVE) {
 		if (room->is_current && room->is_object_at_room(this)) this->clear();
 		move(m.dir * m.speed);
@@ -42,7 +41,7 @@ void MapObject::handle_tick(GameRoom* room) {
 	std::vector<Move> remove;
 	for (Move& m : moves) {
 		m.duartion--;
-		if (m.duartion == 0 || !this->try_move(room, m)) {
+		if (!this->try_move(room, m) || m.duartion == 0) {
 			remove.push_back(m);
 		}
 	}

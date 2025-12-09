@@ -11,9 +11,9 @@ void init_level1(GameView* game) {
 	room->addObject(new MapObject(V(57, 8), S(10, S::SV), (char)ObjType::WALL));
 	room->addObject(new Obstacle(V(5, 5), S1));
 	room->addObject(new Key(V(20,18), S1));
-	room->addObject(new Obstacle(V(60, 19), S1));
+	room->addObject(new Obstacle(V(20, 10), S1));
 	room->addObject(new Door(V(70, 18), S(2, S::SV), DoorDest::NEXT));
-	room->addObject(new Spring(V(50, 10), S(7, S::SH)));
+	room->addObject(new Spring(V(50, 10), S(2, S::SH)));
 }
 
 void init_level2(GameView* game) {
@@ -28,8 +28,8 @@ void init_levels(GameView* game) {
 	init_level1(game);
 	init_level2(game);
 
-	game->player1->setPosition(V(10, 10));
-	game->player2->setPosition(V(15, 10));
+	game->player1->setPosition(V(45, 10));
+	game->player2->setPosition(V(49, 10));
 	game->current->addObject(game->player1);
 	game->current->addObject(game->player2);
 

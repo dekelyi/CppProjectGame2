@@ -16,6 +16,8 @@ struct Move {
 	unsigned short duartion = 1,
 		speed  = 1;
 
+	enum Kind {KEYPRESS, EVENT} kind;
+
 	bool operator==(const Move& m) const = default;
 };
 

@@ -10,16 +10,17 @@ M_CODE Spring::handle_collision(GameRoom* room, MapObject* other, Move& move) {
 	compressed++;
 
 	if (compressed == size.length) {
-		Move new_move;
-		new_move.dir = V(-move.dir.getX(), -move.dir.getY());
-		new_move.speed = compressed;
-		new_move.duartion = compressed * compressed;
-		p->moves.remove(move);
+		Move new_move = {
+			V(-move.dir.getX(), -move.dir.getY()), // pos
+			compressed * compressed, // duartion
+			compressed * count_force(), // speed
+			Move::EVENT // kind
+		};
+		move.duartion = 0;
 		p->moves.push_back(new_move);
 
-		compressed--; // FIXME - expanding
+		compressed--;
 		force[0] = force[1] = nullptr;
-		//compression_dir = V(0, 0);
 		this->draw();
 		return MOVED;
 	}
