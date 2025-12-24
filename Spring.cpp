@@ -1,5 +1,6 @@
 #include "Spring.h"
 #include "Player.h"
+#include "Room.h"
 
 M_CODE Spring::handle_collision(GameRoom* room, MapObject* other, Move& move) {
 	if (
@@ -9,27 +10,27 @@ M_CODE Spring::handle_collision(GameRoom* room, MapObject* other, Move& move) {
 		) return MapObject::handle_collision(room, other, move);
 
 	if (compression_dir == V(0, 0)) compression_dir = move.dir;
-	this->clear();
+	room->clear(*this);
 	force = other;
 
 	compressed++;
 	if (compressed == size.length) {
 		move = create_compressed_move();
 		force = nullptr;
-		this->draw();
+		room->draw(*this);
 		return CAN_MOVE;
 	}
 
-	this->draw();
+	room->draw(*this);
 	return CAN_MOVE;
 }
 
 void Spring::handle_tick(GameRoom* room) {
 	if (!force) {
 		if (compressed > 0) {
-			this->clear();
+			room->clear(*this);
 			compressed--;
-			this->draw();
+			room->draw(*this);
 		}
 		else if (compression_dir != V(0, 0))
 			compression_dir = V(0, 0);

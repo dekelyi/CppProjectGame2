@@ -1,7 +1,6 @@
 #pragma once
+#include <algorithm>
 #include "prelude.h"
-
-// Vector scace represting position and size
 
 // A vector in R^2 represting position/size
 class V {
@@ -37,14 +36,16 @@ public:
 		inline bool operator!=(const V& other) const {
 			return !(*this == other);
 		}
-
-
-		inline bool is_out_of_bounds() const {
-			return this->getX() < 0 || this->getY() < 0 || this->getX() >= SIZE_X || this->getY() >= SIZE_Y;
+		inline bool operator<(const V& other) const {
+			return (getX() < other.getX()) && (getY() < other.getY());
 		}
 
 		inline bool is_same_direction(const V& other) const {
 			return (*this * other) != 0;
+		}
+
+		inline bool is_out_of_bounds() const {
+			return this->getX() < 0 || this->getY() < 0 || this->getX() >= SIZE_X || this->getY() >= SIZE_Y;
 		}
 };
 
@@ -76,3 +77,23 @@ public:
 };
 
 inline S S1 = S(1, S::SB);
+
+struct VS {
+	V pos;
+	V size;
+
+	bool operator==(const VS& other) const {
+		return pos == other.pos && size == other.size;
+	}
+};
+
+inline VS is_in_bounds_dim(const V& o, const V& pos, const V& size, unsigned short area) {
+	V s = pos - V(area, area);
+	V e = pos + V(area, area);
+	V te = o + size;
+	V is = V(std::max(o.getX(), s.getX()), std::max(o.getY(), s.getY()));
+	V ie = V(std::min(te.getX(), e.getX()), std::min(te.getY(), e.getY()));
+	V diff = ie - is;
+	V si = V(std::max(0, diff.getX()), std::max(0, diff.getY()));
+	return { is,si };
+}

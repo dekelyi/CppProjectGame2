@@ -51,13 +51,13 @@ public:
 	/**
 	Draw all objects
 	*/
-	inline void drawAll() {
+	inline void drawAll(bool clear = false) {
 		// set current doors glyphs
 		if (current->entry_point) current->entry_point->setGlyph('0' + i - 1);
 		if (current->exit_point) current->exit_point->setGlyph('0' + i + 1);
 
 		for (MapObject* obj : current->map_objects)
-			obj->draw();
+			clear ? current->clear(*obj) : current->draw(*obj);
 	}
 	/**
 	Add a room to the game

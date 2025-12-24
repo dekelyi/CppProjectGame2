@@ -8,16 +8,18 @@
 
 void init_level1(GameView* game) {
 	GameRoom* room = game->add_room();
+	room->is_dark = true;
 	room->add_object(new MapObject(V(20, 19), S(10, S::SH), (char)ObjType::WALL));
 	room->add_object(new MapObject(V(57, 8), S(10, S::SV), (char)ObjType::WALL));
 	room->add_object(new Obstacle(V(5, 5), S1));
 	room->add_object(new Key(V(20,18), S1));
 	room->add_object(new Obstacle(V(20, 10), S1));
 	room->add_object(new Spring(V(30, 19), S(5, S::SH)));
+	room->add_object(new Torch(V(38, 10), 3));
 
 	auto condition_switch = new Condition(Condition::SWITCH, 1);
 	auto door = new Door(V(70, 18), S(2, S::SV), DoorDest::NEXT);
-	room->add_object(new Switch(V(50, 10), SwitchDoor(door, condition_switch)));
+	room->add_object(new Switch(V(50, 10), SwitchDoor(room, door, condition_switch)));
 	door->conditions.push_back(condition_switch);
 	room->add_object(door);
 }

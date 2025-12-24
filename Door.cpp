@@ -7,7 +7,7 @@ M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
 	// If door is locked, block passage
 	if (isLocked()) {
 		if (try_unlock(obj)) {
-			this->draw();
+			room->draw(*this);
 		}
 		else {
 			room->msg = getMsg();
@@ -22,7 +22,7 @@ M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
 
 	// redraw
 	room->remove_object(obj);
-	obj->clear();
+	room->clear(*obj);
 
 	// move object to next/prev room
 	GameRoom* other_room = (dest == DoorDest::NEXT) ? room->next : room->prev;

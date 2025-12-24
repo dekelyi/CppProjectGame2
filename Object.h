@@ -21,6 +21,13 @@ struct Move {
 	bool operator==(const Move& m) const = default;
 };
 
+struct Draw {
+	V pos;
+	V size;
+	char glyph;
+	std::string attr = "";
+};
+
 class MapObject {
 protected:
 	friend class Spring;
@@ -46,10 +53,6 @@ public:
 	inline char getGlyph() const { return glyph; }
 	virtual inline const std::string getAttr() const { return attr; }
 	inline void move(const V& offset) { pos = pos + offset; }
-
-	// Drawing stuff
-	inline void draw() const { ConsoleView::drawAt(getPosition(), getSize(), glyph, ConsoleView::colors ? getAttr() : ""); }
-	inline void clear() const { ConsoleView::drawAt(getPosition(), getSize(), ' '); }
 
 	// is at a specific position
 	inline bool is_at(const V& pos) {

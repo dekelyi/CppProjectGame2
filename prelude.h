@@ -68,5 +68,6 @@ enum class ObjType : char {
 	KEY = 'K',
 	SPRING = '#',
 	SWITCH_OFF = '\\',
-	SWITCH_ON = '/'
+	SWITCH_ON = '/',
+	TORCH = '!',
 };
