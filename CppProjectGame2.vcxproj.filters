@@ -22,6 +22,9 @@
     <Filter Include="Types">
       <UniqueIdentifier>{dfb37f2a-6fa1-441e-b780-aa5a76119429}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Props">
+      <UniqueIdentifier>{173e07a3-a0c6-452f-aa8b-4b7d0b26052a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CppProjectGame2.cpp">
@@ -59,6 +62,9 @@
     </ClCompile>
     <ClCompile Include="Spring.cpp">
       <Filter>Types</Filter>
+    </ClCompile>
+    <ClCompile Include="DoorProp.h">
+      <Filter>Props</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -130,6 +130,7 @@
     <ClCompile Include="Collectible.cpp" />
     <ClCompile Include="CppProjectGame2.cpp" />
     <ClCompile Include="Door.cpp" />
+    <ClCompile Include="DoorProp.h" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="prelude.h" />
     <ClCompile Include="levels.cpp" />

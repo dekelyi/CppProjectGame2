@@ -2,13 +2,13 @@
 #include <vector>
 #include "Object.h"
 #include "player.h"
-#include "Door.h"
 #include "Collectible.h"
+#include "DoorProp.h"
 
-class Door;
+class GameView;
 
 /** A single game room */
-class GameRoom {
+class GameRoom : public DoorProp {
 	friend class GameView;
 	friend class Torch;
 	std::vector<MapObject*> map_objects; // all objects currently in this room
@@ -17,10 +17,6 @@ public:
 	// linked lsit
 	GameRoom* next = nullptr;
 	GameRoom* prev = nullptr;
-	// move-between-doors-stuff
-	Door* entry_point = nullptr;
-	Door* exit_point = nullptr;
-	Door* last_moved_through = nullptr;
 
 	Player* player1 = nullptr;
 	Player* player2 = nullptr;
@@ -34,16 +30,15 @@ public:
 		for (auto o : map_objects) if (o != player1 && o != player2) delete o;
 	}
 
+	inline void init(unsigned int i) {
+		DoorProp::init(i);
+	}
+
 	inline void add_object(MapObject* obj) {
 		map_objects.push_back(obj);
-		Door* door = dynamic_cast<Door*>(obj);
-		if (door) {
-			if (door->dest == DoorDest::NEXT)
-				this->exit_point = door;
-			else
-				this->entry_point = door;
-		}
+		DoorProp::add_object(obj);
 	}
+
 
 	inline void remove_object(MapObject* obj) {
 		map_objects.erase(std::remove(map_objects.begin(), map_objects.end(), obj));

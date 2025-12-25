@@ -40,6 +40,15 @@ public:
 		delete player2;
 	}
 
+	inline void init_rooms() {
+		unsigned int idx = 1;
+		GameRoom* node = head;
+		while (node) {
+			node->init(idx++);
+			node = node->next;
+		}
+	}
+
 	/**
 	Do one tick of the game
 	*/
@@ -52,10 +61,6 @@ public:
 	Draw all objects
 	*/
 	inline void drawAll(bool clear = false) {
-		// set current doors glyphs
-		if (current->entry_point) current->entry_point->setGlyph('0' + i - 1);
-		if (current->exit_point) current->exit_point->setGlyph('0' + i + 1);
-
 		for (MapObject* obj : current->map_objects)
 			clear ? current->clear(*obj) : current->draw(*obj);
 	}

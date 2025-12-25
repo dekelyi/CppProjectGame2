@@ -46,5 +46,5 @@ void init_levels(GameView* game) {
 	game->player2->setPosition(V(42, 10));
 	game->current->add_object(game->player1);
 	game->current->add_object(game->player2);
-
+	game->init_rooms();
 }

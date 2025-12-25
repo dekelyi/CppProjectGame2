@@ -52,7 +52,7 @@ public:
 	inline void setGlyph(const char _glyph) { glyph = _glyph; }
 	inline char getGlyph() const { return glyph; }
 	virtual inline const std::string getAttr() const { return attr; }
-	inline void move(const V& offset) { pos = pos + offset; }
+	virtual inline void move(const V& offset) { pos = pos + offset; }
 
 	// is at a specific position
 	inline bool is_at(const V& pos) {

@@ -23,6 +23,11 @@ public:
 		}
 	}
 
+	virtual inline void move(const V& offset) override {
+		MapObject::move(offset);
+		if (collectible) collectible->move(offset);
+	}
+
 	inline void handle_movement(Keypress e) {
 		V dir = this->get_moving_offset(e);
 		for (auto& m: moves)
@@ -31,17 +36,11 @@ public:
 		if (dir != V(0, 0))moves.push_back({ dir , USHRT_MAX, 1, Move::KEYPRESS });
 	}
 
-	inline virtual void handle_tick(GameRoom* room) override {
-		// Move collectible with player
-		V old_pos = this->getPosition();
-		MapObject::handle_tick(room);
-		if (collectible) {
-			collectible->setPosition(this->getPosition());
-			collectible->handle_collector_movement(room, old_pos, this->getPosition());
-		}
-	}
-
 	virtual M_CODE handle_collision(GameRoom* room, MapObject* other, Move& move) override;
+	virtual inline void handle_tick(GameRoom* room) override {
+		MapObject::handle_tick(room);
+		if (collectible) collectible->handle_tick(room);
+	}
 
 	// Collectible stuff
 	inline char getCollectibleGlyph() const {
