@@ -1,42 +1,36 @@
 #pragma once
 #include <vector>
 #include "Object.h"
-#include "player.h"
-#include "Collectible.h"
+#include "PlayersProp.h"
 #include "DoorProp.h"
+#include "TorchProp.h"
 
 class GameView;
 
 /** A single game room */
-class GameRoom : public DoorProp {
+class GameRoom {
 	friend class GameView;
 	friend class Torch;
-	std::vector<MapObject*> map_objects; // all objects currently in this room
-
 public:
-	// linked lsit
+	std::vector<MapObject*> map_objects; // all objects currently in this room
+	// linked list
 	GameRoom* next = nullptr;
 	GameRoom* prev = nullptr;
 
-	Player* player1 = nullptr;
-	Player* player2 = nullptr;
+	DoorProp p_doors = { *this };
+	PlayersProp p_players = { *this };
+	TorchProp p_torch = { *this };
 
-	bool is_dark = false;
 	bool is_current = false;
 	std::string msg = "";
 
-	GameRoom(Player* _player1, Player* _player2) : player1(_player1), player2(_player2) {}
-	inline ~GameRoom() {
-		for (auto o : map_objects) if (o != player1 && o != player2) delete o;
-	}
-
 	inline void init(unsigned int i) {
-		DoorProp::init(i);
+		p_doors.init(i);
 	}
 
 	inline void add_object(MapObject* obj) {
 		map_objects.push_back(obj);
-		DoorProp::add_object(obj);
+		p_doors.add_object(obj);
 	}
 
 
@@ -44,9 +38,31 @@ public:
 		map_objects.erase(std::remove(map_objects.begin(), map_objects.end(), obj));
 	}
 
+	template <typename T = MapObject> inline std::vector<T*> get_objects() const {
+		std::vector<T*> objs;
+		std::vector<MapObject*> map_objects = this->map_objects,
+			collectibles = p_players.get_objects();
+		map_objects.insert(map_objects.end(), collectibles.begin(), collectibles.end());
+		
+		for (MapObject* obj : map_objects) {
+			T* casted = dynamic_cast<T*>(obj);
+			if (casted != nullptr)
+				objs.push_back(casted);
+		}
+		return objs;
+	}
+
 	// Drawing stuff
+	inline VS get_drawing_dimensions(const MapObject* obj) const {
+		VS r = { V(0,0), V(0,0) };
+		if (std::find(map_objects.begin(), map_objects.end(), obj) == map_objects.end())
+			return r;
+		r = { obj->getPosition(), obj->getSize() };
+		return p_torch.get_drawing_dimensions(r);
+
+	}
 	inline void draw(const MapObject& obj, VS* dims = nullptr) const {
-		if (dims == nullptr) dims = new VS(should_draw_object(&obj));
+		if (dims == nullptr) dims = new VS(get_drawing_dimensions(&obj));
 		if (this->is_current && dims->size.getX() != 0 && dims->size.getY() != 0)
 			ConsoleView::drawAt(dims->pos, dims->size, obj.getGlyph(), ConsoleView::colors ? obj.getAttr() : "");
 	}
@@ -60,51 +76,5 @@ public:
 			if (obj->is_at(pos))
 				return obj;
 		return nullptr;
-	}
-
-	std::vector<Torch*> get_torches() const {
-		std::vector<Torch*> torches;
-		for (MapObject* obj : map_objects) {
-			Torch* t = dynamic_cast<Torch*>(obj);
-			if (t != nullptr)
-				torches.push_back(t);
-		}
-		for (Player* p : { player1, player2 }) {
-			Torch* t = dynamic_cast<Torch*>(p->collectible);
-			if (t != nullptr) {
-				t->setPosition(p->getPosition());
-				torches.push_back(t);
-			}
-		}
-		return torches;
-	}
-
-	inline VS should_draw_object(const MapObject* val) const {
-		VS r = { V(0,0), V(0,0) };
-		std::vector<Torch*> torches = get_torches();
-		for (MapObject* obj : map_objects)
-			if (obj == val) {
-				if (!is_dark) r = { obj->getPosition(), obj->getSize() };
-				else {
-					for (Torch* t : torches) {
-						VS vs = is_in_bounds_dim(val->getPosition(), t->getPosition(), t->getSize(), t->area);
-						if (vs.size.getX() != 0 && vs.size.getY() != 0) {
-							r = vs;
-							break;
-						}
-					}
-				}
-				break;
-			}
-		return r;
-	}
-
-	inline int count_players() {
-		int count_players = 0;
-		for (MapObject* obj : map_objects) {
-			Player* p = dynamic_cast<Player*>(obj);
-			if (p != nullptr) count_players++;
-		}
-		return count_players;
 	}
 };

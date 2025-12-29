@@ -1,10 +1,9 @@
 #pragma once
+#include "BaseProp.h"
 #include "Door.h"
 
-class DoorProp {
-	friend class Door;
-
-protected:
+class DoorProp : public BaseProp {
+public:
 	Door* entry_point = nullptr;
 	Door* exit_point = nullptr;
 	Door* last_moved_through = nullptr;

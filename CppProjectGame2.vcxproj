@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -131,7 +131,10 @@
     <ClCompile Include="CppProjectGame2.cpp" />
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="DoorProp.h" />
+    <ClCompile Include="LevelParser.cpp" />
+    <ClCompile Include="ObjectTypes.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayersProp.cpp" />
     <ClCompile Include="prelude.h" />
     <ClCompile Include="levels.cpp" />
     <ClCompile Include="GameView.cpp" />
@@ -140,15 +143,20 @@
     <ClCompile Include="Runner.cpp" />
     <ClCompile Include="Spring.cpp" />
     <ClCompile Include="Spring.h" />
+    <ClCompile Include="TorchProp.cpp" />
+    <ClCompile Include="TorchProp.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseProp.h" />
     <ClInclude Include="Collectible.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="GameView.h" />
+    <ClInclude Include="LevelParser.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Console.h" />
+    <ClInclude Include="PlayersProp.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="Switch.h" />
     <ClInclude Include="Vector.h" />
@@ -156,6 +164,9 @@
   <ItemGroup>
     <Text Include="BONUS.txt" />
     <Text Include="README.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="adv-world_01.screen" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

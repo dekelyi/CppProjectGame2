@@ -125,9 +125,9 @@ namespace ConsoleView {
 	}
 
 	void draw_borders() {
-		ConsoleView::drawAt(V(0, HUD_SPACE_TOP - 1), V(SIZE_X, 1), ' ', A_UNDERSCORE, false);
+	/*	ConsoleView::drawAt(V(0, HUD_SPACE_TOP - 1), V(SIZE_X, 1), ' ', A_UNDERSCORE, false);
 		ConsoleView::drawAt(V(0, SIZE_Y), V(SIZE_X, 1), '-');
-		ConsoleView::drawAt(V(SIZE_X, 0), V(1, SIZE_Y), '|');
+		ConsoleView::drawAt(V(SIZE_X, 0), V(1, SIZE_Y), '|');*/
 	}
 
 	Keypress get_keypress() {

@@ -2,11 +2,12 @@
 #include "prelude.h"
 #include "Object.h"
 #include "Door.h"
+#include "Room.h"
 #include <functional>
 
 typedef std::function<void(bool)> CallbackFn;
 
-CallbackFn SwitchDoor(GameRoom* room, Door* door, Condition* condition_switch) {
+inline CallbackFn SwitchDoor(GameRoom* room, Door* door, Condition* condition_switch) {
 	return [=](bool switched) {
 		bool last_state = door->isLocked();
 		condition_switch->collected = (int)switched;
@@ -27,7 +28,10 @@ class Switch : public MapObject {
 
 	std::list<Switcher> switchers;
 public:
-	Switch(V _pos, CallbackFn cb = nullptr) : MapObject(_pos, S1, (char)ObjType::SWITCH_OFF), callback(cb) { attr = A_FOREGROUND_YELLOW; }
+	Switch(V _pos) : MapObject(_pos, S1, (char)ObjType::SWITCH_OFF) { attr = A_FOREGROUND_YELLOW; }
+	Switch(V _pos, CallbackFn cb) : Switch(_pos) {
+		callback = cb;
+	}
 
 	inline void setSwitch(GameRoom* room, bool val) {
 		if (val == switched) return;
@@ -52,5 +56,3 @@ public:
 		MapObject::handle_tick(room);
 	}
 };
-
-#pragma once

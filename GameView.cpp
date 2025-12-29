@@ -12,7 +12,7 @@ using namespace std;
 Add a room to the game
 */
 GameRoom* GameView::add_room() {
-	auto room = new GameRoom(player1, player2);
+	auto room = new GameRoom();
 	if (last) {
 		room->prev = last;
 		room->prev->next = room;
@@ -53,17 +53,17 @@ Checks if no players are in the current room
 if so, move to the room where the last player is at
 */
 Mode GameView::check_room() {
-	if (current->count_players() == 0) {
+	if (current->p_players.count_players() == 0) {
 		GameRoom* room = this->head;
 		// check if we won thr game
 		int count_rooms_with_players = 0;
 		while (room) {
-			if (room->count_players() > 0) count_rooms_with_players++;
+			if (room->p_players.count_players() > 0) count_rooms_with_players++;
 			room = room->next;
 		};
 		if (count_rooms_with_players == 0) return Mode::WINNING;
 		// else, move to the rooms
-		if (current->last_moved_through->dest == DoorDest::PREV)
+		if (current->p_doors.last_moved_through->dest == DoorDest::PREV)
 			goback_room();
 		else advance_room();
 		// redraw room

@@ -47,6 +47,8 @@ public:
 			node->init(idx++);
 			node = node->next;
 		}
+		current->add_object(player1);
+		current->add_object(player2);
 	}
 
 	/**

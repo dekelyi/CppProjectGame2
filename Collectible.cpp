@@ -15,7 +15,7 @@ M_CODE Collectible::handle_collision(GameRoom* room, MapObject* other, Move& mov
 
 void Torch::handle_tick(GameRoom* room) {
 	Collectible::handle_tick(room);
-	if (!room->is_dark) return;
+	if (!room->p_torch.is_dark) return;
 
 	struct TMP {
 		MapObject* obj;

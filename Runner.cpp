@@ -1,6 +1,7 @@
 #include "GameView.h"
 #include "Console.h"
 #include "prelude.h"
+#include <functional>
 
 Mode pause_menu() {
 	Mode mode = Mode::PAUSED;
@@ -35,7 +36,7 @@ Mode start_menu() {
 /**
 * Display main menu runnig main game loop
 */
-void _main(void (*init)(GameView*)) {
+void _main(std::function<void(GameView*)> init) {
 	Mode mode = Mode::MENU;
 	GameView* game = nullptr;
 	while ((bool)mode) {
