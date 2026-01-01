@@ -8,10 +8,8 @@ using std::string, std::vector;
 struct RiddleData {
 	string question;
 	vector<string> answers;
-	size_t correct_answer_index;
+	size_t correct_answer_index = 0;
 };
-
-class RiddleMsg;
 
 class Riddle : public MapObject {
 public:

@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Views">
-      <UniqueIdentifier>{44be4971-1a88-40db-8edb-ad9226695fe0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Base">
       <UniqueIdentifier>{2c5030ba-b191-4bf2-bb49-cb7d5a1199fb}</UniqueIdentifier>
     </Filter>
@@ -25,28 +22,25 @@
     <Filter Include="Props">
       <UniqueIdentifier>{173e07a3-a0c6-452f-aa8b-4b7d0b26052a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{44be4971-1a88-40db-8edb-ad9226695fe0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CppProjectGame2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Console.cpp">
-      <Filter>Views</Filter>
-    </ClCompile>
-    <ClCompile Include="levels.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
-    <ClCompile Include="prelude.h">
-      <Filter>Views</Filter>
+      <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="Runner.cpp">
-      <Filter>Views</Filter>
+      <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="GameView.cpp">
-      <Filter>Views</Filter>
+      <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Collectible.cpp">
       <Filter>Types</Filter>
@@ -75,19 +69,22 @@
     <ClCompile Include="TorchProp.cpp">
       <Filter>Props</Filter>
     </ClCompile>
-    <ClCompile Include="LevelParser.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="Riddle.cpp">
       <Filter>Types</Filter>
     </ClCompile>
     <ClCompile Include="Msg.cpp">
       <Filter>Base</Filter>
     </ClCompile>
+    <ClCompile Include="LevelParser.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="prelude.h">
+      <Filter>Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console.h">
-      <Filter>Views</Filter>
+      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Base</Filter>
@@ -102,7 +99,7 @@
       <Filter>Types</Filter>
     </ClInclude>
     <ClInclude Include="GameView.h">
-      <Filter>Views</Filter>
+      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Room.h">
       <Filter>Base</Filter>
@@ -122,17 +119,14 @@
     <ClInclude Include="BaseProp.h">
       <Filter>Props</Filter>
     </ClInclude>
-    <ClInclude Include="LevelParser.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
     <ClInclude Include="Riddle.h">
       <Filter>Types</Filter>
     </ClInclude>
-    <ClInclude Include="RiddleParser.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
     <ClInclude Include="Msg.h">
       <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelParser.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +141,9 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="adv-world_template.screen">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="adv-world_02.screen">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

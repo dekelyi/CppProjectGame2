@@ -136,7 +136,6 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayersProp.cpp" />
     <ClCompile Include="prelude.h" />
-    <ClCompile Include="levels.cpp" />
     <ClCompile Include="GameView.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Console.cpp" />
@@ -160,7 +159,6 @@
     <ClInclude Include="Console.h" />
     <ClInclude Include="PlayersProp.h" />
     <ClInclude Include="Riddle.h" />
-    <ClInclude Include="RiddleParser.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="Switch.h" />
     <ClInclude Include="Vector.h" />
@@ -172,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="adv-world_01.screen" />
+    <None Include="adv-world_02.screen" />
     <None Include="adv-world_template.screen" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

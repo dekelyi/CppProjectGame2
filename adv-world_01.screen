@@ -13,16 +13,14 @@ W                                                                              W
 W                                                                              W
 W                                                                              W
 W                                                                              W
-W                                                                             *W
+W                                                                          *   W
 W                                                                             KW
 W                                                                              W
 W                                                                              W
 W                                                                              W
 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
 
-:is_dark true
+:is_dark false
 
-::D(N)
-:condition-keys 1
 ::1
 :do-open-door N

@@ -2,6 +2,7 @@
 #include "Console.h"
 #include "prelude.h"
 #include <functional>
+#include <iostream>
 
 Mode pause_menu() {
 	Mode mode = Mode::PAUSED;
@@ -44,7 +45,14 @@ void _main(std::function<void(GameView*)> init) {
 		case Mode::RUNNING:
 			if (game) delete game;
 			game = new GameView();
-			init(game);
+			try {
+				init(game);
+			}
+			catch (const std::runtime_error& e) {
+				ConsoleView::deinit();
+				std::cout << e.what();
+				return;
+			}
 			mode = game->run();
 			break;
 		case Mode::CONTINUE:
