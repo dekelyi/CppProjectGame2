@@ -59,8 +59,9 @@ void MapObject::handle_tick(GameRoom* room) {
 
 M_CODE MapObject::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
 	bool can_move = false;
-	for (auto& m : moves) 
+	for (auto& m : moves)
 		if (m.dir.is_same_direction(move.dir))
-			can_move = can_move || try_move(room, m);
+			//can_move = can_move || try_move(room, m);
+			can_move = true;
 	return can_move ? CAN_MOVE : CANT_MOVE;
 }
