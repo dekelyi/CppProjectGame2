@@ -24,6 +24,8 @@ Sleep for ms miliseconds
 */
 void console_sleep(int ms);
 
+void showCursor(bool show);
+
 /**
 * A Writer that starts with some padding and retains it
 */

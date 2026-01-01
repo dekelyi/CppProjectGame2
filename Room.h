@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Object.h"
+#include "Msg.h"
 #include "PlayersProp.h"
 #include "DoorProp.h"
 #include "TorchProp.h"
@@ -22,7 +23,7 @@ public:
 	TorchProp p_torch = { *this };
 
 	bool is_current = false;
-	std::string msg = "";
+	Msg* msg = new Msg();
 
 	inline void init(unsigned int i) {
 		p_doors.init(i);

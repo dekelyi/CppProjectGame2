@@ -6,6 +6,7 @@
 #include "prelude.h"
 #include "Vector.h"
 #include "GameView.h"
+#include "RiddleParser.h"
 
 using namespace std;
 
@@ -16,6 +17,8 @@ struct Parameterized {
 	size_t size() const { return length + (params.size() > 0 ? 2+params[0].size() : 0); }
 };
 
+
+class LevelParser;
 struct ObjectData {
 	ObjType type;
 	V position;
@@ -23,7 +26,7 @@ struct ObjectData {
 	short id;
 	map<string, string> properties;
 
-	MapObject* into_map_object(GameView* game, GameRoom* room) const;
+	MapObject* into_map_object(GameView* game, GameRoom* room, const LevelParser& parser) const;
 };
 
 class LevelParser {
@@ -36,7 +39,8 @@ class LevelParser {
 	short current_property_id = 0;
 	int current_y_pos = 0;
 public:
-	LevelParser(const string& filename) {
+	const RiddleParser& riddle_parser;
+	LevelParser(const string& filename, const RiddleParser& riddles) : riddle_parser(riddles) {
 		file.open(filename);
 	}
 
@@ -44,7 +48,7 @@ public:
 		auto room = game->add_room();
 		for (auto& obj_data : objects) {
 			ObjectData& od = obj_data;
-			MapObject* obj = obj_data.into_map_object(game, room);
+			MapObject* obj = obj_data.into_map_object(game, room, *this);
 			room->add_object(obj);
 		}
 	}
@@ -54,7 +58,7 @@ public:
 			string line;
 			getline(file, line);
 
-			if (line.empty()) continue;
+			if (line.empty() || line.starts_with('\\')) continue;
 			if (line[0] == ':') {
 				if (line[1] == ':') parse_object_data(line.substr(2));
 				else parse_data(line.substr(1));
@@ -62,9 +66,9 @@ public:
 			else if (line[0] == 'L') legend_position = current_y_pos;
 			else {
 				parse_objects(line);
+				current_y_pos++;
 			};
 
-			current_y_pos++;
 		}
 	}
 

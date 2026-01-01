@@ -10,7 +10,7 @@ M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
 			room->draw(*this);
 		}
 		else {
-			room->msg = getMsg();
+			room->msg = new Msg(getMsg(), MSG_TICKS);
 			return CANT_MOVE;
 		}
 	}

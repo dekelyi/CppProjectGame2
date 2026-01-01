@@ -1,0 +1,38 @@
+L
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+W                                                                              W
+W                                                                              W
+W                                                                              W
+W                                                                              W
+W                                                                              W
+W                                                                              W
+W                                                                              W
+W                                                                              W
+W                                                                              W
+W                                                                              W
+W                                                                              W
+W                                                                              W
+W                                                                              W
+W                                                                              W
+W                                                                              W
+W                                                                              W
+W                                                                              W
+W                                                                              W
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+
+// room properties
+// is the room dark
+:is_dark true
+
+// door properties
+// D(N) is the door to the next room
+// D(P) is the door to the previous room
+::D(N)
+// keys required to open the door
+:condition-keys 1
+
+// switch properties
+// switch with id i
+::\(i)
+// open the door with ID D(N)
+:do-open-door N

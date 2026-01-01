@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 /**
 * Constant values and game settings
 */
@@ -71,4 +72,5 @@ enum class ObjType : char {
 	SWITCH_OFF = '\\',
 	SWITCH_ON = '/',
 	TORCH = '!',
+	RIDDLE = '?',
 };

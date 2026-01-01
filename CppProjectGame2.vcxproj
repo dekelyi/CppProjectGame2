@@ -132,7 +132,7 @@
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="DoorProp.h" />
     <ClCompile Include="LevelParser.cpp" />
-    <ClCompile Include="ObjectTypes.cpp" />
+    <ClCompile Include="Msg.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayersProp.cpp" />
     <ClCompile Include="prelude.h" />
@@ -140,6 +140,7 @@
     <ClCompile Include="GameView.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="Riddle.cpp" />
     <ClCompile Include="Runner.cpp" />
     <ClCompile Include="Spring.cpp" />
     <ClCompile Include="Spring.h" />
@@ -152,11 +153,14 @@
     <ClInclude Include="Door.h" />
     <ClInclude Include="GameView.h" />
     <ClInclude Include="LevelParser.h" />
+    <ClInclude Include="Msg.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="PlayersProp.h" />
+    <ClInclude Include="Riddle.h" />
+    <ClInclude Include="RiddleParser.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="Switch.h" />
     <ClInclude Include="Vector.h" />
@@ -164,9 +168,11 @@
   <ItemGroup>
     <Text Include="BONUS.txt" />
     <Text Include="README.txt" />
+    <Text Include="Riddles.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="adv-world_01.screen" />
+    <None Include="adv-world_template.screen" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

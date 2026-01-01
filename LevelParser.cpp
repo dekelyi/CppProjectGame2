@@ -2,12 +2,12 @@
 #include "Collectible.h"
 #include "Door.h"
 #include "Obstacle.h"
-#include "Player.h"
 #include "Spring.h"
 #include "Switch.h"
+#include "Riddle.h"
 #include "LevelParser.h"
 
-MapObject* ObjectData::into_map_object(GameView* game, GameRoom* room) const {
+MapObject* ObjectData::into_map_object(GameView* game, GameRoom* room, const LevelParser& parser) const {
 	switch (type) {
 	case ObjType::PLAYER_1:
 	case ObjType::PLAYER_2: {
@@ -46,6 +46,10 @@ MapObject* ObjectData::into_map_object(GameView* game, GameRoom* room) const {
 		return new Torch(position, stoi(properties.at("area")));
 	case  ObjType::KEY:
 		return new Key(position, size);
+	case ObjType::RIDDLE: {
+		RiddleData rdata = parser.riddle_parser.riddles.at(id);
+		return new Riddle(position, size, rdata);
+	}
 	default:
 		return new MapObject(position, size, (char)type);
 	}

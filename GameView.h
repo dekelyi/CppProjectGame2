@@ -15,7 +15,6 @@ class GameView {
 	GameRoom* last = nullptr;
 	unsigned char s = 0, // total size
 		i = 1; // current room
-	int msg_count = -1; // counter for msg display
 
 public:
 	GameRoom* current = nullptr; // current room
@@ -83,6 +82,8 @@ public:
 	Draws the HUD of the current game
 	*/
 	void drawHUD();
+
+	void drawMsg();
 	/**
 	Checks if no players are in the current room
 	if so, move to the room where the last player is at

@@ -85,20 +85,6 @@ void GameView::drawHUD() {
 	wr.writeline(format(" PLAYER 1 ({}) INVERTORY: {}", this->player1->getGlyph(), this->player1->getCollectibleGlyph()));
 	wr.writeline(format(" PLAYER 2 ({}) INVERTORY: {}", this->player2->getGlyph(), this->player2->getCollectibleGlyph()));
 
-	// Message ticket
-	if (!this->current->msg.empty()) {
-		if (msg_count == 0) { // clear msg
-			wr.writeline(std::string(this->current->msg.size(), ' '));
-			this->current->msg = "";
-			msg_count = -1;
-		}
-		else { // write msg
-			wr.writeline(this->current->msg);
-			if (msg_count == -1) msg_count = MSG_TICKS;
-			else msg_count--;
-		}
-	}
-
 	wr = Writer(V(SIZE_X - 10, 1));
 	size_t nroom = this->i,
 		lroom = this->s;
@@ -106,7 +92,24 @@ void GameView::drawHUD() {
 	wr.writeline(string(nroom, (char)178) + string(lroom-nroom, (char)176));
 }
 
+void GameView::drawMsg() {
+	if (!this->current->msg->is_active()) return;
 
+	ConsoleView::init();
+	string msg = this->current->msg->getText();
+	Writer(V(5, 10)).writeline(msg);
+	while (this->current->msg->is_active()) {
+		console_sleep(TICK);
+		this->current->msg->handle_tick();
+		if (this->current->msg->getText() != msg) {
+			ConsoleView::init();
+			msg = this->current->msg->getText();
+			Writer(V(5, 10)).writeline(msg);
+		}
+	}
+	Writer(V(5, 10)).writeline(string(this->current->msg->text.size(), ' '));
+	this->drawAll();
+}
 
 Mode GameView::handle_keypress(Keypress e) {
 	switch (e) {
@@ -153,6 +156,7 @@ Mode GameView::run() {
 		this->handle_tick();
 		if ((mode = this->check_room()) != Mode::RUNNING) return mode;
 		this->drawHUD();
+		this->drawMsg();
 		Keypress e = ConsoleView::get_keypress();
 		mode = this->handle_keypress(e);
 	}
