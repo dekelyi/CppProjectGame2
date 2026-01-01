@@ -35,7 +35,6 @@ void Player::dump_collectible(GameRoom* room) {
 	if (collectible == nullptr) return;
 	collectible->setPosition(this->getPosition() + this->getDumpPosition(room));
 	room->add_object(collectible);
-	room->draw(*collectible);
 	collectible = nullptr;
 }
 

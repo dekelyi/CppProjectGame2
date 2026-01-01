@@ -61,9 +61,10 @@ public:
 	/**
 	Draw all objects
 	*/
-	inline void drawAll(bool clear = false) {
+	inline void drawAll() {
 		for (MapObject* obj : current->map_objects)
-			clear ? current->clear(*obj) : current->draw(*obj);
+			current->draw(*obj);
+		current->drawing_buffer.draw();
 	}
 	/**
 	Add a room to the game

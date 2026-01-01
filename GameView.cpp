@@ -155,8 +155,9 @@ Mode GameView::run() {
 		console_sleep(TICK);
 		this->handle_tick();
 		if ((mode = this->check_room()) != Mode::RUNNING) return mode;
-		this->drawHUD();
 		this->drawMsg();
+		this->drawHUD();
+		this->drawAll();
 		Keypress e = ConsoleView::get_keypress();
 		mode = this->handle_keypress(e);
 	}

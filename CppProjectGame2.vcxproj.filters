@@ -128,6 +128,9 @@
     <ClInclude Include="LevelParser.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="DrawingBuffer.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="BONUS.txt" />
@@ -137,7 +140,7 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="adv-world_a01.screen">
+    <None Include="adv-world_01.screen">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="adv-world_template.screen">

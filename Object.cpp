@@ -36,7 +36,6 @@ bool MapObject::try_move(GameRoom* room, Move& m) {
 	if (c == CAN_MOVE) {
 		room->clear(*this);
 		move(m.dir * m.speed);
-		room->draw(*this);
 		return true;
 	}
 	else if (c == MOVED) return true;

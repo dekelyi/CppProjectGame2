@@ -11,9 +11,6 @@ inline CallbackFn SwitchDoor(GameRoom* room, Door* door, Condition* condition_sw
 	return [=](bool switched) {
 		bool last_state = door->isLocked();
 		condition_switch->collected = (int)switched;
-		if (door->isLocked() != last_state) {
-			room->draw(*door);
-		}
 	};
 }
 
@@ -39,7 +36,6 @@ public:
 		switched = val;
 		if (callback) callback(switched);
 		setGlyph(val ? (char)ObjType::SWITCH_ON : (char)ObjType::SWITCH_OFF);
-		room->draw(*this);
 	}
 
 	virtual M_CODE handle_collision(GameRoom* room, MapObject* other, Move& move) override {

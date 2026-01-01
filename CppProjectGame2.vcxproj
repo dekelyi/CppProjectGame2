@@ -150,6 +150,7 @@
     <ClInclude Include="BaseProp.h" />
     <ClInclude Include="Collectible.h" />
     <ClInclude Include="Door.h" />
+    <ClInclude Include="DrawingBuffer.h" />
     <ClInclude Include="GameView.h" />
     <ClInclude Include="LevelParser.h" />
     <ClInclude Include="Msg.h" />
@@ -169,7 +170,7 @@
     <Text Include="Riddles.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="adv-world_a01.screen" />
+    <None Include="adv-world_01.screen" />
     <None Include="adv-world_02.screen" />
     <None Include="adv-world_template.screen" />
   </ItemGroup>

@@ -2,6 +2,7 @@
 #include <vector>
 #include "Object.h"
 #include "Msg.h"
+#include "DrawingBuffer.h"
 #include "PlayersProp.h"
 #include "DoorProp.h"
 #include "TorchProp.h"
@@ -14,6 +15,7 @@ class GameRoom {
 	friend class Torch;
 public:
 	std::vector<MapObject*> map_objects; // all objects currently in this room
+	MapBuffer<SIZE_X, SIZE_Y> drawing_buffer;
 	// linked list
 	GameRoom* next = nullptr;
 	GameRoom* prev = nullptr;
@@ -62,14 +64,11 @@ public:
 		return p_torch.get_drawing_dimensions(r);
 
 	}
-	inline void draw(const MapObject& obj, VS* dims = nullptr) const {
-		if (dims == nullptr) dims = new VS(get_drawing_dimensions(&obj));
-		if (this->is_current && dims->size.getX() != 0 && dims->size.getY() != 0)
-			ConsoleView::drawAt(dims->pos, dims->size, obj.getGlyph(), ConsoleView::colors ? obj.getAttr() : "");
+	inline void draw(const MapObject& obj) {
+		drawing_buffer.set_at(obj.getPosition(), obj.getSize(), { obj.getGlyph(), obj.getAttr() });
 	}
-	inline void clear(const MapObject& obj, const std::string attr = "") const {
-		if (this->is_current)
-			ConsoleView::drawAt(obj.getPosition(), obj.getSize(), ' ', attr);
+	inline void clear(const MapObject& obj, const std::string attr = "") {
+		drawing_buffer.set_at(obj.getPosition(), obj.getSize(), DNULL);
 	}
 
 	inline MapObject* get_object_at(V pos) {

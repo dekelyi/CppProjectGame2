@@ -19,6 +19,8 @@
 #define A_BOLD ANSI_ESC "1m"
 #define A_RESET ANSI_ESC "0m"
 
+void gotoxy(V pos);
+
 /**
 Sleep for ms miliseconds
 */
