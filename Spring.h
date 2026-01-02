@@ -35,6 +35,6 @@ public:
 	}
 
 	// Events
-	virtual void handle_tick(GameRoom* room) override;
+	virtual bool handle_tick(GameRoom* room) override;
 	virtual M_CODE handle_collision(GameRoom* room, MapObject* other, Move& move) override;
 };

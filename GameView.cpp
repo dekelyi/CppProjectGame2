@@ -89,7 +89,7 @@ void GameView::drawHUD() {
 	size_t nroom = this->i,
 		lroom = this->s;
 	wr.writeline(format("ROOM: {}/{}", nroom,lroom));
-	wr.writeline(string(nroom, (char)178) + string(lroom-nroom, (char)176));
+	wr.writeline(string(nroom, CH_BLOCK) + string(lroom-nroom, CH_BLOCK_GREY));
 }
 
 void GameView::drawMsg() {

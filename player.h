@@ -37,9 +37,9 @@ public:
 	}
 
 	virtual M_CODE handle_collision(GameRoom* room, MapObject* other, Move& move) override;
-	virtual inline void handle_tick(GameRoom* room) override {
-		MapObject::handle_tick(room);
+	virtual inline bool handle_tick(GameRoom* room) override {
 		if (collectible) collectible->handle_tick(room);
+		return MapObject::handle_tick(room);
 	}
 
 	// Collectible stuff

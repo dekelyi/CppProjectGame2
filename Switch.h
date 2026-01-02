@@ -44,11 +44,11 @@ public:
 		return CANT_MOVE;
 	}
 
-	virtual void handle_tick(GameRoom* room) override {
+	inline virtual bool handle_tick(GameRoom* room) override {
 		if (switched) {
 			switchers.remove_if([](const Switcher& s) { return s.pos != s.obj->getPosition(); });
 			if (switchers.empty()) setSwitch(room, false);
 		}
-		MapObject::handle_tick(room);
+		return MapObject::handle_tick(room);
 	}
 };

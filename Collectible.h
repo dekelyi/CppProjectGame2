@@ -1,8 +1,7 @@
 #pragma once
 #include "Object.h"
 
-#define BOMB_AREA 3
-#define BOMB_TIMER 5
+#define BOMB_NOT_SET -1
 
 class GameRoom;
 
@@ -24,24 +23,23 @@ class Torch : public Collectible {
 public:
 	unsigned short area;
 	Torch(V _pos, unsigned short _area) : Collectible(_pos, V(1,1), (char)ObjType::TORCH), area(_area) {}
-
-	virtual void handle_tick(GameRoom* room) override;
 };
 
 
 class Bomb : public Collectible {
 public:
-    int bomb_timer = -1;
+    int bomb_timer = BOMB_NOT_SET;
 
     Bomb(V _pos) : Collectible(_pos, V(1, 1), (char)ObjType::BOMB) { attr = A_FOREGROUND_RED; }
 
-    inline virtual void handle_tick(GameRoom* room) override {
-        MapObject::handle_tick(room);
+    inline virtual bool handle_tick(GameRoom* room) override {
         if (bomb_timer == 0) {
             do_bomb(room);
-            bomb_timer = -2;
+            bomb_timer = BOMB_NOT_SET;
+            return false;
         }
         else if (bomb_timer > 0) bomb_timer--;
+        return MapObject::handle_tick(room);
     }
 
     void do_bomb(GameRoom* room) const;

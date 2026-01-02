@@ -19,6 +19,9 @@
 #define A_BOLD ANSI_ESC "1m"
 #define A_RESET ANSI_ESC "0m"
 
+#define CH_BLOCK (char)178
+#define CH_BLOCK_GREY (char)176
+
 void gotoxy(V pos);
 
 /**

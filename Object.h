@@ -76,5 +76,5 @@ public:
 	M_CODE can_move(GameRoom* game, Move& move);
 	virtual M_CODE handle_collision(GameRoom* room, MapObject* obj, Move& move);
 
-	virtual void handle_tick(GameRoom* room);
+	virtual bool handle_tick(GameRoom* room);
 };

@@ -14,6 +14,9 @@
 
 #define N_MAX_PLAYERS 2 // number of players
 
+#define BOMB_AREA 3
+#define BOMB_TIMER 5
+
 /**
 * Represent the current runner mode
 */

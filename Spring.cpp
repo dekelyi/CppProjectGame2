@@ -23,7 +23,7 @@ M_CODE Spring::handle_collision(GameRoom* room, MapObject* other, Move& move) {
 	return CAN_MOVE;
 }
 
-void Spring::handle_tick(GameRoom* room) {
+bool Spring::handle_tick(GameRoom* room) {
 	if (!force) {
 		if (compressed > 0) {
 			room->clear(*this);
@@ -39,5 +39,5 @@ void Spring::handle_tick(GameRoom* room) {
 		force->try_move(room, move);
 		force = nullptr;
 	}
-	MapObject::handle_tick(room);
+	return MapObject::handle_tick(room);
 }

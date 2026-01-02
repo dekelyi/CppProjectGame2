@@ -55,13 +55,18 @@ public:
 	}
 
 	void draw() const {
+		string border_h = string(X+2, CH_BLOCK_GREY);
+
 		gotoxy(V(0, padding_top));
+		std::cout << border_h << std::endl;
 		for (unsigned y = 0; y < Y; y++) {
+			std::cout << CH_BLOCK_GREY;
 			for (unsigned x = 0; x < X; x++) {
 				const DrawingObject& obj = buffer[x][y];
 				std::cout << obj.attr << obj.glyph << A_RESET;
 			}
-			std::cout << std::endl;
+			std::cout << CH_BLOCK_GREY << std::endl;
 		}
+		std::cout << border_h << std::endl;
 	}
 };

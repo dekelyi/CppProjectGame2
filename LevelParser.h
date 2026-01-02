@@ -27,7 +27,7 @@ struct ObjectData {
 	int id;
 	map<string, string> properties;
 
-	MapObject* into_map_object(GameView* game, GameRoom* room, const LevelParser& parser) const;
+	vector<MapObject*> into_map_objects(GameView* game, GameRoom* room, const LevelParser& parser) const;
 };
 
 class RiddleParser {

@@ -57,18 +57,18 @@ public:
 		SV, // vertical
 		SB // block
 	} d;
-	int length;
+	unsigned length;
 
-	S(int _l, SD _d) : length(_l), d(_d) {}
+	S(unsigned _l, SD _d) : length(_l), d(_d) {}
 	S(SD _d) : S(1, _d) {}
 
 	virtual inline int getX() const override { return (d == SH || d == SB) ? length : 1; }
 	virtual inline int getY() const override { return (d == SV || d == SB) ? length : 1; }
 
-	void setX(int _x) = delete;
-	void setY(int _x) = delete;
+	void setX(unsigned _x) = delete;
+	void setY(unsigned _x) = delete;
 
-	void setLength(int _x) { length = _x; }
+	void setLength(unsigned _x) { length = _x; }
 
 	inline bool is_ortho_direction(V v) {
 		return (d == SH) ? v.getY() && !v.getX() :
@@ -86,14 +86,3 @@ struct VS {
 		return pos == other.pos && size == other.size;
 	}
 };
-
-inline VS is_in_bounds_dim(const V& o, const V& pos, const V& size, unsigned short area) {
-	V s = pos - V(area, area);
-	V e = pos + V(area, area);
-	V te = o + size;
-	V is = V(std::max(o.getX(), s.getX()), std::max(o.getY(), s.getY()));
-	V ie = V(std::min(te.getX(), e.getX()), std::min(te.getY(), e.getY()));
-	V diff = ie - is;
-	V si = V(std::max(0, diff.getX()), std::max(0, diff.getY()));
-	return { is,si };
-}
