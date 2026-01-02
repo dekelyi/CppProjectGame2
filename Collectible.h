@@ -1,8 +1,7 @@
 #pragma once
 #include "Object.h"
 
-#define BOMB_AREA_1 1
-#define BOMB_AREA_2 3
+#define BOMB_AREA 3
 #define BOMB_TIMER 5
 
 class GameRoom;
@@ -40,7 +39,7 @@ public:
         MapObject::handle_tick(room);
         if (bomb_timer == 0) {
             do_bomb(room);
-            bomb_timer = -1;
+            bomb_timer = -2;
         }
         else if (bomb_timer > 0) bomb_timer--;
     }

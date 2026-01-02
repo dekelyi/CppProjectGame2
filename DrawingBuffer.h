@@ -55,16 +55,13 @@ public:
 	}
 
 	void draw() const {
-		string str;
-
 		gotoxy(V(0, padding_top));
 		for (unsigned y = 0; y < Y; y++) {
 			for (unsigned x = 0; x < X; x++) {
 				const DrawingObject& obj = buffer[x][y];
-				if (obj != DNULL) str += obj.attr + obj.glyph + A_RESET;
+				std::cout << obj.attr << obj.glyph << A_RESET;
 			}
-			str += "\n";
+			std::cout << std::endl;
 		}
-		std::cout << str << std::endl;
 	}
 };

@@ -41,10 +41,10 @@ void Bomb::handle_dump(GameRoom* room) {
 
 void Bomb::do_bomb(GameRoom* room) const {
 	set<MapObject*> to_remove;
-	V start_pos = pos - V(BOMB_AREA_2, BOMB_AREA_2);
+	V start_pos = pos - V(BOMB_AREA, BOMB_AREA);
 
-	for (unsigned dx = 0; dx < BOMB_AREA_2 * 2; dx++)
-		for (unsigned dy = 0; dy < BOMB_AREA_2 * 2; dy++) {
+	for (unsigned dx = 0; dx < BOMB_AREA * 2; dx++)
+		for (unsigned dy = 0; dy < BOMB_AREA * 2; dy++) {
 			auto obj = room->get_object_at(start_pos + V(dx, dy));
 			if (obj && obj != this) to_remove.insert(obj);
 		}
