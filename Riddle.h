@@ -42,8 +42,8 @@ public:
 			if ((size_t)answer_index == riddle->data.correct_answer_index) {
 				Msg::text = "Correct answer!";
 				room->clear((MapObject)*riddle);
-				room->remove_object((MapObject*)riddle);
-				delete riddle;
+				if (room->remove_object((MapObject*)riddle))
+					delete riddle;
 				riddle = nullptr;
 			}
 			else {

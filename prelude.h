@@ -73,4 +73,5 @@ enum class ObjType : char {
 	SWITCH_ON = '/',
 	TORCH = '!',
 	RIDDLE = '?',
+	BOMB = '@'
 };

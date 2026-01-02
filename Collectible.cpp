@@ -1,6 +1,9 @@
+#include <set>
 #include "Collectible.h"
 #include "Player.h"
 #include "Room.h"
+
+using std::set;
 
 M_CODE Collectible::handle_collision(GameRoom* room, MapObject* other, Move& move) {
 	// If collided with a player, give the collectible to the player
@@ -31,3 +34,25 @@ void Torch::handle_tick(GameRoom* room) {
 	//	room->draw(*obj.obj);
 	//}
 }
+
+void Bomb::handle_dump(GameRoom* room) {
+	this->bomb_timer = BOMB_TIMER;
+}
+
+void Bomb::do_bomb(GameRoom* room) const {
+	set<MapObject*> to_remove;
+	V start_pos = pos - V(BOMB_AREA_2, BOMB_AREA_2);
+
+	for (unsigned dx = 0; dx < BOMB_AREA_2 * 2; dx++)
+		for (unsigned dy = 0; dy < BOMB_AREA_2 * 2; dy++) {
+			auto obj = room->get_object_at(start_pos + V(dx, dy));
+			if (obj && obj != this) to_remove.insert(obj);
+		}
+
+	for (MapObject* obj : to_remove) {
+		room->clear(*obj);
+		if (room->remove_object(obj))
+			delete obj;
+	}
+}
+

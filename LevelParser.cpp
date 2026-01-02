@@ -62,6 +62,8 @@ MapObject* ObjectData::into_map_object(GameView* game, GameRoom* room, const Lev
 			return nullptr;
 		}
 	}
+	case ObjType::BOMB: 
+		return new Bomb(position);
 	default:
 		return new MapObject(position, size, (char)type);
 	}
@@ -246,6 +248,7 @@ void LevelParser::parse_all_levels(GameView* game, const RiddleParser& riddles, 
 		game->current->add_object(game->player2);
 		game->current->remove_object(game->current->p_doors.entry_point);
 		game->current->p_doors.entry_point = nullptr;
+		delete game->current->p_doors.entry_point;
 	}
 }
 

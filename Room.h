@@ -37,8 +37,9 @@ public:
 	}
 
 
-	inline void remove_object(MapObject* obj) {
+	inline bool remove_object(MapObject* obj) {
 		map_objects.erase(std::remove(map_objects.begin(), map_objects.end(), obj));
+		return p_players.handle_remove_obj(obj);
 	}
 
 	template <typename T = MapObject> inline std::vector<T*> get_objects() const {
