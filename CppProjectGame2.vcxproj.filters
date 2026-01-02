@@ -140,7 +140,7 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="adv-world_01.screen">
+    <None Include="adv-world_a01.screen">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="adv-world_template.screen">

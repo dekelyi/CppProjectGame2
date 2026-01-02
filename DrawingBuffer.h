@@ -10,6 +10,8 @@ using std::array, std::string;
 struct DrawingObject {
 	char glyph;
 	std::string attr;
+
+	bool operator==(const DrawingObject& other) const = default;
 };
 
 static const DrawingObject DNULL = { ' ', "" };
@@ -19,6 +21,9 @@ class MapBuffer {
 	array<array<DrawingObject, X>, Y> buffer;
 	unsigned int padding_top = HUD_SPACE_TOP;
 public:
+	const unsigned SX = X;
+	const unsigned SY = Y;
+
 	MapBuffer() {
 		for (int y = 0; y < Y; y++)
 			for (int x = 0; x < X; x++)
@@ -30,6 +35,14 @@ public:
 			return DNULL;
 		return buffer[y][x];
 	}
+
+	bool is_set(V pos) const {
+		int x = pos.getX(), y = pos.getY();
+		if (x < 0 || y < 0 || x >= X || y >= Y)
+			return false;
+		return buffer[y][x] != DNULL;
+	}
+
 	void set_at(V pos, DrawingObject obj) {
 		int x = pos.getX(), y = pos.getY();
 		if (x < 0 || y < 0 || x >= X || y >= Y)

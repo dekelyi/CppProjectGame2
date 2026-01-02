@@ -61,10 +61,10 @@ public:
 	/**
 	Draw all objects
 	*/
-	inline void drawAll() {
+	inline void draw() {
 		for (MapObject* obj : current->map_objects)
 			current->draw(*obj);
-		current->drawing_buffer.draw();
+		current->drawBuffer();
 	}
 	/**
 	Add a room to the game

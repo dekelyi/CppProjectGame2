@@ -70,7 +70,7 @@ Mode GameView::check_room() {
 		if (current != nullptr) {
 			ConsoleView::init();
 			ConsoleView::draw_borders();
-			drawAll();
+			draw();
 		}
 		else return Mode::WINNING;
 	}
@@ -108,7 +108,7 @@ void GameView::drawMsg() {
 		}
 	}
 	Writer(V(5, 10)).writeline(string(this->current->msg->text.size(), ' '));
-	this->drawAll();
+	this->draw();
 }
 
 Mode GameView::handle_keypress(Keypress e) {
@@ -150,14 +150,14 @@ Mode GameView::run() {
 	ConsoleView::init();
 	ConsoleView::draw_borders();
 	this->drawHUD();
-	this->drawAll();
+	this->draw();
 	while (mode == Mode::RUNNING) {
 		console_sleep(TICK);
 		this->handle_tick();
 		if ((mode = this->check_room()) != Mode::RUNNING) return mode;
 		this->drawMsg();
 		this->drawHUD();
-		this->drawAll();
+		this->draw();
 		Keypress e = ConsoleView::get_keypress();
 		mode = this->handle_keypress(e);
 	}

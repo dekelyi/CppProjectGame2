@@ -54,15 +54,8 @@ public:
 		}
 		return objs;
 	}
-
-	// Drawing stuff
-	inline VS get_drawing_dimensions(const MapObject* obj) const {
-		VS r = { V(0,0), V(0,0) };
-		if (std::find(map_objects.begin(), map_objects.end(), obj) == map_objects.end())
-			return r;
-		r = { obj->getPosition(), obj->getSize() };
-		return p_torch.get_drawing_dimensions(r);
-
+	inline void drawBuffer() const {
+		p_torch.manipulate_buffer().draw();
 	}
 	inline void draw(const MapObject& obj) {
 		drawing_buffer.set_at(obj.getPosition(), obj.getSize(), { obj.getGlyph(), obj.getAttr() });

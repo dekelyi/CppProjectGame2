@@ -170,7 +170,7 @@
     <Text Include="Riddles.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="adv-world_01.screen" />
+    <None Include="adv-world_a01.screen" />
     <None Include="adv-world_02.screen" />
     <None Include="adv-world_template.screen" />
   </ItemGroup>
