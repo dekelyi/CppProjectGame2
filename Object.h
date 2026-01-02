@@ -55,7 +55,7 @@ public:
 	virtual inline void move(const V& offset) { pos = pos + offset; }
 
 	// is at a specific position
-	inline bool is_at(const V& pos) {
+	inline bool is_at(const V& pos) const {
 		return (
 			pos.getX() >= getPosition().getX() &&
 			pos.getY() >= getPosition().getY() &&
@@ -76,5 +76,5 @@ public:
 	M_CODE can_move(GameRoom* game, Move& move);
 	virtual M_CODE handle_collision(GameRoom* room, MapObject* obj, Move& move);
 
-	virtual bool handle_tick(GameRoom* room);
+	virtual void handle_tick(GameRoom* room);
 };

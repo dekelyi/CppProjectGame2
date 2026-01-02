@@ -265,7 +265,6 @@ void LevelParser::parse_all_levels(GameView* game, const RiddleParser& riddles, 
 		game->current->add_object(game->player2);
 		game->current->remove_object(game->current->p_doors.entry_point);
 		game->current->p_doors.entry_point = nullptr;
-		delete game->current->p_doors.entry_point;
 	}
 }
 

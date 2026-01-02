@@ -10,7 +10,7 @@ M_CODE Collectible::handle_collision(GameRoom* room, MapObject* other, Move& mov
 	Player* p = dynamic_cast<Player*>(other);
 	if (p != nullptr && p->collectible == nullptr) {
 		p->collectible = this;
-		room->remove_object(this);
+		room->remove_object(this, false);
 		return CAN_MOVE;
 	}
 	return CANT_MOVE;
@@ -18,7 +18,16 @@ M_CODE Collectible::handle_collision(GameRoom* room, MapObject* other, Move& mov
 
 void Bomb::handle_dump(GameRoom* room) {
 	this->bomb_timer = BOMB_TIMER;
-	room->draw(*this);
+}
+
+void Bomb::handle_tick(GameRoom* room) {
+	MapObject::handle_tick(room);
+	if (bomb_timer == 0) {
+		do_bomb(room);
+		room->clear(*this);
+		room->remove_object(this);
+	}
+	else if (bomb_timer > 0) bomb_timer--;
 }
 
 void Bomb::do_bomb(GameRoom* room) const {
@@ -34,8 +43,7 @@ void Bomb::do_bomb(GameRoom* room) const {
 
 	for (MapObject* obj : to_remove) {
 		room->clear(*obj);
-		if (room->remove_object(obj))
-			delete obj;
+		room->remove_object(obj);
 	}
 }
 

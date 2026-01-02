@@ -45,7 +45,7 @@ bool MapObject::try_move(GameRoom* room, Move& m) {
 /**
 Move one iteration each tick
 */
-bool MapObject::handle_tick(GameRoom* room) {
+void MapObject::handle_tick(GameRoom* room) {
 	std::vector<Move> remove;
 	for (Move& m : moves) {
 		m.duartion--;
@@ -54,7 +54,6 @@ bool MapObject::handle_tick(GameRoom* room) {
 		}
 	}
 	for (const Move& m : remove) moves.remove(m);
-	return true;
 }
 
 M_CODE MapObject::handle_collision(GameRoom* room, MapObject* obj, Move& move) {

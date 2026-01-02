@@ -32,15 +32,7 @@ public:
 
     Bomb(V _pos) : Collectible(_pos, V(1, 1), (char)ObjType::BOMB) { attr = A_FOREGROUND_RED; }
 
-    inline virtual bool handle_tick(GameRoom* room) override {
-        if (bomb_timer == 0) {
-            do_bomb(room);
-            bomb_timer = BOMB_NOT_SET;
-            return false;
-        }
-        else if (bomb_timer > 0) bomb_timer--;
-        return MapObject::handle_tick(room);
-    }
+    virtual void handle_tick(GameRoom* room) override;
 
     void do_bomb(GameRoom* room) const;
     virtual void handle_dump(GameRoom* room) override;

@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+#include <set>
 #include "Object.h"
 #include "Msg.h"
 #include "DrawingBuffer.h"
@@ -16,7 +16,7 @@ class GameRoom {
 public:
 	const unsigned X, Y;
 
-	std::vector<MapObject*> map_objects; // all objects currently in this room
+	std::set<MapObject*> map_objects; // all objects currently in this room
 	MapBuffer drawing_buffer;
 	// linked list
 	GameRoom* next = nullptr;
@@ -36,26 +36,25 @@ public:
 	}
 
 	inline void add_object(MapObject* obj) {
-		map_objects.push_back(obj);
+		map_objects.insert(obj);
 		p_doors.add_object(obj);
 	}
 
-
-	inline bool remove_object(MapObject* obj) {
-		map_objects.erase(std::remove(map_objects.begin(), map_objects.end(), obj));
-		return p_players.handle_remove_obj(obj);
+	inline void remove_object(MapObject* obj, bool del = true) {
+		map_objects.erase(obj);
+		if (!p_players.remove_object(obj) && del) delete obj;
 	}
 
-	template <typename T = MapObject> inline std::vector<T*> get_objects() const {
-		std::vector<T*> objs;
-		std::vector<MapObject*> map_objects = this->map_objects,
+	template <typename T = MapObject> inline std::set<T*> get_objects() const {
+		std::set<T*> objs;
+		std::set<MapObject*> map_objects = this->map_objects,
 			collectibles = p_players.get_objects();
-		map_objects.insert(map_objects.end(), collectibles.begin(), collectibles.end());
+		map_objects.insert(collectibles.begin(), collectibles.end());
 		
 		for (MapObject* obj : map_objects) {
 			T* casted = dynamic_cast<T*>(obj);
 			if (casted != nullptr)
-				objs.push_back(casted);
+				objs.insert(casted);
 		}
 		return objs;
 	}
@@ -69,7 +68,7 @@ public:
 		drawing_buffer.set_at(obj.getPosition(), obj.getSize(), DNULL);
 	}
 
-	inline MapObject* get_object_at(V pos) {
+	inline MapObject* get_object_at(V pos) const {
 		for (MapObject* obj : map_objects)
 			if (obj->is_at(pos))
 				return obj;

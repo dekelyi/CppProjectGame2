@@ -1,31 +1,33 @@
-#include <vector>
+#include <set>
 #include "PlayersProp.h"
 #include "Room.h"
 #include "player.h"
 
-std::vector<Player*> PlayersProp::get_players() const {
-	std::vector<Player*> players;
+using std::set;
+
+set<Player*> PlayersProp::get_players() const {
+	set<Player*> players;
 	for (MapObject* obj : room.map_objects) {
 		Player* p = dynamic_cast<Player*>(obj);
-		if (p != nullptr) players.push_back(p);
+		if (p != nullptr) players.insert(p);
 	}
 	return players;
 }
 
-std::vector<MapObject*> PlayersProp::get_objects() const {
-	std::vector<Player*> players = get_players();
-	std::vector<MapObject*> objs(players.size());
+set<MapObject*> PlayersProp::get_objects() const {
+	set<Player*> players = get_players();
+	set<MapObject*> objs;
 
 	for (auto& p : players) {
 		if (p->collectible != nullptr)
-			objs.push_back((MapObject*)(p->collectible));
+			objs.insert((MapObject*)(p->collectible));
 	}
 
 	return objs;
 }
 
-bool PlayersProp::handle_remove_obj(MapObject* obj) {
+bool PlayersProp::remove_object(MapObject* obj) {
 	Player* p = dynamic_cast<Player*>(obj);
-	if (!p) return true;
+	if (p) return true;
 	return false;
 }

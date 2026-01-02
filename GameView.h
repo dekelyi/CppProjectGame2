@@ -54,14 +54,9 @@ public:
 	Do one tick of the game
 	*/
 	inline void handle_tick() {
-		vector<MapObject*> to_remove;
-		for (MapObject* obj : current->map_objects)
-			if (!obj->handle_tick(current)) to_remove.push_back(obj);
-		for (auto obj : to_remove) {
-			current->clear(*obj);
-			current->remove_object(obj);
-			delete obj;
-		}
+		set<MapObject*> objs = current->map_objects;
+		for (MapObject* obj : objs)
+			obj->handle_tick(current);
 	}
 
 	/**

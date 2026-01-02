@@ -18,7 +18,7 @@ M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
 	}
 
 	// redraw
-	room->remove_object(obj);
+	room->remove_object(obj, false);
 	room->clear(*obj);
 
 	// move object to next/prev room
