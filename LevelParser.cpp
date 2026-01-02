@@ -95,8 +95,8 @@ void LevelParser::build_room(GameView* game) {
 	}
 	for (const auto& [key, value] : room_properties) {
 		if (key == "msg-on-enter") {
-			room->msg->text = value;
-			room->msg->ticks_left = 10;
+			room->msg.text = value;
+			room->msg.ticks_left = 10;
 		}
 		else if (key == "is_dark") {
 			if (value == "true" || value == "1") {

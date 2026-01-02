@@ -93,21 +93,21 @@ void GameView::drawHUD() {
 }
 
 void GameView::drawMsg() {
-	if (!this->current->msg->is_active()) return;
+	if (!this->current->msg.is_active()) return;
 
 	ConsoleView::init();
-	string msg = this->current->msg->getText();
+	string msg = this->current->msg.getText();
 	Writer(V(5, 10)).writeline(msg);
-	while (this->current->msg->is_active()) {
+	while (this->current->msg.is_active()) {
 		console_sleep(TICK);
-		this->current->msg->handle_tick();
-		if (this->current->msg->getText() != msg) {
+		this->current->msg.handle_tick();
+		if (this->current->msg.getText() != msg) {
 			ConsoleView::init();
-			msg = this->current->msg->getText();
+			msg = this->current->msg.getText();
 			Writer(V(5, 10)).writeline(msg);
 		}
 	}
-	Writer(V(5, 10)).writeline(string(this->current->msg->text.size(), ' '));
+	Writer(V(5, 10)).writeline(string(this->current->msg.text.size(), ' '));
 	this->draw();
 }
 

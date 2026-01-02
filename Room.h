@@ -27,7 +27,7 @@ public:
 	TorchProp p_torch = { *this };
 
 	bool is_current = false;
-	Msg* msg = new Msg();
+	Msg msg;
 
 	inline GameRoom(unsigned x, unsigned y) : X(x), Y(y), drawing_buffer(MapBuffer(x, y)) {}
 
