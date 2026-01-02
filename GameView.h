@@ -69,7 +69,7 @@ public:
 	/**
 	Add a room to the game
 	*/
-	GameRoom* add_room();
+	GameRoom* add_room(const unsigned X = SIZE_X, const unsigned Y = SIZE_Y);
 	/**
 	Move to the next room
 	*/

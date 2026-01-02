@@ -1,70 +1,70 @@
 #pragma once
 #include <string>
-#include <array>
+#include <vector>
 #include <iostream>
 #include "Vector.h"
 #include "Console.h"
 
-using std::array, std::string;
+using std::vector, std::string;
 
 struct DrawingObject {
-	char glyph;
-	std::string attr;
+	char glyph = ' ';
+	std::string attr = "";
 
 	bool operator==(const DrawingObject& other) const = default;
 };
 
-static const DrawingObject DNULL = { ' ', "" };
+static const DrawingObject DNULL = DrawingObject();
 
-template <unsigned int X, unsigned int Y>
 class MapBuffer {
-	array<array<DrawingObject, X>, Y> buffer;
-	unsigned int padding_top = HUD_SPACE_TOP;
+	vector<vector<DrawingObject>> buffer;
+	unsigned padding_top = HUD_SPACE_TOP;
 public:
-	const unsigned SX = X;
-	const unsigned SY = Y;
+	const unsigned X;
+	const unsigned Y;
 
-	MapBuffer() {
-		for (int y = 0; y < Y; y++)
-			for (int x = 0; x < X; x++)
-				buffer[y][x] = DNULL;
+	MapBuffer(unsigned x, unsigned y) : X(x), Y(y) {
+		buffer = { X, vector<DrawingObject>(Y) };
 	}
 	DrawingObject get_at(V pos) const {
-		int x = pos.getX(), y = pos.getY();
+		unsigned x = pos.getX(), y = pos.getY();
 		if (x < 0 || y < 0 || x >= X || y >= Y)
 			return DNULL;
-		return buffer[y][x];
+		return buffer[x][y];
 	}
 
 	bool is_set(V pos) const {
-		int x = pos.getX(), y = pos.getY();
+		unsigned x = pos.getX(), y = pos.getY();
 		if (x < 0 || y < 0 || x >= X || y >= Y)
 			return false;
-		return buffer[y][x] != DNULL;
+		return buffer[x][y] != DNULL;
 	}
 
 	void set_at(V pos, DrawingObject obj) {
-		int x = pos.getX(), y = pos.getY();
+		unsigned x = pos.getX(), y = pos.getY();
 		if (x < 0 || y < 0 || x >= X || y >= Y)
 			return;
-		buffer[y][x] = obj;
+		buffer[x][y] = obj;
 	}
 
 	void set_at(V pos, V size, const DrawingObject& obj) {
-		unsigned int x = pos.getX(), y = pos.getY(), size_x = size.getX(), size_y = size.getY();
-		for (unsigned int dy = 0; dy < size_y; dy++)
-			for (unsigned int dx = 0; dx < size_x; dx++)
+		unsigned x = pos.getX(), y = pos.getY(), size_x = size.getX(), size_y = size.getY();
+		for (unsigned dy = 0; dy < size_y; dy++)
+			for (unsigned dx = 0; dx < size_x; dx++)
 				set_at(V(x + dx, y + dy), obj);
 	}
 
 	void draw() const {
+		string str;
+
 		gotoxy(V(0, padding_top));
-		for (unsigned int y = 0; y < Y; y++) {
-			for (unsigned int x = 0; x < X; x++) {
-				const DrawingObject& obj = buffer[y][x];
-				std::cout << obj.attr << obj.glyph << A_RESET;
+		for (unsigned y = 0; y < Y; y++) {
+			for (unsigned x = 0; x < X; x++) {
+				const DrawingObject& obj = buffer[x][y];
+				if (obj != DNULL) str += obj.attr + obj.glyph + A_RESET;
 			}
-			std::cout << std::endl;
+			str += "\n";
 		}
+		std::cout << str << std::endl;
 	}
 };

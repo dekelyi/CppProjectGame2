@@ -14,8 +14,10 @@ class GameRoom {
 	friend class GameView;
 	friend class Torch;
 public:
+	const unsigned X, Y;
+
 	std::vector<MapObject*> map_objects; // all objects currently in this room
-	MapBuffer<SIZE_X, SIZE_Y> drawing_buffer;
+	MapBuffer drawing_buffer;
 	// linked list
 	GameRoom* next = nullptr;
 	GameRoom* prev = nullptr;
@@ -26,6 +28,8 @@ public:
 
 	bool is_current = false;
 	Msg* msg = new Msg();
+
+	inline GameRoom(unsigned x, unsigned y) : X(x), Y(y), drawing_buffer(MapBuffer(x, y)) {}
 
 	inline void init(unsigned int i) {
 		p_doors.init(i);

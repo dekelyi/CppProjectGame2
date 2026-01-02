@@ -49,8 +49,9 @@ class LevelParser {
 	vector<ObjectData> objects;
 	map<string, string> room_properties;
 
-	short current_property_id = 0;
-	int current_y_pos = 0;
+	int current_property_id = 0;
+	unsigned current_y_pos = 0;
+
 public:
 	const RiddleParser& riddle_parser;
 	inline LevelParser(const string& filename, const RiddleParser& riddles) : riddle_parser(riddles) {

@@ -9,5 +9,5 @@ class TorchProp : public BaseProp {
 public:
 	bool is_dark = false;
 
-	MapBuffer<SIZE_X, SIZE_Y> manipulate_buffer() const;
+	MapBuffer manipulate_buffer() const;
 };

@@ -70,7 +70,17 @@ MapObject* ObjectData::into_map_object(GameView* game, GameRoom* room, const Lev
 }
 
 void LevelParser::build_room(GameView* game) {
-	auto room = game->add_room();
+	auto get_prop = [&](string key, int _default) -> int {
+		string& val = this->room_properties[key];
+		try {
+			return stoi(val);
+		}
+		catch (...) {
+			return _default;
+		}
+	};
+
+	auto room = game->add_room(get_prop("height", SIZE_X), get_prop("width", SIZE_Y));
 	for (auto& obj_data : objects) {
 		ObjectData& od = obj_data;
 		MapObject* obj = obj_data.into_map_object(game, room, *this);

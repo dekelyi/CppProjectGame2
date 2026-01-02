@@ -11,8 +11,8 @@ using namespace std;
 /**
 Add a room to the game
 */
-GameRoom* GameView::add_room() {
-	auto room = new GameRoom();
+GameRoom* GameView::add_room(const unsigned X, const unsigned Y) {
+	auto room = new GameRoom(X, Y);
 	if (last) {
 		room->prev = last;
 		room->prev->next = room;

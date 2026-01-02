@@ -1,26 +1,26 @@
 L
-WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
-W   $     W                @                                 W             ?(100)  D(N)W
-W   &     W                                                  WWWWWWWWWWWWWWWWWWW
-W         W                                                                    W
-W         W                                                                    W
-W         W                                                                    W
-W\(1)        W                                                                    W
-W         W                                                                    W
-W         W                                                                    W
-W         W                                                                    W
-W                                                                              W
-W                                                                              W
-W                                                                              W
-W                                                                              W
-W                                                                          *   W
-W                                                                             KW
-W                                                                              W
-W                                                                              W
-W                                                                              W
-WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+   $     W                @                                 W             ?(100)  D(N)
+   &     W                                                  WWWWWWWWWWWWWWWWWW
+         W                                                                    
+         W                                                                    
+         W                                                                    
+\(1)        W                                                                    
+         W                                                                    
+         W                                                                    
+         W                                                                    
+                                                                              
+                                                                              
+                                                                              
+                                                                              
+                                                                          *   
+                                                                             K
+                                                                              
+                                                                              
+                                                                              
 
 :is_dark false
+:width 80
+:height 20
 
 ::1
 :do-open-door N
