@@ -33,7 +33,7 @@ M_CODE Player::handle_collision(GameRoom* room, MapObject* other, Move& move)
  */
 void Player::dump_collectible(GameRoom* room) {
 	if (collectible == nullptr) return;
-	collectible->setPosition(this->getPosition() + this->getDumpPosition(room));
+	collectible->setPosition(this->getPosition() + this->getNextPosition(room));
 	room->add_object(collectible);
 	room->draw((MapObject)*collectible);
 	collectible->handle_dump(room);
@@ -55,7 +55,7 @@ void Player::dump_collectible(GameRoom* room) {
  *         relative to the player's current position. Returns `V(0,0)` if no
  *         empty adjacent cell is found.
  */
-V Player::getDumpPosition(GameRoom* room) {
+V Player::getNextPosition(GameRoom* room) {
 	// FIXME: out of bounds
 	std::vector<V> arr = { V(0,-1), V(0,1), V(-1,0), V(1,0) };
 	//arr.erase(std::remove(arr.begin(), arr.end(), this->direction), arr.end());

@@ -82,8 +82,8 @@ Draws the HUD of the current game
 */
 void GameView::drawHUD() {
 	Writer wr(V(5, 1));
-	wr.writeline(format(" PLAYER 1 ({}) INVERTORY: {}", this->player1->getGlyph(), this->player1->getCollectibleGlyph()));
-	wr.writeline(format(" PLAYER 2 ({}) INVERTORY: {}", this->player2->getGlyph(), this->player2->getCollectibleGlyph()));
+	wr.writeline(format(" PLAYER 1 ({}) INVERTORY: {} LIVES: {}", this->player1->getGlyph(), this->player1->getCollectibleGlyph(), this->player1->lives));
+	wr.writeline(format(" PLAYER 2 ({}) INVERTORY: {} LIVES: {}", this->player2->getGlyph(), this->player2->getCollectibleGlyph(), this->player2->lives));
 
 	wr = Writer(V(SIZE_X - 10, 1));
 	size_t nroom = this->i,

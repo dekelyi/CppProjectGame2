@@ -4,8 +4,8 @@ class GameRoom;
 
 class BaseProp {
 protected:
-	const GameRoom& room;
+	GameRoom& room;
 
 public:
-	BaseProp(const GameRoom& _room) : room(_room) {}
+	BaseProp(GameRoom& _room) : room(_room) {}
 };

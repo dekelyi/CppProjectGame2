@@ -7,6 +7,7 @@
 class Player : public MapObject {
 public:
 	Collectible* collectible = nullptr;
+	unsigned lives = LIVES_DEFAULT;
 
 	Player(char _glyph) : MapObject(V(1, 1), _glyph) { attr = A_FOREGROUND_CYAN; }
 	~Player() {
@@ -49,5 +50,5 @@ public:
 
 	void dump_collectible(GameRoom* room);
 
-	V getDumpPosition(GameRoom* room);
+	V getNextPosition(GameRoom* room);
 };

@@ -14,6 +14,7 @@
 
 #define N_MAX_PLAYERS 2 // number of players
 
+#define LIVES_DEFAULT 3
 #define BOMB_AREA 3
 #define BOMB_TIMER 5
 

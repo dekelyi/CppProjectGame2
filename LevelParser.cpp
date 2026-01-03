@@ -260,7 +260,7 @@ void LevelParser::parse_all_levels(GameView* game, const RiddleParser& riddles, 
 
 	if (game->current->p_doors.entry_point) {
 		game->player1->setPosition(game->current->p_doors.entry_point->getPosition());
-		game->player2->setPosition(game->player1->getDumpPosition(game->current));
+		game->player2->setPosition(game->player1->getNextPosition(game->current));
 		game->current->add_object(game->player1);
 		game->current->add_object(game->player2);
 		game->current->remove_object(game->current->p_doors.entry_point);

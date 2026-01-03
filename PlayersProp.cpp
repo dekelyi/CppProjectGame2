@@ -28,6 +28,13 @@ set<MapObject*> PlayersProp::get_objects() const {
 
 bool PlayersProp::remove_object(MapObject* obj) {
 	Player* p = dynamic_cast<Player*>(obj);
-	if (p) return true;
+	if (p) { 
+		p->lives--;
+		if (p->lives > 0) {
+			p->setPosition((room.p_doors.entry_point) ? room.p_doors.entry_point->getPosition() : V(0, 0));
+			room.add_object(p);
+		}
+		return true;
+	}
 	return false;
 }
