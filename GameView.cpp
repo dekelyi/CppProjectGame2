@@ -11,8 +11,8 @@ using namespace std;
 /**
 Add a room to the game
 */
-GameRoom* GameView::add_room(const unsigned X, const unsigned Y) {
-	auto room = new GameRoom(X, Y);
+GameRoom* GameView::add_room(const unsigned X, const unsigned Y, const unsigned legend_pos) {
+	auto room = new GameRoom(X, Y, legend_pos);
 	if (last) {
 		room->prev = last;
 		room->prev->next = room;
@@ -69,7 +69,6 @@ Mode GameView::check_room() {
 		// redraw room
 		if (current != nullptr) {
 			ConsoleView::init();
-			ConsoleView::draw_borders();
 			draw();
 		}
 		else return Mode::WINNING;
@@ -80,16 +79,17 @@ Mode GameView::check_room() {
 /**
 Draws the HUD of the current game
 */
-void GameView::drawHUD() {
-	Writer wr(V(5, 1));
+void GameView::drawHUD(unsigned y) {
+	Writer wr(V(5, y));
 	wr.writeline(format(" PLAYER 1 ({}) INVERTORY: {} LIVES: {}", this->player1->getGlyph(), this->player1->getCollectibleGlyph(), this->player1->lives));
 	wr.writeline(format(" PLAYER 2 ({}) INVERTORY: {} LIVES: {}", this->player2->getGlyph(), this->player2->getCollectibleGlyph(), this->player2->lives));
 
-	wr = Writer(V(SIZE_X - 10, 1));
+	wr = Writer(V(SIZE_X - 10, y));
 	size_t nroom = this->i,
 		lroom = this->s;
 	wr.writeline(format("ROOM: {}/{}", nroom,lroom));
 	wr.writeline(string(nroom, CH_BLOCK) + string(lroom-nroom, CH_BLOCK_GREY));
+	gotoxy(V(0, HUD_SPACE_TOP + y));
 }
 
 void GameView::drawMsg() {
@@ -148,15 +148,12 @@ Main game loop
 Mode GameView::run() {
 	Mode mode = Mode::RUNNING;
 	ConsoleView::init();
-	ConsoleView::draw_borders();
-	this->drawHUD();
 	this->draw();
 	while (mode == Mode::RUNNING) {
 		console_sleep(TICK);
 		this->handle_tick();
 		if ((mode = this->check_room()) != Mode::RUNNING) return mode;
 		this->drawMsg();
-		this->drawHUD();
 		this->draw();
 		Keypress e = ConsoleView::get_keypress();
 		mode = this->handle_keypress(e);

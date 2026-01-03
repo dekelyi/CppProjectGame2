@@ -6,7 +6,6 @@
 #include "prelude.h"
 #include "Vector.h"
 #include "GameView.h"
-#include "RiddleParser.h"
 #include "Riddle.h"
 
 using namespace std;
@@ -18,8 +17,8 @@ struct Parameterized {
 	inline size_t size() const { return length + (params.size() > 0 ? 2+params[0].size() : 0); }
 };
 
-
 class LevelParser;
+
 struct ObjectData {
 	ObjType type;
 	V position;

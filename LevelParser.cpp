@@ -87,7 +87,7 @@ void LevelParser::build_room(GameView* game) {
 		}
 	};
 
-	auto room = game->add_room(get_prop("width", SIZE_X), get_prop("height", SIZE_Y));
+	auto room = game->add_room(get_prop("width", SIZE_X), get_prop("height", SIZE_Y), legend_position);
 	for (auto& obj_data : objects) {
 		ObjectData& od = obj_data;
 		std::vector<MapObject*> objs = obj_data.into_map_objects(game, room, *this);

@@ -77,9 +77,9 @@ namespace ConsoleView {
 		showCursor(true);
 	}
 
-	void drawAt(V pos, const V& size, const char glyph, const string& atr, const bool padding) {
+	void drawAt(V pos, const V& size, const char glyph, const string& atr, int padding) {
 		if (size == V()) return;
-		if (padding) pos = pos + V(0, HUD_SPACE_TOP); // HUD padding
+		if (padding >= 0 && pos.getY() >= padding) pos = pos + V(0, HUD_SPACE_TOP); // HUD padding
 		cout << atr << endl;
 		gotoxy(pos);
 		for (int y = 0; y < size.getY(); y++) {
@@ -122,12 +122,6 @@ namespace ConsoleView {
 		w.writeline("Player 2 controls: I (up), J (left), K (stay), L (right), M (down), O (dispose)");
 		w.writeline("Press any key to return to the main menu...");
 		_getch();
-	}
-
-	void draw_borders() {
-	/*	ConsoleView::drawAt(V(0, HUD_SPACE_TOP - 1), V(SIZE_X, 1), ' ', A_UNDERSCORE, false);
-		ConsoleView::drawAt(V(0, SIZE_Y), V(SIZE_X, 1), '-');
-		ConsoleView::drawAt(V(SIZE_X, 0), V(1, SIZE_Y), '|');*/
 	}
 
 	Keypress get_keypress() {

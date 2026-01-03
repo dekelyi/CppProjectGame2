@@ -5,7 +5,7 @@
 */
 
 /** --- CONSTANTS ---- */
-#define HUD_SPACE_TOP 5 // size of top bar HUD
+#define HUD_SPACE_TOP 3 // size of top bar HUD
 #define SIZE_X 80 // Size of the game view
 #define SIZE_Y 20\
 

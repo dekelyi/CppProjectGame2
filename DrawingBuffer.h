@@ -4,8 +4,9 @@
 #include <iostream>
 #include "Vector.h"
 #include "Console.h"
+#include <functional>
 
-using std::vector, std::string;
+using std::vector, std::string, std::endl, std::cout;
 
 struct DrawingObject {
 	char glyph = ' ';
@@ -18,12 +19,12 @@ static const DrawingObject DNULL = DrawingObject();
 
 class MapBuffer {
 	vector<vector<DrawingObject>> buffer;
-	unsigned padding_top = HUD_SPACE_TOP;
 public:
+	const int legend_y_pos = 0;
 	const unsigned X;
 	const unsigned Y;
 
-	MapBuffer(unsigned x, unsigned y) : X(x), Y(y) {
+	MapBuffer(unsigned x, unsigned y, int legend_pos) : X(x), Y(y), legend_y_pos(legend_pos) {
 		buffer = { X, vector<DrawingObject>(Y) };
 	}
 	DrawingObject get_at(V pos) const {
@@ -54,19 +55,20 @@ public:
 				set_at(V(x + dx, y + dy), obj);
 	}
 
-	void draw() const {
+	void draw(std::function<void(unsigned)> draw_hud) const {
 		string border_h = string(X+2, CH_BLOCK_GREY);
-
-		gotoxy(V(0, padding_top));
-		std::cout << border_h << std::endl;
+		gotoxy(V(0, 0));
 		for (unsigned y = 0; y < Y; y++) {
-			std::cout << CH_BLOCK_GREY;
+			if (y == legend_y_pos) draw_hud(y ? y+1 : y);
+			if (y == 0) cout << border_h << endl;
+			cout << CH_BLOCK_GREY;
 			for (unsigned x = 0; x < X; x++) {
 				const DrawingObject& obj = buffer[x][y];
-				std::cout << obj.attr << obj.glyph << A_RESET;
+				cout << obj.attr << obj.glyph << A_RESET;
 			}
-			std::cout << CH_BLOCK_GREY << std::endl;
+			cout << CH_BLOCK_GREY << endl;
 		}
-		std::cout << border_h << std::endl;
+		cout << border_h << endl;
+		if (legend_y_pos >= Y) draw_hud(Y+2);
 	}
 };

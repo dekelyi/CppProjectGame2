@@ -6,6 +6,7 @@
 #include "PlayersProp.h"
 #include "DoorProp.h"
 #include "TorchProp.h"
+#include <functional>
 
 class GameView;
 
@@ -14,7 +15,7 @@ class GameRoom {
 	friend class GameView;
 	friend class Torch;
 public:
-	const unsigned X, Y;
+	const unsigned X, Y, LEGEND_Y_POS;
 
 	std::set<MapObject*> map_objects; // all objects currently in this room
 	MapBuffer drawing_buffer;
@@ -29,7 +30,7 @@ public:
 	bool is_current = false;
 	Msg msg;
 
-	inline GameRoom(unsigned x, unsigned y) : X(x), Y(y), drawing_buffer(MapBuffer(x, y)) {}
+	inline GameRoom(unsigned x, unsigned y, unsigned legend_pos) : X(x), Y(y), LEGEND_Y_POS(legend_pos), drawing_buffer(MapBuffer(x, y, legend_pos)) {}
 
 	inline void init(unsigned int i) {
 		p_doors.init(i);
@@ -58,8 +59,8 @@ public:
 		}
 		return objs;
 	}
-	inline void drawBuffer() const {
-		p_torch.manipulate_buffer().draw();
+	inline void drawBuffer(std::function<void(unsigned)> draw_hud) const {
+		p_torch.manipulate_buffer().draw(draw_hud);
 	}
 	inline void draw(const MapObject& obj) {
 		drawing_buffer.set_at(obj.getPosition(), obj.getSize(), { obj.getGlyph(), obj.getAttr() });

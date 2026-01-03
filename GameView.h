@@ -65,12 +65,12 @@ public:
 	inline void draw() {
 		for (MapObject* obj : current->map_objects)
 			current->draw(*obj);
-		current->drawBuffer();
+		current->drawBuffer([&](unsigned y) { drawHUD(y); });
 	}
 	/**
 	Add a room to the game
 	*/
-	GameRoom* add_room(const unsigned X = SIZE_X, const unsigned Y = SIZE_Y);
+	GameRoom* add_room(const unsigned X = SIZE_X, const unsigned Y = SIZE_Y, const unsigned legend_pos = 0);
 	/**
 	Move to the next room
 	*/
@@ -83,7 +83,7 @@ public:
 	/**
 	Draws the HUD of the current game
 	*/
-	void drawHUD();
+	void drawHUD(unsigned y);
 
 	void drawMsg();
 	/**
