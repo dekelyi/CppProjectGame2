@@ -13,19 +13,12 @@ enum M_CODE {
 
 struct Move {
 	V dir;
-	unsigned short duartion = 1,
+	unsigned duration = 1,
 		speed  = 1;
 
 	enum Kind {KEYPRESS, EVENT} kind;
 
 	bool operator==(const Move& m) const = default;
-};
-
-struct Draw {
-	V pos;
-	V size;
-	char glyph;
-	std::string attr = "";
 };
 
 class MapObject {
@@ -44,7 +37,7 @@ public:
 	MapObject(V _size, char _glyph) : pos(V(-1, -1)), size(_size), glyph(_glyph) {}
 	MapObject(V _pos, V _size, char _glyph) : pos(_pos), size(_size), glyph(_glyph) {}
 
-	// Setters and getts
+	// Setters and getters
 	inline void setPosition(const V& _pos) { pos = _pos; }
 	virtual inline V getPosition() const { return pos; }
 	inline void setSize(const V& _size) { size = _size; }

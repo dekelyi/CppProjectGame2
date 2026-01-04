@@ -2,7 +2,7 @@
 #include <algorithm>
 #include "prelude.h"
 
-// A vector in R^2 represting position/size
+// A vector in R^2 representing position/size
 class V {
 	int x;
 	int y;
@@ -77,12 +77,3 @@ public:
 };
 
 inline S S1 = S(1, S::SB);
-
-struct VS {
-	V pos;
-	V size;
-
-	bool operator==(const VS& other) const {
-		return pos == other.pos && size == other.size;
-	}
-};

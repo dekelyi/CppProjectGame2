@@ -18,7 +18,10 @@ public:
 		: MapObject(pos, size, (char)ObjType::RIDDLE), data(riddle_data) {
 	}
 
-	virtual M_CODE handle_collision(GameRoom* room, MapObject* obj, Move& move) override;
+	inline virtual M_CODE handle_collision(GameRoom* room, MapObject* obj, Move& move) override {
+		room->msg = RiddleMsg(room, this);
+		return CANT_MOVE;
+	}
 };
 
 
@@ -27,7 +30,7 @@ class RiddleMsg : public MsgWithInput {
 	Riddle* riddle;
 
 public:
-	RiddleMsg(GameRoom* _room, Riddle* _riddle)
+	inline RiddleMsg(GameRoom* _room, Riddle* _riddle)
 		: room(_room), riddle(_riddle) {
 		// build question text
 		text = riddle->data.question + "\n";
@@ -36,20 +39,5 @@ public:
 		}
 	}
 
-	virtual void on_input(char ch) override {
-		int answer_index = ch - '1';
-		if (answer_index >= 0 && answer_index < (int)riddle->data.answers.size()) {
-			if ((size_t)answer_index == riddle->data.correct_answer_index) {
-				Msg::text = "Correct answer!";
-				room->clear((MapObject)*riddle);
-				room->remove_object((MapObject*)riddle);
-				riddle = nullptr;
-			}
-			else {
-				Msg::text = "Wrong answer!";
-			}
-			ticks_left = 5;
-			active = false;
-		}
-	}
+	virtual void on_input(char ch) override;
 };

@@ -48,8 +48,8 @@ Move one iteration each tick
 void MapObject::handle_tick(GameRoom* room) {
 	std::vector<Move> remove;
 	for (Move& m : moves) {
-		m.duartion--;
-		if (m.duartion == 0 || !this->try_move(room, m) || m.duartion == 0) {
+		m.duration--;
+		if (m.duration == 0 || !this->try_move(room, m) || m.duration == 0) {
 			remove.push_back(m);
 		}
 	}

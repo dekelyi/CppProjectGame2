@@ -1,6 +1,18 @@
 #include "Riddle.h"
 
-M_CODE Riddle::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
-	room->msg = RiddleMsg(room, this);
-	return CANT_MOVE;
+void RiddleMsg::on_input(char ch) {
+	int answer_index = ch - '1';
+	if (answer_index >= 0 && answer_index < (int)riddle->data.answers.size()) {
+		if ((size_t)answer_index == riddle->data.correct_answer_index) {
+			Msg::text = "Correct answer!";
+			room->clear((MapObject)*riddle);
+			room->remove_object((MapObject*)riddle);
+			riddle = nullptr;
+		}
+		else {
+			Msg::text = "Wrong answer!";
+		}
+		ticks_left = 5;
+		active = false;
+	}
 }
