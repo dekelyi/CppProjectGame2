@@ -9,12 +9,12 @@ M_CODE MapObject::can_move(GameRoom* room, Move& move) {
 	V dest = pos + move.dir;
 	// check if in bounds
 	if (dest.is_out_of_bounds())
-		return CANT_MOVE;
+		return M_CODE::CANT_MOVE;
 
 	auto obj = room->get_object_at(dest);
 	if (obj)
 		return obj->handle_collision(room, this, move);
-	else return CAN_MOVE;
+	else return M_CODE::CAN_MOVE;
 }
 
 /**
@@ -33,12 +33,12 @@ bool MapObject::try_move(GameRoom* room, Move& m) {
 		return (m.speed) ? true : false;
 	}
 	M_CODE c = can_move(room, m);
-	if (c == CAN_MOVE) {
+	if (c == M_CODE::CAN_MOVE) {
 		room->clear(*this);
 		move(m.dir * m.speed);
 		return true;
 	}
-	else if (c == MOVED) return true;
+	else if (c == M_CODE::MOVED) return true;
 	return false;
 }
 
@@ -62,5 +62,5 @@ M_CODE MapObject::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
 		if (m.dir.is_same_direction(move.dir))
 			//can_move = can_move || try_move(room, m);
 			can_move = true;
-	return can_move ? CAN_MOVE : CANT_MOVE;
+	return can_move ? M_CODE::CAN_MOVE : M_CODE::CANT_MOVE;
 }

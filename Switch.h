@@ -41,7 +41,7 @@ public:
 	virtual M_CODE handle_collision(GameRoom* room, MapObject* other, Move& move) override {
 		switchers.push_back({ other, other->getPosition() });
 		setSwitch(room, true);
-		return CANT_MOVE;
+		return M_CODE::CANT_MOVE;
 	}
 
 	inline virtual void handle_tick(GameRoom* room) override {

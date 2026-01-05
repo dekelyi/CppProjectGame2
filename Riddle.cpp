@@ -19,5 +19,5 @@ void RiddleMsg::on_input(char ch) {
 
 M_CODE Riddle::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
 	room->msg = RiddleMsg(room, this);
-	return CANT_MOVE;
+	return M_CODE::CANT_MOVE;
 }

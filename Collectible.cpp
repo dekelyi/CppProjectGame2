@@ -11,9 +11,9 @@ M_CODE Collectible::handle_collision(GameRoom* room, MapObject* other, Move& mov
 	if (p != nullptr && p->collectible == nullptr) {
 		p->collectible = this;
 		room->remove_object(this, false);
-		return CAN_MOVE;
+		return M_CODE::CAN_MOVE;
 	}
-	return CANT_MOVE;
+	return M_CODE::CANT_MOVE;
 }
 
 void Bomb::handle_dump(GameRoom* room) {

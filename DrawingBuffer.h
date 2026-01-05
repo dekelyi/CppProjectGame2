@@ -64,7 +64,7 @@ public:
 			cout << CH_BLOCK_GREY;
 			for (unsigned x = 0; x < X; x++) {
 				const DrawingObject& obj = buffer[x][y];
-				cout << obj.attr << obj.glyph << A_RESET;
+				cout << (ConsoleMenu::colors ? obj.attr : "") << obj.glyph << A_RESET;
 			}
 			cout << CH_BLOCK_GREY << endl;
 		}

@@ -8,7 +8,7 @@ M_CODE Player::handle_collision(GameRoom* room, MapObject* other, Move& move)
 	if (p && move.kind == Move::EVENT && std::find(moves.begin(), moves.end(), move) == moves.end()) {
 		moves.remove_if([move](const Move& m) { return m.dir.is_same_direction(move.dir); });
 		moves.push_back(move);
-		return try_move(room, move) ? CAN_MOVE : CANT_MOVE;
+		return try_move(room, move) ? M_CODE::CAN_MOVE : M_CODE::CANT_MOVE;
 	}
 	else return MapObject::handle_collision(room, other, move);
 }

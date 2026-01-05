@@ -5,7 +5,7 @@
 
 class GameRoom;
 
-enum M_CODE {
+enum class M_CODE {
 	CAN_MOVE,
 	CANT_MOVE,
 	MOVED

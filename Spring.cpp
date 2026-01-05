@@ -17,10 +17,10 @@ M_CODE Spring::handle_collision(GameRoom* room, MapObject* other, Move& move) {
 	if (compressed == size.length) {
 		move = create_compressed_move();
 		force = nullptr;
-		return CAN_MOVE;
+		return M_CODE::CAN_MOVE;
 	}
 
-	return CAN_MOVE;
+	return M_CODE::CAN_MOVE;
 }
 
 void Spring::handle_tick(GameRoom* room) {
