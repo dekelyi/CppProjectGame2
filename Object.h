@@ -21,6 +21,14 @@ struct Move {
 	bool operator==(const Move& m) const = default;
 };
 
+/**
+ * MapObject - base class for all objects placed on the map.
+ *
+ * Responsibilities:
+ * - Describe position, size and glyph used for rendering.
+ * - Maintain queued moves and process movement logic.
+ * - Provide hooks for collision handling and per-tick updates.
+ */
 class MapObject {
 protected:
 	friend class Spring;
@@ -66,20 +74,23 @@ public:
 	}
 
 	/**
-	* Try to move with `dir`
+	* Try to move this object using `dir`. Movement may be split into
+	* multiple steps if speed > 1. Returns true if movement succeeded.
 	*/
 	bool try_move(GameRoom* game, Move& dir);
-	/**
-	* Checks if the object can move with `move`
-	*/
-	M_CODE can_move(GameRoom* game, Move& move);
-	/**
-	* handles `obj` collision with `this` and handle internal logic
-	*/
-	virtual M_CODE handle_collision(GameRoom* room, MapObject* obj, Move& move);
 
 	/**
-	* Handle one tick
-	*/
+	 * Check whether the object can move according to current room state.
+	 * Returns an M_CODE describing the result.
+	 */
+	M_CODE can_move(GameRoom* game, Move& move);
+
+	/**
+	 * Handle collision between this object and `obj` when attempting `move`.
+	 * Default implementation allows movement only when queued moves match direction.
+	 */
+	virtual M_CODE handle_collision(GameRoom* room, MapObject* obj, Move& move);
+
+	/** Per-tick update; advances active moves and removes expired ones. */
 	virtual void handle_tick(GameRoom* room);
 };

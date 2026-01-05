@@ -3,8 +3,9 @@
 #include "Vector.h"
 
 /**
-Checks if the object can move in a specific way, considering other objects in the way
-*/
+ * Checks if the object can move in a specific way, considering other objects in the way.
+ * Returns M_CODE::CAN_MOVE, CANT_MOVE or MOVED.
+ */
 M_CODE MapObject::can_move(GameRoom* room, Move& move) {
 	V dest = pos + move.dir;
 	// check if in bounds
@@ -18,8 +19,9 @@ M_CODE MapObject::can_move(GameRoom* room, Move& move) {
 }
 
 /**
-Try to move in a specific way and draws the outcome
-*/
+ * Try to move in a specific way. If speed>1, performs repeated steps.
+ * Returns true when movement occurred or was handled (MOVED).
+ */
 bool MapObject::try_move(GameRoom* room, Move& m) {
 	if (m.dir == V(0, 0)) return false;
 	if (m.speed > 1) {
@@ -42,9 +44,7 @@ bool MapObject::try_move(GameRoom* room, Move& m) {
 	return false;
 }
 
-/**
-Move one iteration each tick
-*/
+/** Move one iteration each tick; decrement durations and execute moves. */
 void MapObject::handle_tick(GameRoom* room) {
 	std::vector<Move> remove;
 	for (Move& m : moves) {
@@ -56,6 +56,10 @@ void MapObject::handle_tick(GameRoom* room) {
 	for (const Move& m : remove) moves.remove(m);
 }
 
+/**
+ * Default collision handler: prefer movement when queued moves match direction,
+ * otherwise block.
+ */
 M_CODE MapObject::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
 	bool can_move = false;
 	for (auto& m : moves)

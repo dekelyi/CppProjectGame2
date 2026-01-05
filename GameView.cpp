@@ -9,8 +9,8 @@ using namespace std;
 /** ------ Linked list stuff ------------*/
 
 /**
-Add a room to the game
-*/
+ * Add a room to the game. Link into linked list and return pointer.
+ */
 GameRoom* GameView::add_room(const unsigned X, const unsigned Y, const unsigned legend_pos) {
 	auto room = new GameRoom(X, Y, legend_pos);
 	if (last) {
@@ -26,9 +26,7 @@ GameRoom* GameView::add_room(const unsigned X, const unsigned Y, const unsigned 
 	return room;
 }
 
-/**
-Move to the next room
-*/
+/** Move to the next room in the list and update index/flags. */
 void GameView::advance_room() {
 	current->is_current = false;
 	if (current->next)
@@ -37,9 +35,7 @@ void GameView::advance_room() {
 	i++;
 }
 
-/**
-Move to the previous room
-*/
+/** Move to the previous room in the list and update index/flags. */
 void GameView::goback_room() {
 	current->is_current = false;
 	if (current->prev)
@@ -49,9 +45,9 @@ void GameView::goback_room() {
 }
 
 /**
-Checks if no players are in the current room
-if so, move to the room where the last player is at
-*/
+ * If current room has no players move forward/back based on last door used.
+ * Returns Mode::WINNING when no players left in any room.
+ */
 Mode GameView::check_room() {
 	if (current->p_players.count_players() == 0) {
 		GameRoom* room = this->head;
@@ -76,9 +72,7 @@ Mode GameView::check_room() {
 	return Mode::RUNNING;
 }
 
-/**
-Draws the HUD of the current game
-*/
+/** Draw HUD lines with player inventory and room progress. */
 void GameView::drawHUD(unsigned y) {
 	Writer wr(V(5, y));
 	wr.writeline(format(" PLAYER 1 ({}) INVERTORY: {} LIVES: {}", this->player1->getGlyph(), this->player1->getCollectibleGlyph(), this->player1->lives));
@@ -92,6 +86,7 @@ void GameView::drawHUD(unsigned y) {
 	Console::gotoxy(V(0, HUD_SPACE_TOP + y));
 }
 
+/** Display current room message modal until it expires. */
 void GameView::drawMsg() {
 	Console::init();
 	string msg = this->current->msg->getText();
@@ -107,6 +102,7 @@ void GameView::drawMsg() {
 	}
 }
 
+/** Dispatch a keypress to players or menus; returns Mode when mode-switch is required. */
 Mode GameView::handle_keypress(Keypress e) {
 	switch (e) {
 		case Keypress::UP_1:
@@ -138,9 +134,7 @@ Mode GameView::handle_keypress(Keypress e) {
 	return Mode::RUNNING;
 }
 
-/**
-Main game loop
-*/
+/** Main loop: tick, draw, input, sleep cycle until mode changes. */
 Mode GameView::run() {
 	Mode mode = Mode::RUNNING;
 	Console::init();

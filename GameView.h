@@ -4,11 +4,15 @@
 #include "Room.h"
 
 /**
-* Object representing a game
-* Containing a linked list of rooms
-* 
-* Does all the Event handling
-*/
+ * GameView - application-level game container
+ *
+ * Responsibilities:
+ * - Owns the linked list of GameRoom instances and players.
+ * - Drives the main game loop and event routing.
+ * - Provides room management helpers (add, advance, go back).
+ *
+ * Public methods are documented inline.
+ */
 class GameView {
 	// linked list of rooms
 	GameRoom* head = nullptr;
@@ -21,6 +25,9 @@ public:
 	Player* player1;
 	Player* player2;
 
+	/**
+	 * Construct a GameView and create two player instances.
+	 */
 	inline GameView() {
 		player1 = new Player((char)ObjType::PLAYER_1);
 		player2 = new Player((char)ObjType::PLAYER_2);
@@ -39,6 +46,9 @@ public:
 		delete player2;
 	}
 
+	/**
+	 * Initialize all rooms (call init on each GameRoom and its props).
+	 */
 	inline void init_rooms() {
 		unsigned int idx = 1;
 		GameRoom* node = head;
@@ -51,48 +61,55 @@ public:
 	}
 
 	/**
-	Do one tick of the game
-	*/
+	 * Perform one game tick by delegating tick handling to map objects.
+	 */
 	inline void handle_tick() {
 		for (MapObject* obj : current->map_objects)
 			obj->handle_tick(current);
 	}
 
 	/**
-	Draw all objects
-	*/
+	 * Render the current room by drawing each MapObject and then the HUD.
+	 */
 	inline void draw() {
 		for (MapObject* obj : current->map_objects)
 			current->draw(*obj);
 		current->drawBuffer([&](unsigned y) { drawHUD(y); });
 	}
+
 	/**
-	Add a room to the game
-	*/
+	 * Add a new room to the game linked list.
+	 * @param X Width of the room in cells (default SIZE_X).
+	 * @param Y Height of the room in cells (default SIZE_Y).
+	 * @param legend_pos Y position of the legend line.
+	 * @returns pointer to the newly created GameRoom.
+	 */
 	GameRoom* add_room(const unsigned X = SIZE_X, const unsigned Y = SIZE_Y, const unsigned legend_pos = 0);
-	/**
-	Move to the next room
-	*/
+
+	/** Move to the next room in the linked list (if any). */
 	void advance_room();
-	/**
-	Move to the previous room
-	*/
+
+	/** Move to the previous room in the linked list (if any). */
 	void goback_room();
 
-	/**
-	Draws the HUD of the current game
-	*/
+	/** Draw the HUD for the current game state at vertical offset `y`. */
 	void drawHUD(unsigned y);
 
+	/** Draw active message modal (blocks until message inactive). */
 	void drawMsg();
+
 	/**
-	Checks if no players are in the current room
-	if so, move to the room where the last player is at
-	*/
+	 * Check whether players exist in the current room; if none, move to a room
+	 * where players remain. Returns the Mode to switch to (RUNNING, WINNING, etc).
+	 */
 	Mode check_room();
+
+	/** Handle a Keypress event and update players/room accordingly; returns selected Mode. */
 	Mode handle_keypress(Keypress e);
+
 	/**
-	Main game loop
-	*/
+	 * Main game loop. Runs until a Mode other than RUNNING is returned.
+	 * Returns the Mode which the caller should handle next.
+	 */
 	Mode run();
 };

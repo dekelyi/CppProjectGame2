@@ -1,13 +1,13 @@
 /**
-* Console view helpers and drawers
-*/
+ * Console view helpers and drawers
+ */
 #pragma once
 #include <string>
 #include <functional>
 #include "Vector.h"
 #include "prelude.h"
 
-/** --- CONSTANTS - ANSI CODES */
+ /** --- CONSTANTS - ANSI CODES */
 #define ANSI_ESC "\033["
 #define A_FOREGROUND_RED ANSI_ESC "31m"
 #define A_FOREGROUND_GREEN ANSI_ESC "32m"
@@ -26,42 +26,93 @@
 class GameView;
 
 /**
-* Console - static helper class that replaces previous free functions.
-*/
+ * Console - static helper class that replaces previous free functions.
+ *
+ * Responsibilities:
+ * - Terminal initialization / teardown used by the game loop.
+ * - Cursor positioning and simple screen utilities.
+ *
+ * All methods are static convenience wrappers over Win32 console APIs.
+ */
 class Console {
 public:
+    /**
+     * Initialize the console for the game (clear screen, hide cursor,
+     * enable ANSI escape processing).
+     */
     static void init();
+    /**
+     * Restore console state after the game (clear screen, show cursor).
+     */
     static void deinit();
 
+    /**
+     * Move the terminal cursor to the given screen coordinates.
+     * @param pos Target coordinate in console cells.
+     */
     static void gotoxy(V pos);
+    /**
+     * Show or hide the terminal cursor.
+     * @param show true to show the cursor, false to hide it.
+     */
     static void showCursor(bool show);
+    /**
+     * Clear the terminal screen.
+     */
     static void cls();
+    /**
+     * Sleep for the specified number of milliseconds.
+     * @param ms Milliseconds to sleep.
+     */
     static void sleep(int ms);
 };
 
 /**
-* A Writer that starts with some padding and retains it
-*/
+ * A Writer that starts at a given position and retains the column during
+ * multiple writes. Intended for simple vertical text output (writeline).
+ */
 class Writer {
     V pos;
 public:
     Writer(V _pos) : pos(_pos) {}
+    /**
+     * Write a single line at the current writer position and advance the Y
+     * coordinate by one.
+     * @param line Text to print.
+     */
     void writeline(const std::string& line);
 };
 
 /**
-* ConsoleMenu - converted from namespace to static class.
-*/
+ * ConsoleMenu - static helper for the main menu and modal dialogs.
+ *
+ * Provides simple blocking menu flows used by the application bootstrap
+ * and the main game loop. All methods are static and use the Console   
+ * and Writer helpers for presentation.
+ */
 class ConsoleMenu {
 public:
     static bool colors;
 
+    /** Show the manual/instructions screen (blocking). */
     static void manual();
+    /** Show the "won game" screen (non-blocking). */
     static void won_game();
+    /** Pause dialog that returns the mode to switch to. */
     static Mode pause();
+    /** Main menu dialog that returns the selected mode. */
     static Mode menu();
 
+    /**
+     * Run the top-level main loop which drives the entire application.
+     * The provided init callback is used to configure a newly created
+     * GameView before starting the game.
+     */
     static void main_loop(std::function<void(GameView*)> init);
 
+    /**
+     * Poll for a keypress and convert it to a Keypress enum. Returns
+     * Keypress::NONE if no key is available.
+     */
     static Keypress get_keypress();
 };

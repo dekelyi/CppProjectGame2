@@ -15,6 +15,7 @@ using std::cout, std::endl, std::string, std::format;
 
 // --------- Console (static helpers) --------------------
 
+// Move the cursor to the given console coordinate and flush the output.
 void Console::gotoxy(V pos) {
     cout.flush();
     COORD coord;
@@ -23,6 +24,7 @@ void Console::gotoxy(V pos) {
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
+// Show or hide the console cursor.
 void Console::showCursor(bool show) {
     HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO curInfo;
@@ -31,14 +33,17 @@ void Console::showCursor(bool show) {
     SetConsoleCursorInfo(hStdOut, &curInfo);
 }
 
+// Clear the console using system call.
 void Console::cls() {
     system("cls");
 }
 
+// Sleep wrapper around Win32 Sleep.
 void Console::sleep(int ms) {
     Sleep(ms);
 }
 
+// Initialize console state for the game: clear, hide cursor, enable ANSI codes.
 void Console::init() {
     Console::cls();
     Console::showCursor(false);
@@ -51,13 +56,14 @@ void Console::init() {
     SetConsoleMode(hStdOut, dwMode);
 }
 
+// Restore console state after the game.
 void Console::deinit() {
     Console::cls();
     Console::showCursor(true);
 }
 
 // --------- Writer -----------------
-
+// Write a line at the writer's current position and advance Y.
 void Writer::writeline(const string& line) {
     Console::gotoxy(pos);
     cout << line;
@@ -68,6 +74,7 @@ void Writer::writeline(const string& line) {
 
 bool ConsoleMenu::colors = true;
 
+// Pause dialog: blocking loop that returns selected next mode.
 Mode ConsoleMenu::pause() {
     Console::cls();
     Console::gotoxy(V(10, 5));
@@ -82,6 +89,7 @@ Mode ConsoleMenu::pause() {
     return m;
 }
 
+// Show win screen (non-blocking).
 void ConsoleMenu::won_game() {
     Console::init();
     Writer w = { V(10, 5) };
@@ -89,6 +97,27 @@ void ConsoleMenu::won_game() {
     w.writeline("press any key to return to the main menu");
 }
 
+// Display manual instructions (blocking).
+void ConsoleMenu::manual() {
+    Console::init();
+    Writer w = { V(10, 5) };
+    w.writeline("Instructions:");
+    w.writeline("Player 1 controls: W (up), A (left), S (stay), D (right), X (down), E (dispose)");
+    w.writeline("Player 2 controls: I (up), J (left), K (stay), L (right), M (down), O (dispose)");
+    w.writeline("Press any key to return to the main menu...");
+    _getch();
+}
+
+// Return Keypress enum from keyboard; returns NONE if no key available.
+Keypress ConsoleMenu::get_keypress() {
+    if (_kbhit()) {
+        char ch = _getch();
+        return (Keypress)(toupper(ch));
+    }
+    return Keypress::NONE;
+}
+
+// Main menu flow; returns chosen Mode.
 Mode ConsoleMenu::menu() {
     Console::init();
     Writer w = { V(10, 5) };
@@ -115,24 +144,9 @@ Mode ConsoleMenu::menu() {
     return m;
 }
 
-void ConsoleMenu::manual() {
-    Console::init();
-    Writer w = { V(10, 5) };
-    w.writeline("Instructions:");
-    w.writeline("Player 1 controls: W (up), A (left), S (stay), D (right), X (down), E (dispose)");
-    w.writeline("Player 2 controls: I (up), J (left), K (stay), L (right), M (down), O (dispose)");
-    w.writeline("Press any key to return to the main menu...");
-    _getch();
-}
 
-Keypress ConsoleMenu::get_keypress() {
-    if (_kbhit()) {
-        char ch = _getch();
-        return (Keypress)(toupper(ch));
-    }
-    return Keypress::NONE;
-}
 
+// Application top-level main loop. init callback configures a new GameView.
 void ConsoleMenu::main_loop(std::function<void(GameView*)> init) {
     Mode mode = Mode::MENU;
     GameView* game = nullptr;
