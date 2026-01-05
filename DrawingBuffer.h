@@ -57,7 +57,7 @@ public:
 
 	void draw(std::function<void(unsigned)> draw_hud) const {
 		string border_h = string(X+2, CH_BLOCK_GREY);
-		gotoxy(V(0, 0));
+		Console::gotoxy(V(0, 0));
 		for (unsigned y = 0; y < Y; y++) {
 			if (y == legend_y_pos) draw_hud(y ? y+1 : y);
 			if (y == 0) cout << border_h << endl;

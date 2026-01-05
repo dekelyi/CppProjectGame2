@@ -5,130 +5,172 @@
 #include <cstdlib>
 #include <conio.h>
 #include <format>
+#include <functional>
 #include "Vector.h"
 #include "Console.h"
 #include "prelude.h"
+#include "GameView.h"
 
 using std::cout, std::endl, std::string, std::format;
 
-// --------- INTERNAL FUNCTIONS --------------------
-/**
-goto a position in the screen
-*/
-void gotoxy(V pos) {
-	cout.flush();
-	COORD coord;
-	coord.X = pos.getX();
-	coord.Y = pos.getY();
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+// --------- Console (static helpers) --------------------
+
+void Console::gotoxy(V pos) {
+    cout.flush();
+    COORD coord;
+    coord.X = pos.getX();
+    coord.Y = pos.getY();
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
-/**
-Show or hide curesor
-*/
-void showCursor(bool show) {
-	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-	CONSOLE_CURSOR_INFO curInfo;
-	GetConsoleCursorInfo(hStdOut, &curInfo);
-	curInfo.bVisible = show; // Set to TRUE to make it visible
-	SetConsoleCursorInfo(hStdOut, &curInfo);
+void Console::showCursor(bool show) {
+    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO curInfo;
+    GetConsoleCursorInfo(hStdOut, &curInfo);
+    curInfo.bVisible = show; // Set to TRUE to make it visible
+    SetConsoleCursorInfo(hStdOut, &curInfo);
 }
 
-/**
-clear the screen
-*/
-void cls() {
-	system("cls");
+void Console::cls() {
+    system("cls");
 }
 
-// --------- EXPORT FUNCTIONS -----------------
-
-/**
-Sleep for ms miliseconds
-*/
-void console_sleep(int ms) {
-	Sleep(ms);
+void Console::sleep(int ms) {
+    Sleep(ms);
 }
 
-// Writer
+void Console::init() {
+    Console::cls();
+    Console::showCursor(false);
+
+    // Enable ANSI escape codes
+    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD dwMode = 0;
+    GetConsoleMode(hStdOut, &dwMode);
+    dwMode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    SetConsoleMode(hStdOut, dwMode);
+}
+
+void Console::deinit() {
+    Console::cls();
+    Console::showCursor(true);
+}
+
+// --------- Writer -----------------
+
 void Writer::writeline(const string& line) {
-	gotoxy(pos);
-	cout << line;
-	pos.setY(pos.getY() + 1);
+    Console::gotoxy(pos);
+    cout << line;
+    pos.setY(pos.getY() + 1);
 }
 
-namespace ConsoleView {
-	bool colors = true;
+// --------- ConsoleMenu (static class) -----------------
 
-	void init() {
-		cls();
-		showCursor(false);
+bool ConsoleMenu::colors = true;
 
-		// Enable ANSI escape codes
-		HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-		DWORD dwMode = 0;
-		GetConsoleMode(hStdOut, &dwMode);
-		dwMode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-		SetConsoleMode(hStdOut, dwMode);
-	}
+Mode ConsoleMenu::pause() {
+    Console::cls();
+    Console::gotoxy(V(10, 5));
+    cout << "Game paused, press ESC again to continue or H to go back to the main menu" << endl;
 
-	void deinit() {
-		cls();
-		showCursor(true);
-	}
+    Mode m = Mode::PAUSED;
+    while (m == Mode::PAUSED) {
+        Keypress e = ConsoleMenu::get_keypress();
+        if (e == Keypress::ESC) m = Mode::CONTINUE;
+        if (e == Keypress::H) m = Mode::MENU;
+    }
+    return m;
+}
 
-	void drawAt(V pos, const V& size, const char glyph, const string& atr, int padding) {
-		if (size == V()) return;
-		if (padding >= 0 && pos.getY() >= padding) pos = pos + V(0, HUD_SPACE_TOP); // HUD padding
-		cout << atr << endl;
-		gotoxy(pos);
-		for (int y = 0; y < size.getY(); y++) {
-			for (int x = 0; x < size.getX(); x++) {
-				cout << glyph;
-			}
-			gotoxy(pos + V(0, y + 1));
-		}
-		cout << A_RESET << endl;
-	}
+void ConsoleMenu::won_game() {
+    Console::init();
+    Writer w = { V(10, 5) };
+    w.writeline("You won the Game");
+    w.writeline("press any key to return to the main menu");
+}
 
-	void pause() {
-		cls();
-		gotoxy(V(10, 5));
-		cout << "Game paused, press ESC again to continue or H to go back to the main menu" << endl;
-	}
+Mode ConsoleMenu::menu() {
+    Console::init();
+    Writer w = { V(10, 5) };
+    w.writeline("Welcome to the Game!");
+    w.writeline("(1) Start a new game");
+    w.writeline(format("(7) Colors: turn {}", colors ? "off" : "on"));
+    w.writeline("(8) Instruction and manual");
+    w.writeline("(9) Exit");
 
-	void won_game() {
-		ConsoleView::init();
-		Writer w = { V(10, 5) };
-		w.writeline("You won the Game");
-		w.writeline("press any key to return to the main menu");
-	}
+    Mode m = Mode::MENU;
+    while (m == Mode::MENU) {
+        Keypress e = ConsoleMenu::get_keypress();
+        if (e == Keypress::_1) m = Mode::RUNNING;
+        if (e == Keypress::_7) { // disable/enable colors
+            ConsoleMenu::colors = !ConsoleMenu::colors;
+            ConsoleMenu::menu();
+        }
+        if (e == Keypress::_8) { // print manual
+            ConsoleMenu::manual();
+            ConsoleMenu::menu();
+        }
+        if (e == Keypress::_9 || e == Keypress::ESC) m = Mode::EXIT;
+    }
+    return m;
+}
 
-	void menu() {
-		ConsoleView::init();
-		Writer w = { V(10, 5) };
-		w.writeline("Welcome to the Game!");
-		w.writeline("(1) Start a new game");
-		w.writeline(format("(7) Colors: turn {}", colors ? "off" : "on"));
-		w.writeline("(8) Instruction and manual");
-		w.writeline("(9) Exit");
-	}
+void ConsoleMenu::manual() {
+    Console::init();
+    Writer w = { V(10, 5) };
+    w.writeline("Instructions:");
+    w.writeline("Player 1 controls: W (up), A (left), S (stay), D (right), X (down), E (dispose)");
+    w.writeline("Player 2 controls: I (up), J (left), K (stay), L (right), M (down), O (dispose)");
+    w.writeline("Press any key to return to the main menu...");
+    _getch();
+}
 
-	void manual() {
-		ConsoleView::init();
-		Writer w = { V(10, 5) };
-		w.writeline("Instructions:");
-		w.writeline("Player 1 controls: W (up), A (left), S (stay), D (right), X (down), E (dispose)");
-		w.writeline("Player 2 controls: I (up), J (left), K (stay), L (right), M (down), O (dispose)");
-		w.writeline("Press any key to return to the main menu...");
-		_getch();
-	}
+Keypress ConsoleMenu::get_keypress() {
+    if (_kbhit()) {
+        char ch = _getch();
+        return (Keypress)(toupper(ch));
+    }
+    return Keypress::NONE;
+}
 
-	Keypress get_keypress() {
-		if (_kbhit()) {
-			char ch = _getch();
-			return (Keypress)(toupper(ch));
-		}
-		return Keypress::NONE;
-	}
+void ConsoleMenu::main_loop(std::function<void(GameView*)> init) {
+    Mode mode = Mode::MENU;
+    GameView* game = nullptr;
+    while ((bool)mode) {
+        switch (mode) {
+        case Mode::RUNNING:
+            if (game) delete game;
+            game = new GameView();
+            try {
+                init(game);
+            }
+            catch (const std::runtime_error& e) {
+                Console::deinit();
+                std::cout << e.what();
+                return;
+            }
+            mode = game->run();
+            break;
+        case Mode::CONTINUE:
+            if (game) mode = game->run();
+            else mode = Mode::RUNNING;
+            break;
+        case Mode::PAUSED:
+            mode = ConsoleMenu::pause();
+            break;
+        case Mode::MENU:
+            mode = ConsoleMenu::menu();
+            break;
+        case Mode::WINNING:
+            ConsoleMenu::won_game();
+            while (ConsoleMenu::get_keypress() == Keypress::NONE);
+            mode = Mode::MENU;
+            break;
+        default:
+            mode = Mode::EXIT;
+            break;
+        }
+    }
+    if (game) delete game;
+    Console::deinit();
 }

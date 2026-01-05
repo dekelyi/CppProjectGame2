@@ -3,6 +3,7 @@
 */
 #pragma once
 #include <string>
+#include <functional>
 #include "Vector.h"
 #include "prelude.h"
 
@@ -22,37 +23,45 @@
 #define CH_BLOCK (char)178
 #define CH_BLOCK_GREY (char)176
 
-void gotoxy(V pos);
+class GameView;
 
 /**
-Sleep for ms miliseconds
+* Console - static helper class that replaces previous free functions.
 */
-void console_sleep(int ms);
+class Console {
+public:
+    static void init();
+    static void deinit();
 
-void showCursor(bool show);
+    static void gotoxy(V pos);
+    static void showCursor(bool show);
+    static void cls();
+    static void sleep(int ms);
+};
 
 /**
 * A Writer that starts with some padding and retains it
 */
 class Writer {
-	V pos;
+    V pos;
 public:
-	Writer(V _pos) : pos(_pos) {}
-	void writeline(const std::string& line);
+    Writer(V _pos) : pos(_pos) {}
+    void writeline(const std::string& line);
 };
 
-namespace ConsoleView {
-	extern bool colors;
+/**
+* ConsoleMenu - converted from namespace to static class.
+*/
+class ConsoleMenu {
+public:
+    static bool colors;
 
-	void drawAt(V pos, const V& size, const char glyph, const std::string& atr="", const bool padding=true);
+    static void manual();
+    static void won_game();
+    static Mode pause();
+    static Mode menu();
 
-	void init();
-	void deinit();
-	void pause();
-	void won_game();
-	void menu();
-	void manual();
-	void draw_borders();
+    static void main_loop(std::function<void(GameView*)> init);
 
-	Keypress get_keypress();
+    static Keypress get_keypress();
 };

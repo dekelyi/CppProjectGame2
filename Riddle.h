@@ -11,6 +11,7 @@ struct RiddleData {
 	size_t correct_answer_index = 0;
 };
 
+
 class Riddle : public MapObject {
 public:
 	const RiddleData data;
@@ -18,10 +19,7 @@ public:
 		: MapObject(pos, size, (char)ObjType::RIDDLE), data(riddle_data) {
 	}
 
-	inline virtual M_CODE handle_collision(GameRoom* room, MapObject* obj, Move& move) override {
-		room->msg = RiddleMsg(room, this);
-		return CANT_MOVE;
-	}
+	virtual M_CODE handle_collision(GameRoom* room, MapObject* obj, Move& move) override;
 };
 
 

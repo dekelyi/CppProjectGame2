@@ -8,7 +8,7 @@ void MsgWithInput::handle_tick() {
 	if (!active)
 		Msg::handle_tick();
 	else { // wait for input
-		showCursor(true);
+		Console::showCursor(true);
 		int n;
 		cin >> n;
 		on_input((char)(n + '0'));

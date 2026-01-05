@@ -36,9 +36,6 @@
     <ClCompile Include="Object.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="Runner.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="GameView.cpp">
       <Filter>Game</Filter>
     </ClCompile>

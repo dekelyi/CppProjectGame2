@@ -1,7 +1,7 @@
 L
 D(P)            K           W          W          W                               
              W           W          W          W                              
-            !W      W    W     W    W     W    W                              
+  !          W      W    W     W    W     W    W                              
              W      W    W     W    W     W    W                              
              W      W    K     W    W     W    W                              
              W      W    W     W    W     W    W                              
@@ -17,6 +17,8 @@ D(P)            K           W          W          W
              W      W    W     W    W     W    W                              
                     W          W          W                           WWWWWWWWW
                     W          W          W#####                              D(N)
+                    W          W          W
+                    W          W          W
 
 // room properties
 :is_dark true

@@ -140,7 +140,6 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Riddle.cpp" />
-    <ClCompile Include="Runner.cpp" />
     <ClCompile Include="Spring.cpp" />
     <ClCompile Include="Spring.h" />
     <ClCompile Include="TorchProp.cpp" />

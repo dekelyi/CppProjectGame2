@@ -68,7 +68,7 @@ Mode GameView::check_room() {
 		else advance_room();
 		// redraw room
 		if (current != nullptr) {
-			ConsoleView::init();
+			Console::init();
 			draw();
 		}
 		else return Mode::WINNING;
@@ -89,20 +89,20 @@ void GameView::drawHUD(unsigned y) {
 		lroom = this->s;
 	wr.writeline(format("ROOM: {}/{}", nroom,lroom));
 	wr.writeline(string(nroom, CH_BLOCK) + string(lroom-nroom, CH_BLOCK_GREY));
-	gotoxy(V(0, HUD_SPACE_TOP + y));
+	Console::gotoxy(V(0, HUD_SPACE_TOP + y));
 }
 
 void GameView::drawMsg() {
 	if (!this->current->msg.is_active()) return;
 
-	ConsoleView::init();
+	Console::init();
 	string msg = this->current->msg.getText();
 	Writer(V(5, 10)).writeline(msg);
 	while (this->current->msg.is_active()) {
-		console_sleep(TICK);
+		Console::sleep(TICK);
 		this->current->msg.handle_tick();
 		if (this->current->msg.getText() != msg) {
-			ConsoleView::init();
+			Console::init();
 			msg = this->current->msg.getText();
 			Writer(V(5, 10)).writeline(msg);
 		}
@@ -147,15 +147,15 @@ Main game loop
 */
 Mode GameView::run() {
 	Mode mode = Mode::RUNNING;
-	ConsoleView::init();
+	Console::init();
 	this->draw();
 	while (mode == Mode::RUNNING) {
-		console_sleep(TICK);
+		Console::sleep(TICK);
 		this->handle_tick();
 		if ((mode = this->check_room()) != Mode::RUNNING) return mode;
 		this->drawMsg();
 		this->draw();
-		Keypress e = ConsoleView::get_keypress();
+		Keypress e = ConsoleMenu::get_keypress();
 		mode = this->handle_keypress(e);
 	}
 	return mode;
