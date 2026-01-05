@@ -93,22 +93,18 @@ void GameView::drawHUD(unsigned y) {
 }
 
 void GameView::drawMsg() {
-	if (!this->current->msg.is_active()) return;
-
 	Console::init();
-	string msg = this->current->msg.getText();
+	string msg = this->current->msg->getText();
 	Writer(V(5, 10)).writeline(msg);
-	while (this->current->msg.is_active()) {
+	while (this->current->msg->is_active()) {
 		Console::sleep(TICK);
-		this->current->msg.handle_tick();
-		if (this->current->msg.getText() != msg) {
+		this->current->msg->handle_tick();
+		if (this->current->msg->getText() != msg) {
 			Console::init();
-			msg = this->current->msg.getText();
+			msg = this->current->msg->getText();
 			Writer(V(5, 10)).writeline(msg);
 		}
 	}
-	Writer(V(5, 10)).writeline(string(this->current->msg.text.size(), ' '));
-	this->draw();
 }
 
 Mode GameView::handle_keypress(Keypress e) {
@@ -150,13 +146,16 @@ Mode GameView::run() {
 	Console::init();
 	this->draw();
 	while (mode == Mode::RUNNING) {
-		Console::sleep(TICK);
 		this->handle_tick();
 		if ((mode = this->check_room()) != Mode::RUNNING) return mode;
-		this->drawMsg();
+		if (this->current->msg->is_active()) {
+			this->drawMsg();
+			Console::init();
+		}
 		this->draw();
 		Keypress e = ConsoleMenu::get_keypress();
 		mode = this->handle_keypress(e);
+		Console::sleep(TICK);
 	}
 	return mode;
 }

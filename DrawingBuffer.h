@@ -69,6 +69,6 @@ public:
 			cout << CH_BLOCK_GREY << endl;
 		}
 		cout << border_h << endl;
-		if (legend_y_pos >= Y) draw_hud(Y+2);
+		if (legend_y_pos >= (int)Y) draw_hud(Y+2);
 	}
 };

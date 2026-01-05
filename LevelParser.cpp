@@ -62,12 +62,12 @@ std::vector<MapObject*> ObjectData::into_map_objects(GameView* game, GameRoom* r
 			return {};
 		}
 	}
-	case ObjType::BOMB: 
+	case ObjType::BOMB:
 		return { new Bomb(position) };
 	case ObjType::WALL: {
 		vector<MapObject*> arr;
-		for (unsigned x = 0; x < size.getX(); x++)
-			for (unsigned y = 0; y < size.getY(); y++)
+		for (unsigned x = 0; (int)x < size.getX(); x++)
+			for (unsigned y = 0; (int)y < size.getY(); y++)
 				arr.push_back(new MapObject(position + V(x, y), S1, (char)type));
 		return arr;
 	}
@@ -76,6 +76,13 @@ std::vector<MapObject*> ObjectData::into_map_objects(GameView* game, GameRoom* r
 	}
 }
 
+/**
+ * Build a room using parsed `objects` and `room_properties` and add it to `game`.
+ *
+ * - Uses width/height from room_properties when present (fallback to SIZE_X / SIZE_Y).
+ * - Adds each created MapObject to the room.
+ * - Applies special room-level properties (e.g. msg-on-enter, is_dark).
+ */
 void LevelParser::build_room(GameView* game) {
 	auto get_prop = [&](string key, int _default) -> int {
 		string& val = this->room_properties[key];
@@ -85,18 +92,18 @@ void LevelParser::build_room(GameView* game) {
 		catch (...) {
 			return _default;
 		}
-	};
+		};
 
 	auto room = game->add_room(get_prop("width", SIZE_X), get_prop("height", SIZE_Y), legend_position);
 	for (auto& obj_data : objects) {
 		ObjectData& od = obj_data;
 		std::vector<MapObject*> objs = obj_data.into_map_objects(game, room, *this);
-		for (auto obj: objs) room->add_object(obj);
+		for (auto obj : objs) room->add_object(obj);
 	}
 	for (const auto& [key, value] : room_properties) {
 		if (key == "msg-on-enter") {
-			room->msg.text = value;
-			room->msg.ticks_left = 10;
+			room->msg->text = value;
+			room->msg->ticks_left = MSG_TICKS;
 		}
 		else if (key == "is_dark") {
 			if (value == "true" || value == "1") {
@@ -106,6 +113,11 @@ void LevelParser::build_room(GameView* game) {
 	}
 }
 
+/**
+ * Parse the file associated with this LevelParser.
+ *
+ * See LevelParser::parse() declaration for line semantics.
+ */
 void LevelParser::parse() {
 	while (!file.eof()) {
 		string line;
@@ -125,6 +137,14 @@ void LevelParser::parse() {
 	}
 }
 
+/**
+ * Parse tokens from a single map row and add / extend ObjectData entries.
+ *
+ * Behavior:
+ * - Iterates over visible tokens; for each token calls `parse_parameterized`,
+ *   determines type, id and size, and either extends an existing vertical object
+ *   or adds a new ObjectData to `objects`.
+ */
 void LevelParser::parse_objects(const string& line) {
 	size_t index = line.find_first_not_of(' ');
 	size_t x_offset = 0;
@@ -143,6 +163,12 @@ void LevelParser::parse_objects(const string& line) {
 	}
 }
 
+/**
+ * Check if a newly-read tile should extend an existing vertical object.
+ *
+ * If a match is found the existing object's size is increased and the function
+ * returns true. Otherwise returns false.
+ */
 bool LevelParser::try_extend_vertical_object(ObjType type, int id, V pos, S size) {
 	for (auto& obj : objects) {
 		if (obj.type != type || (id != 0 && obj.id != id)) continue;
@@ -158,6 +184,12 @@ bool LevelParser::try_extend_vertical_object(ObjType type, int id, V pos, S size
 	return false;
 }
 
+/**
+ * Set the current object id context for subsequent property directives.
+ *
+ * Accepts either a numeric id or a parameterized token string from which the id
+ * will be extracted.
+ */
 void LevelParser::parse_object_data(const string& line) {
 	int id;
 	try {
@@ -169,6 +201,10 @@ void LevelParser::parse_object_data(const string& line) {
 	current_property_id = id;
 }
 
+/**
+ * Parse a key/value directive and apply it either as a room property or to all
+ * objects matching the current_property_id.
+ */
 void LevelParser::parse_data(const string& line) {
 	string key, value;
 	key = line.substr(0, line.find(' '));
@@ -183,6 +219,12 @@ void LevelParser::parse_data(const string& line) {
 	}
 }
 
+/**
+ * Extract the integer id from a Parameterized token.
+ *
+ * - Returns 0 if there is no parameter or if conversion fails.
+ * - Special door tokens: "D(N)" -> -1, "D(P)" -> -2.
+ */
 int LevelParser::get_id_from_parameterized(const Parameterized& p) {
 	if (p.params.size() < 1) return 0;
 	try {
@@ -199,6 +241,9 @@ int LevelParser::get_id_from_parameterized(const Parameterized& p) {
 	}
 }
 
+/**
+ * Split a comma-separated string into individual parameter substrings.
+ */
 vector<string> LevelParser::parse_params(const string& str) {
 	vector<string> params;
 	size_t start = 0;
@@ -212,6 +257,14 @@ vector<string> LevelParser::parse_params(const string& str) {
 	return params;
 }
 
+/**
+ * Parse a parameterized token from a string.
+ *
+ * The returned `Parameterized` contains:
+ * - symbol: the map character (first char of str)
+ * - params: vector of strings extracted between parentheses if present
+ * - length: number of characters consumed for this token when parsing the row
+ */
 Parameterized LevelParser::parse_parameterized(const string& str) {
 	Parameterized p = { str[0] };
 	size_t open_paren = str.find('('),
@@ -232,6 +285,16 @@ Parameterized LevelParser::parse_parameterized(const string& str) {
 	return p;
 }
 
+/**
+ * Discover, parse and build all level files in `path` following the naming:
+ * ".\adv-world_<N>.screen".
+ *
+ * - Files are sorted lexicographically before loading.
+ * - After all rooms are created, player placement and initialization are adjusted
+ *   based on the entry/exit doors.
+ *
+ * Throws runtime_error when no matching level files are found.
+ */
 void LevelParser::parse_all_levels(GameView* game, const RiddleParser& riddles, const string& path) {
 	vector<filesystem::directory_entry> files;
 	for (const auto& entry : filesystem::directory_iterator(path)) {
@@ -250,7 +313,7 @@ void LevelParser::parse_all_levels(GameView* game, const RiddleParser& riddles, 
 
 	sort(files.begin(), files.end(), [](const filesystem::directory_entry& a, const filesystem::directory_entry& b) {
 		return a.path().string() < b.path().string();
-	});
+		});
 
 	for (const auto& entry : files) {
 		LevelParser parser(entry.path().string(), riddles);
@@ -266,8 +329,18 @@ void LevelParser::parse_all_levels(GameView* game, const RiddleParser& riddles, 
 		game->current->remove_object(game->current->p_doors.entry_point);
 		game->current->p_doors.entry_point = nullptr;
 	}
+	game->init_rooms();
 }
 
+/**
+ * Parse riddles file and populate `riddles`.
+ *
+ * Format:
+ * - Lines starting with '?' start a new riddle: "?<id> <title>"
+ * - Lines starting with "! " add an answer and mark it as the correct answer
+ * - Other lines belonging to a riddle are stored as answers
+ * - Blank lines or lines starting with '\' are ignored
+ */
 void RiddleParser::parse() {
 	while (!file.eof()) {
 		string line;

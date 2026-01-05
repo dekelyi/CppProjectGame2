@@ -24,6 +24,7 @@ D(P)            K           W          W          W
 :is_dark true
 :width 80
 :height 20
+:msg-on-enter hello
 
 ::D(N)
 :condition-keys 4

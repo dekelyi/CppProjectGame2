@@ -1,4 +1,4 @@
-   $     W                @                                 W             ?(100)   D(N)
+   $     W                @                                               ?(100)   D(N)
    &     W                                                  WWWWWWWWWWWWWWWWWWWW
          W                                                                    
          W                                                                    
@@ -25,4 +25,4 @@ L
 :height 20
 
 ::1
-:do-open-door N
+//:do-open-door N

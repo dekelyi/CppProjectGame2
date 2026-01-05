@@ -1,18 +1,18 @@
 #pragma once
-#include <set>
+#include <vector>
 #include "BaseProp.h"
 #include "player.h"
 
-using std::set;
+using std::vector;
 
 class PlayersProp : public BaseProp {
 public:
-	set<Player*> get_players() const;
+	vector<Player*> get_players() const;
 
 	inline int count_players() const {
 		return (int)get_players().size();
 	};
 
-	set<MapObject*> get_objects() const;
+	vector<MapObject*> get_objects() const;
 	bool remove_object(MapObject* obj);
 };

@@ -3,6 +3,9 @@
 
 using std::string;
 
+/**
+ * A message on the screen
+ */
 struct Msg {
 	string text;
 	int ticks_left;
@@ -17,6 +20,9 @@ struct Msg {
 	inline virtual bool is_active() const { return ticks_left > 0; }
 };
 
+/**
+ * A message on the screen, waiting for input
+ */
 class MsgWithInput : public Msg {
 protected:
 	bool active = true;

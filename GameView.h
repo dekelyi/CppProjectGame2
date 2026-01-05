@@ -46,16 +46,15 @@ public:
 			node->init(idx++);
 			node = node->next;
 		}
-		current->add_object(player1);
-		current->add_object(player2);
+		//current->add_object(player1);
+		//current->add_object(player2);
 	}
 
 	/**
 	Do one tick of the game
 	*/
 	inline void handle_tick() {
-		set<MapObject*> objs = current->map_objects;
-		for (MapObject* obj : objs)
+		for (MapObject* obj : current->map_objects)
 			obj->handle_tick(current);
 	}
 

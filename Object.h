@@ -65,9 +65,21 @@ public:
 		return false;
 	}
 
+	/**
+	* Try to move with `dir`
+	*/
 	bool try_move(GameRoom* game, Move& dir);
+	/**
+	* Checks if the object can move with `move`
+	*/
 	M_CODE can_move(GameRoom* game, Move& move);
+	/**
+	* handles `obj` collision with `this` and handle internal logic
+	*/
 	virtual M_CODE handle_collision(GameRoom* room, MapObject* obj, Move& move);
 
+	/**
+	* Handle one tick
+	*/
 	virtual void handle_tick(GameRoom* room);
 };
