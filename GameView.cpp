@@ -75,8 +75,8 @@ Mode GameView::check_room() {
 /** Draw HUD lines with player inventory and room progress. */
 void GameView::drawHUD(unsigned y) {
 	Writer wr(V(5, y));
-	wr.writeline(format(" PLAYER 1 ({}) INVERTORY: {} LIVES: {}", this->player1->getGlyph(), this->player1->getCollectibleGlyph(), this->player1->lives));
-	wr.writeline(format(" PLAYER 2 ({}) INVERTORY: {} LIVES: {}", this->player2->getGlyph(), this->player2->getCollectibleGlyph(), this->player2->lives));
+	wr.writeline(format(" PLAYER 1 ({}) INVERTORY: {} LIVES: {} SCORE: {}", this->player1->getGlyph(), this->player1->getCollectibleGlyph(), this->player1->lives, this->player1->score));
+	wr.writeline(format(" PLAYER 2 ({}) INVERTORY: {} LIVES: {} SCORE: {}", this->player2->getGlyph(), this->player2->getCollectibleGlyph(), this->player2->lives, this->player2->score));
 
 	wr = Writer(V(SIZE_X - 10, y));
 	size_t nroom = this->i,

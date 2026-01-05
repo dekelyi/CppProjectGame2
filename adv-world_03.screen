@@ -1,0 +1,31 @@
+L
+D(P)
+
+                         WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+                         W                            K         W
+                         W   WWWWWWW  WWW   WWWWWWW   WWWWWWW   W
+                         W   W     W  W W   W     W   W     W   W
+                         W   W  K  W  W W   W  D(N)  W   W  K  W   W
+                         W   W     W  W W   W     W   W     W   W
+                         W   WWW WWW  WWW   WWW?(101)WWW   WWWW WW   W
+                         W                                      W
+                         W   WWWWWWW  WWW   WWW WWW   WWWWWWW   W
+                         W   W     W  W W   W     W   W     W   W
+                         W   W  K  W  W W   W  !(1)  W   W  K  W   W
+                         W   W     W  W W   W     W   W     W   W
+                         W   WWW WWW  WWW   WWW WWW   WWWW WW   W
+                         W                                      W
+                         WWWWWWWWWWWWWWWWWWWWWW*WWWWWWW#WWWWWWWWW
+
+
+// room properties
+:is_dark true
+:width 80
+:height 20
+:msg-on-enter light will reveal the keys to the the other realm.
+
+::1
+:area 4
+
+::D(N)
+:condition-keys 5

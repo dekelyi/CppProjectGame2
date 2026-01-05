@@ -26,10 +26,11 @@ public:
 class RiddleMsg : public MsgWithInput {
 	GameRoom* room;
 	Riddle* riddle;
+	Player* player;
 
 public:
-	inline RiddleMsg(GameRoom* _room, Riddle* _riddle)
-		: room(_room), riddle(_riddle) {
+	inline RiddleMsg(GameRoom* _room, Riddle* _riddle, Player* p)
+		: room(_room), riddle(_riddle), player(p) {
 		// build question text
 		text = riddle->data.question + "\n";
 		for (size_t i = 0; i < riddle->data.answers.size(); i++) {

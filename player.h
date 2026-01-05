@@ -8,6 +8,7 @@ class Player : public MapObject {
 public:
 	Collectible* collectible = nullptr;
 	unsigned lives = LIVES_DEFAULT;
+	unsigned score = 0;
 
 	Player(char _glyph) : MapObject(V(1, 1), _glyph) { attr = A_FOREGROUND_CYAN; }
 	~Player() {
