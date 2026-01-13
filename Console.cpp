@@ -10,6 +10,7 @@
 #include "Console.h"
 #include "prelude.h"
 #include "GameView.h"
+#include "GameRunner.h"
 
 using std::cout, std::endl, std::string, std::format;
 
@@ -147,14 +148,14 @@ Mode ConsoleMenu::menu() {
 
 
 // Application top-level main loop. init callback configures a new GameView.
-void ConsoleMenu::main_loop(std::function<void(GameView*)> init) {
+void ConsoleMenu::main_loop(std::function<void(GameView*)> init, GameRunner* runner) {
     Mode mode = Mode::MENU;
     GameView* game = nullptr;
     while ((bool)mode) {
         switch (mode) {
         case Mode::RUNNING:
             if (game) delete game;
-            game = new GameView();
+            game = new GameView(runner);
             try {
                 init(game);
             }

@@ -2,6 +2,7 @@
 #include "Object.h"
 #include "player.h"
 #include "Room.h"
+#include "GameRunner.h"
 
 /**
  * GameView - application-level game container
@@ -21,6 +22,7 @@ class GameView {
 		i = 1; // current room
 
 public:
+	GameRunner* runner = nullptr;
 	GameRoom* current = nullptr; // current room
 	Player* player1;
 	Player* player2;
@@ -28,7 +30,8 @@ public:
 	/**
 	 * Construct a GameView and create two player instances.
 	 */
-	inline GameView() {
+	inline GameView(GameRunner* _runner) : runner(_runner) {
+		if (!runner) runner = new KeyboardGameRunner();
 		player1 = new Player((char)ObjType::PLAYER_1);
 		player2 = new Player((char)ObjType::PLAYER_2);
 	}

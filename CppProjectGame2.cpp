@@ -1,11 +1,17 @@
 #include "GameView.h"
 #include "LevelParser.h"
 #include "Console.h"
+#include "GameRunner.h"
 
-int main()
-{
+int main(int argc, char* argv[]) {
 	RiddleParser riddle_parser("riddles.txt");
 	riddle_parser.parse();
-	ConsoleMenu::main_loop([&](GameView* game) {LevelParser::parse_all_levels(game, riddle_parser);});
+	GameRunner* runner = nullptr;
+	if (argc > 1) {
+		std::string arg = argv[1];
+		if (arg == "-load") runner = new LoadedGameRunner();
+		else if (arg == "-save") runner = new SavingGameRunner();
+	}
+	ConsoleMenu::main_loop([&](GameView* game) {LevelParser::parse_all_levels(game, riddle_parser);}, runner);
 	return 0;
 }

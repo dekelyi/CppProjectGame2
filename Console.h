@@ -24,6 +24,7 @@
 #define CH_BLOCK_GREY (char)176
 
 class GameView;
+class GameRunner;
 
 /**
  * Console - static helper class that replaces previous free functions.
@@ -108,7 +109,7 @@ public:
      * The provided init callback is used to configure a newly created
      * GameView before starting the game.
      */
-    static void main_loop(std::function<void(GameView*)> init);
+    static void main_loop(std::function<void(GameView*)> init, GameRunner* runner);
 
     /**
      * Poll for a keypress and convert it to a Keypress enum. Returns
