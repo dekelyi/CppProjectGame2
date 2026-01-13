@@ -149,7 +149,7 @@ Mode ConsoleMenu::menu() {
 
 // Application top-level main loop. init callback configures a new GameView.
 void ConsoleMenu::main_loop(std::function<void(GameView*)> init, GameRunner* runner) {
-    Mode mode = Mode::MENU;
+    Mode mode = runner->start_mode();
     GameView* game = nullptr;
     while ((bool)mode) {
         switch (mode) {

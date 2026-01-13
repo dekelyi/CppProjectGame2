@@ -10,11 +10,12 @@
 
 class GameRunner {
 public:
+	virtual Mode start_mode() const { return Mode::MENU; }
 	virtual Keypress get_keypress() = 0;
-	virtual void handle_tick(Keypress e) {};
 };
 
 class KeyboardGameRunner : public GameRunner {
+public:
 	inline virtual Keypress get_keypress() override {
 		return ConsoleMenu::get_keypress();
 	}
@@ -30,11 +31,13 @@ public:
 	};
 	~SavingGameRunner() { file.close(); };
 
-	inline virtual void handle_tick(Keypress e) override {
-		if (e == Keypress::ESC) return;
+	inline virtual Keypress get_keypress() override {
+		Keypress e = KeyboardGameRunner::get_keypress();
+		if (e == Keypress::ESC) return e;
 		char ch = (bool)e ? (char)e : NO_KEYPRESS;
 		file << ch;
 		file.flush();
+		return e;
 	};
 };
 
@@ -47,6 +50,8 @@ public:
 		}
 	};
 	~LoadedGameRunner() { file.close(); };
+
+	virtual Mode start_mode() const override { return Mode::RUNNING; }
 
 	inline virtual Keypress get_keypress() override {
 		char ch = 0;
