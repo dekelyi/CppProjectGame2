@@ -93,7 +93,7 @@ void GameView::drawMsg() {
 	Writer(V(5, 10)).writeline(msg);
 	while (this->current->msg->is_active()) {
 		Console::sleep(TICK);
-		this->current->msg->handle_tick();
+		this->current->msg->handle_tick(*this);
 		if (this->current->msg->getText() != msg) {
 			Console::init();
 			msg = this->current->msg->getText();

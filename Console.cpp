@@ -174,6 +174,8 @@ void ConsoleMenu::main_loop(std::function<void(GameView*)> init, GameRunner* run
             mode = ConsoleMenu::pause();
             break;
         case Mode::MENU:
+            if (game) delete game;
+            game = nullptr;
             mode = ConsoleMenu::menu();
             break;
         case Mode::WINNING:

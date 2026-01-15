@@ -38,5 +38,5 @@ public:
 		}
 	}
 
-	virtual void on_input(char ch) override;
+	virtual void on_input(string str) override;
 };

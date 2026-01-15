@@ -1,7 +1,15 @@
 #include "Riddle.h"
 
-void RiddleMsg::on_input(char ch) {
-	int answer_index = ch - '1';
+void RiddleMsg::on_input(string str) {
+	int answer_index;
+
+	try {
+		answer_index = stoi(str) - 1;
+	}
+	catch (...) {
+		answer_index = -1;
+	}
+
 	if (answer_index >= 0 && answer_index < (int)riddle->data.answers.size()) {
 		if ((size_t)answer_index == riddle->data.correct_answer_index) {
 			Msg::text = "Correct answer!";

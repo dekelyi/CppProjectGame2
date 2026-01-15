@@ -1,16 +1,12 @@
 #include "Msg.h"
-#include "Console.h"
-#include <iostream>
+#include "GameView.h"
 
 using std::cin;
 
-void MsgWithInput::handle_tick() {
+void MsgWithInput::handle_tick(GameView& game) {
 	if (!active)
-		Msg::handle_tick();
+		Msg::handle_tick(game);
 	else { // wait for input
-		Console::showCursor(true);
-		int n;
-		cin >> n;
-		on_input((char)(n + '0'));
+		on_input(game.runner->get_input());
 	}
 }

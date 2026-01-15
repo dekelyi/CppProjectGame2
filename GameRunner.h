@@ -1,5 +1,5 @@
 #pragma once
-#include <map>
+#include <string>
 #include <iostream>
 #include <fstream>
 #include "prelude.h"
@@ -8,16 +8,26 @@
 #define FILENAME "adv-world.steps"
 #define NO_KEYPRESS '~'
 
+using std::string;
+
 class GameRunner {
 public:
 	virtual Mode start_mode() const { return Mode::MENU; }
 	virtual Keypress get_keypress() = 0;
+	virtual string get_input() = 0;
 };
 
 class KeyboardGameRunner : public GameRunner {
 public:
 	inline virtual Keypress get_keypress() override {
 		return ConsoleMenu::get_keypress();
+	}
+
+	inline virtual string get_input() override {
+		Console::showCursor(true);
+		string str;
+		std::cin >> str;
+		return str;
 	}
 };
 
@@ -39,6 +49,13 @@ public:
 		file.flush();
 		return e;
 	};
+
+	inline virtual string get_input() override {
+		string str = KeyboardGameRunner::get_input();
+		file << str;
+		file.flush();
+		return str;
+	}
 };
 
 class LoadedGameRunner : public GameRunner {
@@ -57,5 +74,14 @@ public:
 		char ch = 0;
 		if (!file.get(ch) || ch == NO_KEYPRESS) ch = 0;
 		return (Keypress)ch;
+	}
+	inline virtual string get_input() override {
+		string str = "";
+		while (file.peek() != NO_KEYPRESS) {
+			char ch;
+			file.get(ch);
+			str += ch;
+		}
+		return str;
 	}
 };
