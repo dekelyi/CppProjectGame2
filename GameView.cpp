@@ -148,7 +148,7 @@ Mode GameView::run() {
 		}
 		this->draw();
 		Keypress e = runner->get_keypress();
-		mode = this->handle_keypress(e);
+		mode = runner->get_mode(this->handle_keypress(e));
 		Console::sleep(TICK);
 	}
 	return mode;

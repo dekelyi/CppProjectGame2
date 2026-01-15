@@ -12,7 +12,7 @@ using std::string;
 
 class GameRunner {
 public:
-	virtual Mode start_mode() const { return Mode::MENU; }
+	virtual Mode get_mode(Mode mode) { return mode; }
 	virtual Keypress get_keypress() = 0;
 	virtual string get_input() = 0;
 };
@@ -68,7 +68,14 @@ public:
 	};
 	~LoadedGameRunner() { file.close(); };
 
-	virtual Mode start_mode() const override { return Mode::RUNNING; }
+	virtual Mode get_mode(Mode mode) override {
+		if (file.is_open() && !file.eof()) {
+			return Mode::RUNNING;
+		}
+		else {
+			return Mode::EXIT;
+		}
+	}
 
 	inline virtual Keypress get_keypress() override {
 		char ch = 0;
