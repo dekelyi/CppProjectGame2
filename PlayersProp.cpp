@@ -30,6 +30,7 @@ bool PlayersProp::remove_object(MapObject* obj) {
 	Player* p = dynamic_cast<Player*>(obj);
 	if (p) { 
 		p->lives--;
+		room.runner->log_event(new LostLife(obj, 1));
 		if (p->lives > 0) {
 			p->setPosition((room.p_doors.entry_point) ? room.p_doors.entry_point->getPosition() : V(0, 0));
 			room.add_object(p);

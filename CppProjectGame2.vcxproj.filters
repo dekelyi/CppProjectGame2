@@ -78,6 +78,9 @@
     <ClCompile Include="prelude.h">
       <Filter>Base</Filter>
     </ClCompile>
+    <ClCompile Include="EventLogger.h">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console.h">
@@ -149,9 +152,9 @@
     <None Include="adv-world_02.screen">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="adv-world.steps" />
     <None Include="adv-world_03.screen">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="adv-world.steps" />
   </ItemGroup>
 </Project>

@@ -131,6 +131,7 @@
     <ClCompile Include="CppProjectGame2.cpp" />
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="DoorProp.h" />
+    <ClCompile Include="EventLogger.h" />
     <ClCompile Include="LevelParser.cpp" />
     <ClCompile Include="Msg.cpp" />
     <ClCompile Include="Player.cpp" />

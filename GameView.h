@@ -32,6 +32,7 @@ public:
 	 */
 	inline GameView(GameRunner* _runner) : runner(_runner) {
 		if (!runner) runner = new KeyboardGameRunner();
+		runner->init();
 		player1 = new Player((char)ObjType::PLAYER_1);
 		player2 = new Player((char)ObjType::PLAYER_2);
 	}
@@ -47,6 +48,8 @@ public:
 
 		delete player1;
 		delete player2;
+
+		runner->deinit();
 	}
 
 	/**

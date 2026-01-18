@@ -17,7 +17,6 @@ std::vector<MapObject*> ObjectData::into_map_objects(GameView* game, GameRoom* r
 	case ObjType::PLAYER_2: {
 		auto p = (type == ObjType::PLAYER_1) ? game->player1 : game->player2;
 		p->setPosition(position);
-		room->add_object(p);
 		return { p };
 	}
 	case ObjType::DOOR: {

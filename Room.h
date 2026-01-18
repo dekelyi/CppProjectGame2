@@ -2,6 +2,7 @@
 #include <vector>
 #include "Object.h"
 #include "Msg.h"
+#include "GameRunner.h"
 #include "DrawingBuffer.h"
 #include "PlayersProp.h"
 #include "DoorProp.h"
@@ -39,8 +40,9 @@ public:
 
 	bool is_current = false;
 	Msg* msg = nullptr;
+	GameRunner* runner;
 
-	inline GameRoom(unsigned x, unsigned y, unsigned legend_pos) : X(x), Y(y), LEGEND_Y_POS(legend_pos), drawing_buffer(MapBuffer(x, y, legend_pos)), msg(new Msg()) {}
+	inline GameRoom(unsigned x, unsigned y, unsigned legend_pos, GameRunner* _runner) : X(x), Y(y), LEGEND_Y_POS(legend_pos), drawing_buffer(MapBuffer(x, y, legend_pos)), msg(new Msg()), runner(_runner) {}
 
 	~GameRoom() {
 		delete msg;

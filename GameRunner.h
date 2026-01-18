@@ -4,6 +4,7 @@
 #include <fstream>
 #include "prelude.h"
 #include "Console.h"
+#include "EventLogger.h"
 
 #define FILENAME "adv-world.steps"
 #define NO_KEYPRESS '~'
@@ -11,13 +12,19 @@
 using std::string;
 
 class GameRunner {
+	unsigned time = 0;
 public:
-	virtual Mode get_mode(Mode mode) { return mode; }
+	~GameRunner() { deinit(); }
+	virtual void init() {};
+	virtual void deinit() {};
+
+	virtual Mode get_mode(Mode mode) const { return mode; }
 	virtual Keypress get_keypress() = 0;
 	virtual string get_input() = 0;
+	virtual void log_event(Event* e) {};
 };
 
-class KeyboardGameRunner : public GameRunner {
+class KeyboardGameRunner : virtual public GameRunner {
 public:
 	inline virtual Keypress get_keypress() override {
 		return ConsoleMenu::get_keypress();
@@ -32,14 +39,18 @@ public:
 };
 
 class SavingGameRunner : public KeyboardGameRunner {
+	std::string filename;
 	std::ofstream file;
 public:
-	SavingGameRunner(const std::string& filename = FILENAME) :file(filename) {
-		if (!file.is_open()) {
-			throw std::runtime_error("error open file");
-		}
-	};
-	~SavingGameRunner() { file.close(); };
+	SavingGameRunner(const std::string& _filename = FILENAME) :filename(_filename) {};
+
+	virtual void init() override {
+		file.open(filename);
+		if (!file.is_open()) throw std::runtime_error("error open file");
+	}
+	virtual void deinit() override {
+		file.close();
+	}
 
 	inline virtual Keypress get_keypress() override {
 		Keypress e = KeyboardGameRunner::get_keypress();
@@ -59,17 +70,21 @@ public:
 };
 
 class LoadedGameRunner : public GameRunner {
+	std::string filename;
 	std::ifstream file;
 public:
-	LoadedGameRunner(const std::string& filename = FILENAME) : file(filename) {
-		if (!file.is_open()) {
-			throw std::runtime_error("error open file");
-		}
-	};
-	~LoadedGameRunner() { file.close(); };
+	LoadedGameRunner(const std::string& _filename = FILENAME) :filename(_filename) {};
 
-	virtual Mode get_mode(Mode mode) override {
-		if (file.is_open() && !file.eof()) {
+	virtual void init() override {
+		file.open(filename);
+		if (!file.is_open()) throw std::runtime_error("error open file");
+	}
+	virtual void deinit() override {
+		file.close();
+	}
+
+	virtual Mode get_mode(Mode mode) const override {
+		if (!file.eof()) {
 			return Mode::RUNNING;
 		}
 		else {
