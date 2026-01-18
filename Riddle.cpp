@@ -11,9 +11,11 @@ void RiddleMsg::on_input(string str) {
 	}
 
 	if (answer_index >= 0 && answer_index < (int)riddle->data.answers.size()) {
+		room->runner->handle_event(new EventRiddleInteracted(player, riddle, (unsigned)answer_index));
 		if ((size_t)answer_index == riddle->data.correct_answer_index) {
 			Msg::text = "Correct answer!";
 			if (player) player->score += 1;
+			room->runner->handle_event(new GainedScore(player, 1));
 			room->clear((MapObject)*riddle);
 			room->remove_object((MapObject*)riddle);
 			riddle = nullptr;

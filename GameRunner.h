@@ -21,7 +21,7 @@ public:
 	virtual Mode get_mode(Mode mode) const { return mode; }
 	virtual Keypress get_keypress() = 0;
 	virtual string get_input() = 0;
-	virtual void log_event(Event* e) {};
+	virtual void handle_event(Event* e) {};
 };
 
 class KeyboardGameRunner : virtual public GameRunner {
