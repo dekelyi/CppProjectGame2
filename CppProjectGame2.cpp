@@ -9,7 +9,10 @@ int main(int argc, char* argv[]) {
 	GameRunner* runner = nullptr;
 	if (argc > 1) {
 		std::string arg = argv[1];
-		if (arg == "-load") runner = new LoadedGameRunner();
+		if (arg == "-load") {
+			if (argc > 2 && std::string(argv[2]) == "-silent") runner = new TestGameRunner();
+			else runner = new LoadedGameRunner();
+		}
 		else if (arg == "-save") runner = new SavingGameRunner();
 	}
 	ConsoleMenu::main_loop([&](GameView* game) {LevelParser::parse_all_levels(game, riddle_parser);}, runner);

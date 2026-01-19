@@ -1,9 +1,12 @@
 #pragma once
 #include <string>
+#include <format>
 #include <vector>
 #include "Object.h"
-#include "Room.h"
-#include "EventLogger.h"
+#include "player.h"
+#include "Msg.h"
+
+class GameRoom;
 
 using std::string, std::vector;
 
@@ -41,14 +44,4 @@ public:
 	}
 
 	virtual void on_input(string str) override;
-};
-
-class EventRiddleInteracted : public Event {
-public:
-	const Riddle* riddle;
-	const unsigned answer;
-
-	EventRiddleInteracted(const MapObject* _actor, const Riddle* _riddle, const unsigned _answer)
-		: Event(_actor), riddle(_riddle), answer(_answer) {
-	};
 };

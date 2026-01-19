@@ -37,10 +37,10 @@ protected:
 	V size;
 	std::list<Move> moves;
 
-	char glyph;
 	std::string attr = "";
 
 public:
+	char glyph;
 	MapObject() : pos(V(-1,-1)), size(V(1, 1)), glyph(' ') {}
 	MapObject(V _size, char _glyph) : pos(V(-1, -1)), size(_size), glyph(_glyph) {}
 	MapObject(V _pos, V _size, char _glyph) : pos(_pos), size(_size), glyph(_glyph) {}

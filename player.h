@@ -2,21 +2,6 @@
 #include "Object.h"
 #include "Collectible.h"
 #include "prelude.h"
-#include "EventLogger.h"
-
-class PlayerIntAttrModified : public Event {
-	unsigned amount;
-public:
-	PlayerIntAttrModified(const MapObject* _actor, unsigned val)
-		: amount(val), Event(_actor) {}
-};
-
-class LostLife : public PlayerIntAttrModified {
-	using PlayerIntAttrModified::PlayerIntAttrModified;
-};
-class GainedScore : public PlayerIntAttrModified {
-	using PlayerIntAttrModified::PlayerIntAttrModified;
-};
 
 class Player : public MapObject {
 public:

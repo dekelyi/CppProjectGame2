@@ -6,17 +6,24 @@
 #include "Console.h"
 #include "EventLogger.h"
 
-#define FILENAME "adv-world.steps"
+#define STEPS_FILENAME "adv-world.steps"
+#define LOG_FILENAME "adv-world.result"
 #define NO_KEYPRESS '~'
 
 using std::string;
 
 class GameRunner {
+protected:
 	unsigned time = 0;
 public:
 	~GameRunner() { deinit(); }
 	virtual void init() {};
 	virtual void deinit() {};
+
+	virtual unsigned get_tick_time_ms() const { return 100; };
+	virtual void handle_tick() { time++; };
+	virtual bool should_draw_screen() const { return true; };
+	virtual string get_exit_msg() const { return ""; };
 
 	virtual Mode get_mode(Mode mode) const { return mode; }
 	virtual Keypress get_keypress() = 0;
@@ -39,52 +46,64 @@ public:
 };
 
 class SavingGameRunner : public KeyboardGameRunner {
-	std::string filename;
-	std::ofstream file;
+	const string steps_filename;
+	const string log_filename;
+	std::ofstream steps;
+	std::ofstream log;
 public:
-	SavingGameRunner(const std::string& _filename = FILENAME) :filename(_filename) {};
+	SavingGameRunner(const string& sfn = STEPS_FILENAME, const string& lfn = LOG_FILENAME)
+		: steps_filename(sfn), log_filename(lfn) {
+	};
 
 	virtual void init() override {
-		file.open(filename);
-		if (!file.is_open()) throw std::runtime_error("error open file");
+		steps.open(steps_filename);
+		if (!steps.is_open()) throw std::runtime_error("error open file");
+		log.open(log_filename);
+		if (!log.is_open()) throw std::runtime_error("error open file");
 	}
 	virtual void deinit() override {
-		file.close();
+		steps.close();
+		log.close();
 	}
 
 	inline virtual Keypress get_keypress() override {
 		Keypress e = KeyboardGameRunner::get_keypress();
 		if (e == Keypress::ESC) return e;
 		char ch = (bool)e ? (char)e : NO_KEYPRESS;
-		file << ch;
-		file.flush();
+		steps << ch;
+		steps.flush();
 		return e;
 	};
 
 	inline virtual string get_input() override {
 		string str = KeyboardGameRunner::get_input();
-		file << str;
-		file.flush();
+		steps << str;
+		steps.flush();
 		return str;
+	}
+
+	inline virtual void handle_event(Event* e) override {
+		log << time << ":: " << e->to_string() << std::endl;
+		log.flush();
 	}
 };
 
 class LoadedGameRunner : public GameRunner {
-	std::string filename;
-	std::ifstream file;
+	string filename;
+	std::ifstream steps;
 public:
-	LoadedGameRunner(const std::string& _filename = FILENAME) :filename(_filename) {};
+	LoadedGameRunner(const string& _filename = STEPS_FILENAME) :filename(_filename) {};
 
 	virtual void init() override {
-		file.open(filename);
-		if (!file.is_open()) throw std::runtime_error("error open file");
+		steps.open(filename);
+		if (!steps.is_open()) throw std::runtime_error("error open file");
 	}
 	virtual void deinit() override {
-		file.close();
+		steps.close();
 	}
 
 	virtual Mode get_mode(Mode mode) const override {
-		if (!file.eof()) {
+		if (!steps.eof()) {
 			return Mode::RUNNING;
 		}
 		else {
@@ -94,16 +113,53 @@ public:
 
 	inline virtual Keypress get_keypress() override {
 		char ch = 0;
-		if (!file.get(ch) || ch == NO_KEYPRESS) ch = 0;
+		if (!steps.get(ch) || ch == NO_KEYPRESS) ch = 0;
 		return (Keypress)ch;
 	}
 	inline virtual string get_input() override {
 		string str = "";
-		while (file.peek() != NO_KEYPRESS) {
+		while (steps.peek() != NO_KEYPRESS) {
 			char ch;
-			file.get(ch);
+			steps.get(ch);
 			str += ch;
 		}
 		return str;
 	}
+
+	virtual unsigned get_tick_time_ms() const override {
+		return GameRunner::get_tick_time_ms()/2;
+	}
+};
+
+class TestGameRunner : public LoadedGameRunner {
+	const string log_filename;
+	std::ifstream log;
+public:
+	TestGameRunner(const string& sfn = STEPS_FILENAME, const string& lfn = LOG_FILENAME)
+		: LoadedGameRunner(sfn), log_filename(lfn) {
+	};
+
+	virtual void init() override {
+		LoadedGameRunner::init();
+		log.open(log_filename);
+		if (!log.is_open()) throw std::runtime_error("error open file");
+	}
+	virtual void deinit() override {
+		LoadedGameRunner::deinit();
+		log.close();
+	}
+
+	inline virtual void handle_event(Event* e) override {
+		string expected = std::to_string(time) + ":: " + e->to_string();
+		string actual;
+		std::getline(log, actual);
+		if (expected != actual) {
+			throw EventAssertionError("Test failed at time " + std::to_string(time) + ": expected '" + expected + "', got '" + actual + "'");
+		}
+	}
+
+	virtual unsigned get_tick_time_ms() const override { return 0; }
+
+	virtual bool should_draw_screen() const override { return false; }
+	virtual string get_exit_msg() const { return "All tests passed"; };
 };

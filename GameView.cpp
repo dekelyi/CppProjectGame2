@@ -88,16 +88,20 @@ void GameView::drawHUD(unsigned y) {
 
 /** Display current room message modal until it expires. */
 void GameView::drawMsg() {
-	Console::init();
 	string msg = this->current->msg->getText();
-	Writer(V(5, 10)).writeline(msg);
+	if (runner->should_draw_screen()) {
+		Console::init();
+		Writer(V(5, 10)).writeline(msg);
+	}
 	while (this->current->msg->is_active()) {
-		Console::sleep(TICK);
 		this->current->msg->handle_tick(*this);
-		if (this->current->msg->getText() != msg) {
-			Console::init();
-			msg = this->current->msg->getText();
-			Writer(V(5, 10)).writeline(msg);
+		if (runner->should_draw_screen()) {
+			Console::sleep(runner->get_tick_time_ms());
+			if (this->current->msg->getText() != msg) {
+				Console::init();
+				msg = this->current->msg->getText();
+				Writer(V(5, 10)).writeline(msg);
+			}
 		}
 	}
 }
@@ -140,6 +144,7 @@ Mode GameView::run() {
 	Console::init();
 	this->draw();
 	while (mode == Mode::RUNNING) {
+		runner->handle_tick();
 		this->handle_tick();
 		if ((mode = this->check_room()) != Mode::RUNNING) return mode;
 		if (this->current->msg->is_active()) {
@@ -149,7 +154,7 @@ Mode GameView::run() {
 		this->draw();
 		Keypress e = runner->get_keypress();
 		mode = runner->get_mode(this->handle_keypress(e));
-		Console::sleep(TICK);
+		Console::sleep(runner->get_tick_time_ms());
 	}
 	return mode;
 }

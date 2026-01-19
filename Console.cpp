@@ -151,43 +151,56 @@ Mode ConsoleMenu::menu() {
 void ConsoleMenu::main_loop(std::function<void(GameView*)> init, GameRunner* runner) {
     Mode mode = runner->get_mode(Mode::MENU);
     GameView* game = nullptr;
-    while ((bool)mode) {
-        switch (mode) {
-        case Mode::RUNNING:
-            if (game) delete game;
-            game = new GameView(runner);
-            try {
-                init(game);
+    std::string exit_msg = runner->get_exit_msg();
+    try {
+        while ((bool)mode) {
+            switch (mode) {
+            case Mode::RUNNING:
+                if (game) delete game;
+                game = new GameView(runner);
+                try {
+                    init(game);
+                }
+                catch (const std::runtime_error& e) {
+                    Console::deinit();
+                    std::cout << e.what();
+                    return;
+                }
+                mode = game->run();
+                break;
+            case Mode::CONTINUE:
+                if (game) mode = game->run();
+                else mode = Mode::RUNNING;
+                break;
+            case Mode::PAUSED:
+                mode = ConsoleMenu::pause();
+                break;
+            case Mode::MENU:
+                if (game) delete game;
+                game = nullptr;
+                mode = ConsoleMenu::menu();
+                break;
+            case Mode::WINNING:
+                ConsoleMenu::won_game();
+                while (ConsoleMenu::get_keypress() == Keypress::NONE);
+                mode = Mode::MENU;
+                break;
+            default:
+                mode = Mode::EXIT;
+                break;
             }
-            catch (const std::runtime_error& e) {
-                Console::deinit();
-                std::cout << e.what();
-                return;
-            }
-            mode = game->run();
-            break;
-        case Mode::CONTINUE:
-            if (game) mode = game->run();
-            else mode = Mode::RUNNING;
-            break;
-        case Mode::PAUSED:
-            mode = ConsoleMenu::pause();
-            break;
-        case Mode::MENU:
-            if (game) delete game;
-            game = nullptr;
-            mode = ConsoleMenu::menu();
-            break;
-        case Mode::WINNING:
-            ConsoleMenu::won_game();
-            while (ConsoleMenu::get_keypress() == Keypress::NONE);
-            mode = Mode::MENU;
-            break;
-        default:
-            mode = Mode::EXIT;
-            break;
         }
+	} catch (const EventAssertionError& e) {
+		exit_msg = format("Event assertion error: {}\n", e.what());
     }
+    catch (const std::runtime_error& e) {
+        exit_msg = format("Runtime error: {}\n", e.what());
+    } catch (const std::exception& e) {
+        exit_msg = format("Fatal error: {}\n", e.what());
+	}
     if (game) delete game;
     Console::deinit();
+	if (!exit_msg.empty()) {
+        std::cout << exit_msg;
+    }
 }

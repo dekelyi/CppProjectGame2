@@ -78,6 +78,7 @@ public:
 	 * Render the current room by drawing each MapObject and then the HUD.
 	 */
 	inline void draw() {
+		if (!runner->should_draw_screen()) return;
 		for (MapObject* obj : current->map_objects)
 			current->draw(*obj);
 		current->drawBuffer([&](unsigned y) { drawHUD(y); });
