@@ -42,6 +42,8 @@ public:
 		player2 = new Player((char)ObjType::PLAYER_2);
 	}
 
+	inline GameView(const GameView& other) = delete;
+
 	~GameView() {
 		// delete linked list
 		GameRoom* node = head, *tmp;
@@ -56,6 +58,8 @@ public:
 
 		runner->deinit();
 	}
+
+
 
 	/**
 	 * Initialize all rooms (call init on each GameRoom and its props).
@@ -89,6 +93,8 @@ public:
 		current->drawBuffer([&](unsigned y) { drawHUD(y); });
 	}
 
+
+	GameRoom* add_room(GameRoom* room);
 	/**
 	 * Add a new room to the game linked list.
 	 * @param X Width of the room in cells (default SIZE_X).
@@ -96,7 +102,9 @@ public:
 	 * @param legend_pos Y position of the legend line.
 	 * @returns pointer to the newly created GameRoom.
 	 */
-	GameRoom* add_room(const unsigned X = DEFAULT_X, const unsigned Y = DEFAULT_Y, const unsigned legend_pos = 0);
+	inline GameRoom* add_room(const unsigned X = DEFAULT_X, const unsigned Y = DEFAULT_Y, const unsigned legend_pos = 0) {
+		return add_room(new GameRoom(X, Y, legend_pos, runner));
+	}
 
 	/** Move to the next room in the linked list (if any). */
 	void advance_room();

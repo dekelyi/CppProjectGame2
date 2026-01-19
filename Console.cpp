@@ -11,6 +11,7 @@
 #include "prelude.h"
 #include "GameView.h"
 #include "GameRunner.h"
+#include "LevelParser.h"
 
 using std::cout, std::endl, std::string, std::format;
 
@@ -148,7 +149,7 @@ Mode ConsoleMenu::menu() {
 
 
 // Application top-level main loop. init callback configures a new GameView.
-void ConsoleMenu::main_loop(std::function<void(GameView*)> init, GameRunner* runner) {
+void ConsoleMenu::main_loop(const ParserFactory& factory, GameRunner* runner) {
     Mode mode = runner->get_mode(Mode::MENU);
     GameView* game = nullptr;
     std::string exit_msg = runner->get_exit_msg();
@@ -158,14 +159,7 @@ void ConsoleMenu::main_loop(std::function<void(GameView*)> init, GameRunner* run
             case Mode::RUNNING:
                 if (game) delete game;
                 game = new GameView(runner);
-                try {
-                    init(game);
-                }
-                catch (const std::runtime_error& e) {
-                    Console::deinit();
-                    std::cout << e.what();
-                    return;
-                }
+				factory.init_game(game);
                 mode = game->run();
                 break;
             case Mode::CONTINUE:

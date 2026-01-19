@@ -11,8 +11,7 @@ using namespace std;
 /**
  * Add a room to the game. Link into linked list and return pointer.
  */
-GameRoom* GameView::add_room(const unsigned X, const unsigned Y, const unsigned legend_pos) {
-	auto room = new GameRoom(X, Y, legend_pos, runner);
+GameRoom* GameView::add_room(GameRoom* room) {
 	if (last) {
 		room->prev = last;
 		room->prev->next = room;

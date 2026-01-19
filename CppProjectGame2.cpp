@@ -7,6 +7,7 @@ int main(int argc, char* argv[]) {
 	RiddleParser riddle_parser("riddles.txt");
 	riddle_parser.parse();
 	GameRunner* runner = nullptr;
+	ParserFactory factory(riddle_parser);
 	if (argc > 1) {
 		std::string arg = argv[1];
 		if (arg == "-load") {
@@ -15,6 +16,7 @@ int main(int argc, char* argv[]) {
 		}
 		else if (arg == "-save") runner = new SavingGameRunner();
 	}
-	ConsoleMenu::main_loop([&](GameView* game) {LevelParser::parse_all_levels(game, riddle_parser);}, runner);
+	ConsoleMenu::main_loop(factory, runner);
+	delete runner;
 	return 0;
 }

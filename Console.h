@@ -3,7 +3,6 @@
  */
 #pragma once
 #include <string>
-#include <functional>
 #include "Vector.h"
 #include "prelude.h"
 
@@ -25,6 +24,7 @@
 
 class GameView;
 class GameRunner;
+class ParserFactory;
 
 /**
  * Console - static helper class that replaces previous free functions.
@@ -109,7 +109,7 @@ public:
      * The provided init callback is used to configure a newly created
      * GameView before starting the game.
      */
-    static void main_loop(std::function<void(GameView*)> init, GameRunner* runner);
+    static void main_loop(const ParserFactory& factory, GameRunner* runner);
 
     /**
      * Poll for a keypress and convert it to a Keypress enum. Returns

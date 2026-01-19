@@ -107,7 +107,7 @@ public:
   * Parameters:
   * - game: the GameView to which the new room will be added.
   */
-	void build_room(GameView* game);
+	void build_room(GameView* game) const;
 
 	/**
   * Parse the entire room file associated with this LevelParser instance.
@@ -208,19 +208,34 @@ public:
   * - A `Parameterized` describing the symbol, extracted params and the consumed length.
   */
 	static Parameterized parse_parameterized(const string& str);
+};
 
-	/**
-  * Parse and build all level files found in `path`, adding them to `game`.
-  *
-  * Parameters:
-  * - game: GameView to receive parsed rooms.
-  * - riddles: pre-parsed RiddleParser containing riddle data for RIDDLE objects.
-  * - path: directory to scan for level files (default ".").
-  *
-  * Behavior:
-  * - Scans for files matching the naming convention ".\\adv-world_<N>.screen".
-  * - Sorts files lexicographically and loads them in order.
-  * - Throws `runtime_error` if no level files are found.
-  */
-	static void parse_all_levels(GameView* game, const RiddleParser& riddles, const string& path = ".");
+/**
+* Parse and build all level files found in `path`, adding them to `game`.
+*
+* Parameters:
+* - game: GameView to receive parsed rooms.
+* - riddles: pre-parsed RiddleParser containing riddle data for RIDDLE objects.
+* - path: directory to scan for level files (default ".").
+*
+* Behavior:
+* - Scans for files matching the naming convention ".\\adv-world_<N>.screen".
+* - Sorts files lexicographically and loads them in order.
+* - Throws `runtime_error` if no level files are found.
+*/
+class ParserFactory {
+	const RiddleParser& riddles;
+	vector<LevelParser*> parsers;
+
+	void parse_files(const string& path);
+public:
+	ParserFactory(const RiddleParser& _riddles, const string& path = "."): riddles(_riddles) {
+		parse_files(path);
+	}
+
+	~ParserFactory() {
+		for (auto p : parsers) delete p;
+	}
+
+	void init_game(GameView* game) const;
 };

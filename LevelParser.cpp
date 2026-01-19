@@ -83,10 +83,10 @@ std::vector<MapObject*> ObjectData::into_map_objects(GameView* game, GameRoom* r
  * - Adds each created MapObject to the room.
  * - Applies special room-level properties (e.g. msg-on-enter, is_dark).
  */
-void LevelParser::build_room(GameView* game) {
+void LevelParser::build_room(GameView* game) const {
 	auto get_prop = [&](string key, int _default) -> int {
-		string& val = this->room_properties[key];
 		try {
+			string val = this->room_properties.at(key);
 			return stoi(val);
 		}
 		catch (...) {
@@ -96,7 +96,7 @@ void LevelParser::build_room(GameView* game) {
 
 	auto room = game->add_room(get_prop("width", GameView::DEFAULT_X), get_prop("height", GameView::DEFAULT_Y), legend_position);
 	for (auto& obj_data : objects) {
-		ObjectData& od = obj_data;
+		ObjectData od = obj_data;
 		std::vector<MapObject*> objs = obj_data.into_map_objects(game, room, *this);
 		for (auto obj : objs) room->add_object(obj);
 	}
@@ -286,53 +286,6 @@ Parameterized LevelParser::parse_parameterized(const string& str) {
 }
 
 /**
- * Discover, parse and build all level files in `path` following the naming:
- * ".\adv-world_<N>.screen".
- *
- * - Files are sorted lexicographically before loading.
- * - After all rooms are created, player placement and initialization are adjusted
- *   based on the entry/exit doors.
- *
- * Throws runtime_error when no matching level files are found.
- */
-void LevelParser::parse_all_levels(GameView* game, const RiddleParser& riddles, const string& path) {
-	vector<filesystem::directory_entry> files;
-	for (const auto& entry : filesystem::directory_iterator(path)) {
-		string filename = entry.path().string();
-		if (filename.starts_with(".\\adv-world_") && filename.ends_with(".screen")) {
-			string index = filename.substr(12, filename.size() - 19);
-			try {
-				int n = stoi(index);
-				files.push_back(entry);
-			}
-			catch (...) {}
-		}
-	}
-
-	if (files.size() == 0) throw runtime_error("No level files found.");
-
-	sort(files.begin(), files.end(), [](const filesystem::directory_entry& a, const filesystem::directory_entry& b) {
-		return a.path().string() < b.path().string();
-		});
-
-	for (const auto& entry : files) {
-		LevelParser parser(entry.path().string(), riddles);
-		parser.parse();
-		parser.build_room(game);
-	}
-
-	if (game->current->p_doors.entry_point) {
-		game->player1->setPosition(game->current->p_doors.entry_point->getPosition());
-		game->player2->setPosition(game->player1->getNextPosition(game->current));
-		game->current->add_object(game->player1);
-		game->current->add_object(game->player2);
-		game->current->remove_object(game->current->p_doors.entry_point);
-		game->current->p_doors.entry_point = nullptr;
-	}
-	game->init_rooms();
-}
-
-/**
  * Parse riddles file and populate `riddles`.
  *
  * Format:
@@ -361,4 +314,57 @@ void RiddleParser::parse() {
 		}
 		else if (current) current->answers.push_back(line);
 	}
+}
+
+/**
+ * Discover, parse and build all level files in `path` following the naming:
+ * ".\adv-world_<N>.screen".
+ *
+ * - Files are sorted lexicographically before loading.
+ * - After all rooms are created, player placement and initialization are adjusted
+ *   based on the entry/exit doors.
+ *
+ * Throws runtime_error when no matching level files are found.
+ */
+void ParserFactory::parse_files(const string& path) {
+	vector<filesystem::directory_entry> files;
+	for (const auto& entry : filesystem::directory_iterator(path)) {
+		string filename = entry.path().string();
+		if (filename.starts_with(".\\adv-world_") && filename.ends_with(".screen")) {
+			string index = filename.substr(12, filename.size() - 19);
+			try {
+				int n = stoi(index);
+				files.push_back(entry);
+			}
+			catch (...) {}
+		}
+	}
+
+	if (files.size() == 0) throw runtime_error("No level files found.");
+
+	sort(files.begin(), files.end(), [](const filesystem::directory_entry& a, const filesystem::directory_entry& b) {
+		return a.path().string() < b.path().string();
+		});
+
+	for (const auto& entry : files) {
+		LevelParser* parser = new LevelParser(entry.path().string(), riddles);
+		parser->parse();
+		parsers.push_back(parser);
+	}
+}
+
+void ParserFactory::init_game(GameView* game) const {
+	for (auto& parser : parsers) {
+		parser->build_room(game);
+	}
+
+	if (game->current->p_doors.entry_point) {
+		game->player1->setPosition(game->current->p_doors.entry_point->getPosition());
+		game->player2->setPosition(game->player1->getNextPosition(game->current));
+		game->current->add_object(game->player1);
+		game->current->add_object(game->player2);
+		game->current->remove_object(game->current->p_doors.entry_point);
+		game->current->p_doors.entry_point = nullptr;
+	}
+	game->init_rooms();
 }

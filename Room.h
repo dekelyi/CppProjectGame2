@@ -48,6 +48,8 @@ public:
 		delete msg;
 	}
 
+	GameRoom(const GameRoom& other) = delete;
+
 	/** Initialize room props (called by GameView::init_rooms). */
 	inline void init(unsigned int i) {
 		p_doors.init(i);
