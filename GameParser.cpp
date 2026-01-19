@@ -2,7 +2,7 @@
 #include <vector>
 #include <filesystem>
 
-#include "prelude.h"
+#include "ObjTypes.h"
 #include "GameView.h"
 #include "Collectible.h"
 #include "Door.h"

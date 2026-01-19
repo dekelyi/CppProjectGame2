@@ -6,37 +6,37 @@
 
 // Application top-level main loop. init callback configures a new GameView.
 void main_loop(const GameParser& parser, GameRunner* runner) {
-    Mode mode = runner->get_mode(Mode::MENU);
+    ConsoleMenu::Mode mode = runner->get_mode(ConsoleMenu::Mode::MENU);
     GameView* game = nullptr;
     std::string exit_msg = runner->get_exit_msg();
     try {
         while ((bool)mode) {
             switch (mode) {
-            case Mode::RUNNING:
+            case ConsoleMenu::Mode::RUNNING:
                 if (game) delete game;
                 game = new GameView(runner);
                 parser.init_game(game);
                 mode = game->run();
                 break;
-            case Mode::CONTINUE:
+            case ConsoleMenu::Mode::CONTINUE:
                 if (game) mode = game->run();
-                else mode = Mode::RUNNING;
+                else mode = ConsoleMenu::Mode::RUNNING;
                 break;
-            case Mode::PAUSED:
+            case ConsoleMenu::Mode::PAUSED:
                 mode = ConsoleMenu::pause();
                 break;
-            case Mode::MENU:
+            case ConsoleMenu::Mode::MENU:
                 if (game) delete game;
                 game = nullptr;
                 mode = ConsoleMenu::menu();
                 break;
-            case Mode::WINNING:
+            case ConsoleMenu::Mode::WINNING:
                 ConsoleMenu::won_game();
-                while (ConsoleMenu::get_keypress() == Keypress::NONE);
-                mode = Mode::MENU;
+                while (ConsoleMenu::get_keypress() == ConsoleMenu::Keypress::NONE);
+                mode = ConsoleMenu::Mode::MENU;
                 break;
             default:
-                mode = Mode::EXIT;
+                mode = ConsoleMenu::Mode::EXIT;
                 break;
             }
         }

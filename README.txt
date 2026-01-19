@@ -92,7 +92,7 @@ This order keeps the separation of concerns intact: `MapObject` decides collisio
 
 - Add a new MapObject subclass (representation/collision):
   1. Create a lightweight subclass undofer `MapObject` that defines placement and collision metadata.
-  2. Add a symbol in `prelude::ObjType`.
+  2. Add a symbol in `ObjTypes::ObjType`.
   3. Add factory mapping in `LevelParser.cpp` so `LevelParser` can instantiate it from `.screen`.
   4. Keep it free of complex behavioral logic — delegate that to a Prop if needed.
 

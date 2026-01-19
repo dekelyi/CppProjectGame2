@@ -2,7 +2,6 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include "prelude.h"
 #include "Console.h"
 #include "EventLogger.h"
 
@@ -25,15 +24,15 @@ public:
 	virtual bool should_draw_screen() const { return true; };
 	virtual string get_exit_msg() const { return ""; };
 
-	virtual Mode get_mode(Mode mode) const { return mode; }
-	virtual Keypress get_keypress() = 0;
+	virtual ConsoleMenu::Mode get_mode(ConsoleMenu::Mode mode) const { return mode; }
+	virtual ConsoleMenu::Keypress get_keypress() = 0;
 	virtual string get_input() = 0;
 	virtual void handle_event(Event* e) {};
 };
 
 class KeyboardGameRunner : virtual public GameRunner {
 public:
-	inline virtual Keypress get_keypress() override {
+	inline virtual ConsoleMenu::Keypress get_keypress() override {
 		return ConsoleMenu::get_keypress();
 	}
 
@@ -66,9 +65,9 @@ public:
 		log.close();
 	}
 
-	inline virtual Keypress get_keypress() override {
-		Keypress e = KeyboardGameRunner::get_keypress();
-		if (e == Keypress::ESC) return e;
+	inline virtual ConsoleMenu::Keypress get_keypress() override {
+		ConsoleMenu::Keypress e = KeyboardGameRunner::get_keypress();
+		if (e == ConsoleMenu::Keypress::ESC) return e;
 		char ch = (bool)e ? (char)e : NO_KEYPRESS;
 		steps << ch;
 		steps.flush();
@@ -102,19 +101,19 @@ public:
 		steps.close();
 	}
 
-	virtual Mode get_mode(Mode mode) const override {
+	virtual ConsoleMenu::Mode get_mode(ConsoleMenu::Mode mode) const override {
 		if (!steps.eof()) {
-			return Mode::RUNNING;
+			return ConsoleMenu::Mode::RUNNING;
 		}
 		else {
-			return Mode::EXIT;
+			return ConsoleMenu::Mode::EXIT;
 		}
 	}
 
-	inline virtual Keypress get_keypress() override {
+	inline virtual ConsoleMenu::Keypress get_keypress() override {
 		char ch = 0;
 		if (!steps.get(ch) || ch == NO_KEYPRESS) ch = 0;
-		return (Keypress)ch;
+		return (ConsoleMenu::Keypress)ch;
 	}
 	inline virtual string get_input() override {
 		string str = "";

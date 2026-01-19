@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "prelude.h"
+#include "ObjTypes.h"
 #include "Vector.h"
 #include "GameView.h"
 #include "Riddle.h"

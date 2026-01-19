@@ -7,7 +7,6 @@
 #include <format>
 
 #include "Console.h"
-#include "prelude.h"
 #include "Vector.h"
 
 using std::cout, std::endl, std::string, std::format;
@@ -74,7 +73,7 @@ void Writer::writeline(const string& line) {
 bool ConsoleMenu::colors = true;
 
 // Pause dialog: blocking loop that returns selected next mode.
-Mode ConsoleMenu::pause() {
+ConsoleMenu::Mode ConsoleMenu::pause() {
     Console::cls();
     Console::gotoxy(V(10, 5));
     cout << "Game paused, press ESC again to continue or H to go back to the main menu" << endl;
@@ -108,7 +107,7 @@ void ConsoleMenu::manual() {
 }
 
 // Return Keypress enum from keyboard; returns NONE if no key available.
-Keypress ConsoleMenu::get_keypress() {
+ConsoleMenu::Keypress ConsoleMenu::get_keypress() {
     if (_kbhit()) {
         char ch = _getch();
         return (Keypress)(toupper(ch));
@@ -117,7 +116,7 @@ Keypress ConsoleMenu::get_keypress() {
 }
 
 // Main menu flow; returns chosen Mode.
-Mode ConsoleMenu::menu() {
+ConsoleMenu::Mode ConsoleMenu::menu() {
     Console::init();
     Writer w = { V(10, 5) };
     w.writeline("Welcome to the Game!");

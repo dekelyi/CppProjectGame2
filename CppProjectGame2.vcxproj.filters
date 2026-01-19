@@ -75,11 +75,11 @@
     <ClCompile Include="GameParser.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="prelude.h">
-      <Filter>Base</Filter>
-    </ClCompile>
     <ClCompile Include="EventLogger.h">
       <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjTypes.h">
+      <Filter>Types</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

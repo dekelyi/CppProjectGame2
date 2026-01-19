@@ -1,5 +1,5 @@
 #pragma once
-#include "prelude.h"
+#include "ObjTypes.h"
 #include "Object.h"
 class Obstacle : public MapObject {
 public:

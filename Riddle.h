@@ -2,6 +2,7 @@
 #include <string>
 #include <format>
 #include <vector>
+#include "ObjTypes.h"
 #include "Object.h"
 #include "player.h"
 #include "Msg.h"

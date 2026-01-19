@@ -1,7 +1,6 @@
 #pragma once
 #include "Object.h"
 #include "Collectible.h"
-#include "prelude.h"
 
 class Player : public MapObject {
 public:
@@ -15,12 +14,12 @@ public:
 		if (collectible) delete collectible;
 	}
 
-	V get_moving_offset(Keypress e) {
+	V get_moving_offset(ConsoleMenu::Keypress e) {
 		switch (e) {
-			case Keypress::UP_1: case Keypress::UP_2: return V(0, -1);
-			case Keypress::DOWN_1: case Keypress::DOWN_2: return V(0, 1);
-			case Keypress::RIGHT_1: case Keypress::RIGHT_2: return V(1, 0);
-			case Keypress::LEFT_1: case Keypress::LEFT_2: return V(-1, 0);
+			case ConsoleMenu::Keypress::UP_1: case ConsoleMenu::Keypress::UP_2: return V(0, -1);
+			case ConsoleMenu::Keypress::DOWN_1: case ConsoleMenu::Keypress::DOWN_2: return V(0, 1);
+			case ConsoleMenu::Keypress::RIGHT_1: case ConsoleMenu::Keypress::RIGHT_2: return V(1, 0);
+			case ConsoleMenu::Keypress::LEFT_1: case ConsoleMenu::Keypress::LEFT_2: return V(-1, 0);
 			default: return V(0, 0);
 		}
 	}
@@ -30,7 +29,7 @@ public:
 		if (collectible) collectible->move(offset);
 	}
 
-	inline void handle_movement(Keypress e) {
+	inline void handle_movement(ConsoleMenu::Keypress e) {
 		V dir = this->get_moving_offset(e);
 		for (auto& m: moves)
 			if (m.kind == Move::EVENT && m.dir.is_same_direction(dir)) return;

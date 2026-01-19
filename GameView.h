@@ -126,14 +126,14 @@ public:
 	 * Check whether players exist in the current room; if none, move to a room
 	 * where players remain. Returns the Mode to switch to (RUNNING, WINNING, etc).
 	 */
-	Mode check_room();
+	ConsoleMenu::Mode check_room();
 
 	/** Handle a Keypress event and update players/room accordingly; returns selected Mode. */
-	Mode handle_keypress(Keypress e);
+	ConsoleMenu::Mode handle_keypress(ConsoleMenu::Keypress e);
 
 	/**
 	 * Main game loop. Runs until a Mode other than RUNNING is returned.
 	 * Returns the Mode which the caller should handle next.
 	 */
-	Mode run();
+	ConsoleMenu::Mode run();
 };

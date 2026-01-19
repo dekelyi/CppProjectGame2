@@ -1,4 +1,5 @@
 #pragma once
+#include "ObjTypes.h"
 #include "Object.h"
 
 #define BOMB_NOT_SET -1

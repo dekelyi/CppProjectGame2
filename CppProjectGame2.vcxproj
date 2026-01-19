@@ -136,7 +136,7 @@
     <ClCompile Include="Msg.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayersProp.cpp" />
-    <ClCompile Include="prelude.h" />
+    <ClCompile Include="ObjTypes.h" />
     <ClCompile Include="GameView.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Console.cpp" />

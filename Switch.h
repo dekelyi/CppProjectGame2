@@ -1,5 +1,5 @@
 #pragma once
-#include "prelude.h"
+#include "ObjTypes.h"
 #include "Object.h"
 #include "Door.h"
 #include "Room.h"

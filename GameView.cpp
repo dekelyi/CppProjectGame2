@@ -1,7 +1,6 @@
 #include "GameView.h"
 #include "player.h"
 #include "Console.h"
-#include "prelude.h"
 #include <format>
 
 using namespace std;
@@ -47,7 +46,7 @@ void GameView::goback_room() {
  * If current room has no players move forward/back based on last door used.
  * Returns Mode::WINNING when no players left in any room.
  */
-Mode GameView::check_room() {
+ConsoleMenu::Mode GameView::check_room() {
 	if (current->p_players.count_players() == 0) {
 		GameRoom* room = this->head;
 		// check if we won the game
@@ -58,7 +57,7 @@ Mode GameView::check_room() {
 		};
 		if (count_rooms_with_players == 0) {
 			runner->handle_event(new GameEndedEvent());
-			return Mode::WINNING;
+			return ConsoleMenu::Mode::WINNING;
 
 		}
 		// else, move to the rooms
@@ -72,10 +71,10 @@ Mode GameView::check_room() {
 		}
 		else {
 			runner->handle_event(new GameEndedEvent());
-			return Mode::WINNING;
+			return ConsoleMenu::Mode::WINNING;
 		};
 	}
-	return Mode::RUNNING;
+	return ConsoleMenu::Mode::RUNNING;
 }
 
 /** Draw HUD lines with player inventory and room progress. */
@@ -113,52 +112,52 @@ void GameView::drawMsg() {
 }
 
 /** Dispatch a keypress to players or menus; returns Mode when mode-switch is required. */
-Mode GameView::handle_keypress(Keypress e) {
+ConsoleMenu::Mode GameView::handle_keypress(ConsoleMenu::Keypress e) {
 	switch (e) {
-		case Keypress::UP_1:
-		case Keypress::DOWN_1:
-		case Keypress::LEFT_1:
-		case Keypress::RIGHT_1:
-		case Keypress::STAY_1:
+		case ConsoleMenu::Keypress::UP_1:
+		case ConsoleMenu::Keypress::DOWN_1:
+		case ConsoleMenu::Keypress::LEFT_1:
+		case ConsoleMenu::Keypress::RIGHT_1:
+		case ConsoleMenu::Keypress::STAY_1:
 			this->player1->handle_movement(e);
 			break;
-		case Keypress::UP_2:
-		case Keypress::DOWN_2:
-		case Keypress::LEFT_2:
-		case Keypress::RIGHT_2:
-		case Keypress::STAY_2:
+		case ConsoleMenu::Keypress::UP_2:
+		case ConsoleMenu::Keypress::DOWN_2:
+		case ConsoleMenu::Keypress::LEFT_2:
+		case ConsoleMenu::Keypress::RIGHT_2:
+		case ConsoleMenu::Keypress::STAY_2:
 			this->player2->handle_movement(e);
 			break;
-		case Keypress::DISPOSE_1:
+		case ConsoleMenu::Keypress::DISPOSE_1:
 			this->player1->dump_collectible(this->current);
 			break;
-		case Keypress::DISPOSE_2:
+		case ConsoleMenu::Keypress::DISPOSE_2:
 			this->player2->dump_collectible(this->current);
 			break;
-		case Keypress::ESC:
-			return Mode::PAUSED;
-		case Keypress::NONE:
+		case ConsoleMenu::Keypress::ESC:
+			return ConsoleMenu::Mode::PAUSED;
+		case ConsoleMenu::Keypress::NONE:
 		default:
 			break;
 	}
-	return Mode::RUNNING;
+	return ConsoleMenu::Mode::RUNNING;
 }
 
 /** Main loop: tick, draw, input, sleep cycle until mode changes. */
-Mode GameView::run() {
-	Mode mode = Mode::RUNNING;
+ConsoleMenu::Mode GameView::run() {
+	ConsoleMenu::Mode mode = ConsoleMenu::Mode::RUNNING;
 	Console::init();
 	this->draw();
-	while (mode == Mode::RUNNING) {
+	while (mode == ConsoleMenu::Mode::RUNNING) {
 		runner->handle_tick();
 		this->handle_tick();
-		if ((mode = this->check_room()) != Mode::RUNNING) return mode;
+		if ((mode = this->check_room()) != ConsoleMenu::Mode::RUNNING) return mode;
 		if (this->current->msg->is_active()) {
 			this->drawMsg();
 			Console::init();
 		}
 		this->draw();
-		Keypress e = runner->get_keypress();
+		ConsoleMenu::Keypress e = runner->get_keypress();
 		mode = runner->get_mode(this->handle_keypress(e));
 		Console::sleep(runner->get_tick_time_ms());
 	}
