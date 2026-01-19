@@ -8,16 +8,17 @@
 
 using std::vector, std::string, std::endl, std::cout;
 
-struct DrawingObject {
-	char glyph = ' ';
-	std::string attr = "";
-
-	bool operator==(const DrawingObject& other) const = default;
-};
-
-static const DrawingObject DNULL = DrawingObject();
-
 class MapBuffer {
+	struct DrawingObject {
+		char glyph = ' ';
+		std::string attr = "";
+
+		bool operator==(const DrawingObject& other) const = default;
+		explicit operator bool() const {
+			return *this == DrawingObject();
+		}
+	};
+
 	vector<vector<DrawingObject>> buffer;
 public:
 	const int legend_y_pos = 0;
@@ -30,7 +31,7 @@ public:
 	DrawingObject get_at(V pos) const {
 		unsigned x = pos.getX(), y = pos.getY();
 		if (x < 0 || y < 0 || x >= X || y >= Y)
-			return DNULL;
+			return DrawingObject();
 		return buffer[x][y];
 	}
 
@@ -38,7 +39,7 @@ public:
 		unsigned x = pos.getX(), y = pos.getY();
 		if (x < 0 || y < 0 || x >= X || y >= Y)
 			return false;
-		return buffer[x][y] != DNULL;
+		return (bool)buffer[x][y];
 	}
 
 	void set_at(V pos, DrawingObject obj) {

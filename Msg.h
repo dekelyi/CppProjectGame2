@@ -24,12 +24,10 @@ struct Msg {
 /**
  * A message on the screen, waiting for input
  */
-class MsgWithInput : public Msg {
-protected:
+struct MsgWithInput : public Msg {
 	bool active = true;
-public:
-	virtual void on_input(string str) = 0;
-
-	virtual void handle_tick(GameView& game) override;
 	inline virtual bool is_active() const override { return active || Msg::is_active(); }
+
+	virtual void on_input(string str) = 0;
+	virtual void handle_tick(GameView& game) override;
 };

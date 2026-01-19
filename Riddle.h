@@ -11,15 +11,14 @@ class GameRoom;
 
 using std::string, std::vector;
 
-struct RiddleData {
-	string question;
-	vector<string> answers;
-	size_t correct_answer_index = 0;
-};
-
-
 class Riddle : public MapObject {
 public:
+	struct RiddleData {
+		string question;
+		vector<string> answers;
+		size_t correct_answer_index = 0;
+	};
+
 	const RiddleData data;
 	Riddle(V pos, S size, const RiddleData& riddle_data)
 		: MapObject(pos, size, (char)ObjType::RIDDLE), data(riddle_data) {

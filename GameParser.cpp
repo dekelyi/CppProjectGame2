@@ -109,7 +109,7 @@ std::vector<MapObject*> GameParser::LevelParser::ObjectData::into_map_objects(Ga
 		return { new Key(position, size) };
 	case ObjType::RIDDLE: {
 		try {
-			RiddleData rdata = parser.riddle_parser.riddles.at(id);
+			Riddle::RiddleData rdata = parser.riddle_parser.riddles.at(id);
 			return { new Riddle(position, size, rdata) };
 		}
 		catch (...) {
@@ -357,7 +357,7 @@ void GameParser::RiddleParser::parse() {
 			// New riddle
 			size_t space_index = line.find(' ');
 			int id = stoi(line.substr(1, space_index));
-			RiddleData riddle = { line.substr(space_index + 1) };
+			Riddle::RiddleData riddle = { line.substr(space_index + 1) };
 			riddle.answers.clear();
 			riddles[id] = riddle;
 			current = &riddles[id];

@@ -29,9 +29,9 @@ class GameParser {
 */
 	class RiddleParser {
 		ifstream file;
-		RiddleData* current = nullptr;
+		Riddle::RiddleData* current = nullptr;
 	public:
-		map<int, RiddleData> riddles;
+		map<int, Riddle::RiddleData> riddles;
 
 		RiddleParser(const string& filename) {
 			file.open(filename);
