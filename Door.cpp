@@ -3,6 +3,7 @@
 #include "Collectible.h"
 #include "Room.h"
 #include "GameView.h"
+#include "EventLogger.h"
 
 MapObject::M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
 	// If door is locked, block passage
@@ -30,6 +31,9 @@ MapObject::M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, Move& m
 	other_room->add_object(obj);
 	obj->setPosition(other_door ? other_door->getPosition() : V(0,0));
 	room->p_doors.last_moved_through = this;
+
+	// emit event describing transition
+	room->runner->handle_event(new RoomTransitionEvent(obj, dest));
 
 	// move the object in the next room
 	obj->try_move(other_room, move);

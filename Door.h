@@ -1,6 +1,5 @@
 #pragma once
 #include "Object.h"
-#include "EventLogger.h"
 #include <format>
 
 enum class DoorState {

@@ -2,9 +2,12 @@
 #include <string>
 #include "Object.h"
 #include "Riddle.h"
+#include <format>
+#include "Door.h"
 #include <stdexcept>
 
 using std::string;
+
 
 /**
  * Base class for events emitted by game objects during runtime.
@@ -74,6 +77,22 @@ public:
             actor->getGlyph(), riddle->data.question,
             riddle->data.answers[answer], (answer == riddle->data.correct_answer_index) ? "yes" : "no");
     };
+};
+
+/**
+ * Event emitted when an object moves between rooms through a door.
+ * Reports whether the object moved to the NEXT room or the PREV room.
+ */
+class RoomTransitionEvent : public Event {
+public:
+    DoorDest dir;
+
+    RoomTransitionEvent(const MapObject* _actor, DoorDest _dir)
+        : Event(_actor), dir(_dir) {}
+
+    virtual string to_string() override {
+        return std::format("OBJ {} MOVED: {}", actor->getGlyph(), (dir == DoorDest::NEXT) ? "NEXT" : "PREV");
+    }
 };
 
 class EventAssertionError : public std::runtime_error {
