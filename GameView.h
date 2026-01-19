@@ -42,7 +42,11 @@ public:
 		player2 = new Player((char)ObjType::PLAYER_2);
 	}
 
+	// dont allow copy/move
 	inline GameView(const GameView& other) = delete;
+	GameView(const GameView&& other) = delete;
+	GameView& operator=(const GameView& other) = delete;
+	GameView& operator=(const GameView&& other) = delete;
 
 	~GameView() {
 		// delete linked list

@@ -48,7 +48,11 @@ public:
 		delete msg;
 	}
 
+	// dont allow copy/move
 	GameRoom(const GameRoom& other) = delete;
+	GameRoom(const GameRoom&& other) = delete;
+	GameRoom& operator=(const GameRoom& other) = delete;
+	GameRoom& operator=(const GameRoom&& other) = delete;
 
 	/** Initialize room props (called by GameView::init_rooms). */
 	inline void init(unsigned int i) {
