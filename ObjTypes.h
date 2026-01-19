@@ -1,7 +1,7 @@
 #pragma once
 
 /**
-* Represent symbols of game element
+* Represent symbols of game element used in map files and rendering.
 */
 enum class ObjType : char {
 	PLAYER_1 = '$',

@@ -11,154 +11,172 @@
 
 using std::string;
 
+/**
+ * Base class for input/timing runners controlling the game loop.
+ *
+ * Subclasses provide keypress/input sources, playback or recording functionality.
+ */
 class GameRunner {
 protected:
-	unsigned time = 0;
+    unsigned time = 0;
 public:
-	~GameRunner() { deinit(); }
-	virtual void init() {};
-	virtual void deinit() {};
+    ~GameRunner() { deinit(); }
+    virtual void init() {};
+    virtual void deinit() {};
 
-	virtual unsigned get_tick_time_ms() const { return 100; };
-	virtual void handle_tick() { time++; };
-	virtual bool should_draw_screen() const { return true; };
-	virtual string get_exit_msg() const { return ""; };
+    /** Tick interval used for sleeping between frames. */
+    virtual unsigned get_tick_time_ms() const { return 100; };
+    virtual void handle_tick() { time++; };
+    virtual bool should_draw_screen() const { return true; };
+    virtual string get_exit_msg() const { return ""; };
 
-	virtual ConsoleMenu::Mode get_mode(ConsoleMenu::Mode mode) const { return mode; }
-	virtual ConsoleMenu::Keypress get_keypress() = 0;
-	virtual string get_input() = 0;
-	virtual void handle_event(Event* e) {};
+    virtual ConsoleMenu::Mode get_mode(ConsoleMenu::Mode mode) const { return mode; }
+    virtual ConsoleMenu::Keypress get_keypress() = 0;
+    virtual string get_input() = 0;
+    virtual void handle_event(Event* e) {};
 };
 
+/**
+ * Keyboard runner that reads input from the console using ConsoleMenu helpers.
+ */
 class KeyboardGameRunner : virtual public GameRunner {
 public:
-	inline virtual ConsoleMenu::Keypress get_keypress() override {
-		return ConsoleMenu::get_keypress();
-	}
+    inline virtual ConsoleMenu::Keypress get_keypress() override {
+        return ConsoleMenu::get_keypress();
+    }
 
-	inline virtual string get_input() override {
-		Console::showCursor(true);
-		string str;
-		std::cin >> str;
-		return str;
-	}
+    inline virtual string get_input() override {
+        Console::showCursor(true);
+        string str;
+        std::cin >> str;
+        return str;
+    }
 };
 
+/**
+ * Runner that records player input and logs events to files for replay/testing.
+ */
 class SavingGameRunner : public KeyboardGameRunner {
-	const string steps_filename;
-	const string log_filename;
-	std::ofstream steps;
-	std::ofstream log;
+    const string steps_filename;
+    const string log_filename;
+    std::ofstream steps;
+    std::ofstream log;
 public:
-	SavingGameRunner(const string& sfn = STEPS_FILENAME, const string& lfn = LOG_FILENAME)
-		: steps_filename(sfn), log_filename(lfn) {
-	};
+    SavingGameRunner(const string& sfn = STEPS_FILENAME, const string& lfn = LOG_FILENAME)
+        : steps_filename(sfn), log_filename(lfn) {
+    };
 
-	virtual void init() override {
-		steps.open(steps_filename);
-		if (!steps.is_open()) throw std::runtime_error("error open file");
-		log.open(log_filename);
-		if (!log.is_open()) throw std::runtime_error("error open file");
-	}
-	virtual void deinit() override {
-		steps.close();
-		log.close();
-	}
+    virtual void init() override {
+        steps.open(steps_filename);
+        if (!steps.is_open()) throw std::runtime_error("error open file");
+        log.open(log_filename);
+        if (!log.is_open()) throw std::runtime_error("error open file");
+    }
+    virtual void deinit() override {
+        steps.close();
+        log.close();
+    }
 
-	inline virtual ConsoleMenu::Keypress get_keypress() override {
-		ConsoleMenu::Keypress e = KeyboardGameRunner::get_keypress();
-		if (e == ConsoleMenu::Keypress::ESC) return e;
-		char ch = (bool)e ? (char)e : NO_KEYPRESS;
-		steps << ch;
-		steps.flush();
-		return e;
-	};
+    inline virtual ConsoleMenu::Keypress get_keypress() override {
+        ConsoleMenu::Keypress e = KeyboardGameRunner::get_keypress();
+        if (e == ConsoleMenu::Keypress::ESC) return e;
+        char ch = (bool)e ? (char)e : NO_KEYPRESS;
+        steps << ch;
+        steps.flush();
+        return e;
+    };
 
-	inline virtual string get_input() override {
-		string str = KeyboardGameRunner::get_input();
-		steps << str;
-		steps.flush();
-		return str;
-	}
+    inline virtual string get_input() override {
+        string str = KeyboardGameRunner::get_input();
+        steps << str;
+        steps.flush();
+        return str;
+    }
 
-	inline virtual void handle_event(Event* e) override {
-		log << time << ":: " << e->to_string() << std::endl;
-		log.flush();
-	}
+    inline virtual void handle_event(Event* e) override {
+        log << time << ":: " << e->to_string() << std::endl;
+        log.flush();
+    }
 };
 
+/**
+ * Runner that replays input from a saved steps file.
+ */
 class LoadedGameRunner : public GameRunner {
-	string filename;
-	std::ifstream steps;
+    string filename;
+    std::ifstream steps;
 public:
-	LoadedGameRunner(const string& _filename = STEPS_FILENAME) :filename(_filename) {};
+    LoadedGameRunner(const string& _filename = STEPS_FILENAME) :filename(_filename) {};
 
-	virtual void init() override {
-		steps.open(filename);
-		if (!steps.is_open()) throw std::runtime_error("error open file");
-	}
-	virtual void deinit() override {
-		steps.close();
-	}
+    virtual void init() override {
+        steps.open(filename);
+        if (!steps.is_open()) throw std::runtime_error("error open file");
+    }
+    virtual void deinit() override {
+        steps.close();
+    }
 
-	virtual ConsoleMenu::Mode get_mode(ConsoleMenu::Mode mode) const override {
-		if (!steps.eof()) {
-			return ConsoleMenu::Mode::RUNNING;
-		}
-		else {
-			return ConsoleMenu::Mode::EXIT;
-		}
-	}
+    virtual ConsoleMenu::Mode get_mode(ConsoleMenu::Mode mode) const override {
+        if (!steps.eof()) {
+            return ConsoleMenu::Mode::RUNNING;
+        }
+        else {
+            return ConsoleMenu::Mode::EXIT;
+        }
+    }
 
-	inline virtual ConsoleMenu::Keypress get_keypress() override {
-		char ch = 0;
-		if (!steps.get(ch) || ch == NO_KEYPRESS) ch = 0;
-		return (ConsoleMenu::Keypress)ch;
-	}
-	inline virtual string get_input() override {
-		string str = "";
-		while (steps.peek() != NO_KEYPRESS) {
-			char ch;
-			steps.get(ch);
-			str += ch;
-		}
-		return str;
-	}
+    inline virtual ConsoleMenu::Keypress get_keypress() override {
+        char ch = 0;
+        if (!steps.get(ch) || ch == NO_KEYPRESS) ch = 0;
+        return (ConsoleMenu::Keypress)ch;
+    }
+    inline virtual string get_input() override {
+        string str = "";
+        while (steps.peek() != NO_KEYPRESS) {
+            char ch;
+            steps.get(ch);
+            str += ch;
+        }
+        return str;
+    }
 
-	virtual unsigned get_tick_time_ms() const override {
-		return GameRunner::get_tick_time_ms()/2;
-	}
+    virtual unsigned get_tick_time_ms() const override {
+        return GameRunner::get_tick_time_ms()/2;
+    }
 };
 
+/**
+ * Test runner that compares runtime events to an expected log file; throws on mismatch.
+ */
 class TestGameRunner : public LoadedGameRunner {
-	const string log_filename;
-	std::ifstream log;
+    const string log_filename;
+    std::ifstream log;
 public:
-	TestGameRunner(const string& sfn = STEPS_FILENAME, const string& lfn = LOG_FILENAME)
-		: LoadedGameRunner(sfn), log_filename(lfn) {
-	};
+    TestGameRunner(const string& sfn = STEPS_FILENAME, const string& lfn = LOG_FILENAME)
+        : LoadedGameRunner(sfn), log_filename(lfn) {
+    };
 
-	virtual void init() override {
-		LoadedGameRunner::init();
-		log.open(log_filename);
-		if (!log.is_open()) throw std::runtime_error("error open file");
-	}
-	virtual void deinit() override {
-		LoadedGameRunner::deinit();
-		log.close();
-	}
+    virtual void init() override {
+        LoadedGameRunner::init();
+        log.open(log_filename);
+        if (!log.is_open()) throw std::runtime_error("error open file");
+    }
+    virtual void deinit() override {
+        LoadedGameRunner::deinit();
+        log.close();
+    }
 
-	inline virtual void handle_event(Event* e) override {
-		string expected = std::to_string(time) + ":: " + e->to_string();
-		string actual;
-		std::getline(log, actual);
-		if (expected != actual) {
-			throw EventAssertionError("Test failed at time " + std::to_string(time) + ": expected '" + expected + "', got '" + actual + "'");
-		}
-	}
+    inline virtual void handle_event(Event* e) override {
+        string expected = std::to_string(time) + ":: " + e->to_string();
+        string actual;
+        std::getline(log, actual);
+        if (expected != actual) {
+            throw EventAssertionError("Test failed at time " + std::to_string(time) + ": expected '" + expected + "', got '" + actual + "'");
+        }
+    }
 
-	virtual unsigned get_tick_time_ms() const override { return 0; }
+    virtual unsigned get_tick_time_ms() const override { return 0; }
 
-	virtual bool should_draw_screen() const override { return false; }
-	virtual string get_exit_msg() const { return "All tests passed"; };
+    virtual bool should_draw_screen() const override { return false; }
+    virtual string get_exit_msg() const override { return "All tests passed"; };
 };

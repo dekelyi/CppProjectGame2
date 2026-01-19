@@ -18,8 +18,8 @@ protected:
 	friend class Spring;
 
 	/**
-	* A code representing the result of a moving operation
-	*/
+	 * Movement result codes used by movement and collision handlers.
+	 */
 	enum class M_CODE {
 		CAN_MOVE,
 		CANT_MOVE,
@@ -27,8 +27,8 @@ protected:
 	};
 
 	/**
-	* A move order
-	*/
+	 * Representation of a single queued move.
+	 */
 	struct Move {
 		V dir;
 		unsigned duration = 1,
@@ -39,14 +39,14 @@ protected:
 		bool operator==(const Move& m) const = default;
 	};
 
-	V pos;
-	V size;
-	std::list<Move> moves;
+	V pos;                      // current position
+	V size;                     // size occupied on the grid
+	std::list<Move> moves;      // queued move orders
 
-	std::string attr = "";
+	std::string attr = "";    // rendering attribute (color/ansi)
 
 public:
-	char glyph;
+	char glyph;                // character used for rendering
 	MapObject() : pos(V(-1,-1)), size(V(1, 1)), glyph(' ') {}
 	MapObject(V _size, char _glyph) : pos(V(-1, -1)), size(_size), glyph(_glyph) {}
 	MapObject(V _pos, V _size, char _glyph) : pos(_pos), size(_size), glyph(_glyph) {}
@@ -80,9 +80,9 @@ public:
 	}
 
 	/**
-	* Try to move this object using `dir`. Movement may be split into
-	* multiple steps if speed > 1. Returns true if movement succeeded.
-	*/
+	 * Try to move this object using `dir`. Movement may be split into
+	 * multiple steps if speed > 1. Returns true if movement succeeded.
+	 */
 	bool try_move(GameRoom* game, Move& dir);
 
 	/**

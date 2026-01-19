@@ -1,6 +1,11 @@
 #pragma once
 #include "ObjTypes.h"
 #include "Object.h"
+
+/**
+ * Obstacle - simple blocking object. Blocks movement unless underlying
+ * try_move logic allows it.
+ */
 class Obstacle : public MapObject {
 public:
 	Obstacle(V _pos, V _size) : MapObject(_pos, _size, (char)ObjType::OBSTCALE) { attr = A_FOREGROUND_YELLOW;  }

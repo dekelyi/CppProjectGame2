@@ -7,6 +7,10 @@
 
 typedef std::function<void(bool)> CallbackFn;
 
+/**
+ * Create a callback that toggles a door's condition when a switch is toggled.
+ * The returned lambda captures pointers to the room, door and condition to modify.
+ */
 inline CallbackFn SwitchDoor(GameRoom* room, Door* door, Condition* condition_switch) {
 	return [=](bool switched) {
 		bool last_state = door->isLocked();
@@ -14,6 +18,10 @@ inline CallbackFn SwitchDoor(GameRoom* room, Door* door, Condition* condition_sw
 	};
 }
 
+/**
+ * Switch object that can be toggled when an object stays on it. Optionally
+ * executes a callback when toggled (e.g. opening a door).
+ */
 class Switch : public MapObject {
 	bool switched = false;
 	CallbackFn callback;
@@ -30,6 +38,9 @@ public:
 		callback = cb;
 	}
 
+	/**
+	 * Set the switch state and invoke callback if present.
+	 */
 	inline void setSwitch(GameRoom* room, bool val) {
 		if (val == switched) return;
 		room->clear(*this);

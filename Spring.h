@@ -3,6 +3,10 @@
 #include "Vector.h"
 #include "Object.h"
 
+/**
+ * Spring object that compresses when an object stands on it and propels
+ * objects in the opposite direction when released.
+ */
 class Spring : public MapObject {
 	S size;
 	unsigned short compressed = 0;

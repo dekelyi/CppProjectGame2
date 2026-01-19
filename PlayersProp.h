@@ -7,12 +7,17 @@ using std::vector;
 
 class PlayersProp : public BaseProp {
 public:
-	vector<Player*> get_players() const;
+    /** Return a vector of player pointers currently in the room. */
+    vector<Player*> get_players() const;
 
-	inline int count_players() const {
-		return (int)get_players().size();
-	};
+    /** Return number of players currently in the room. */
+    inline int count_players() const {
+        return (int)get_players().size();
+    };
 
-	vector<MapObject*> get_objects() const;
-	bool remove_object(MapObject* obj);
+    /** Return other objects that belong to players (e.g. collectibles). */
+    vector<MapObject*> get_objects() const;
+
+    /** Attempt to remove object `obj`; if it is a Player, handle lives and respawn. */
+    bool remove_object(MapObject* obj);
 };

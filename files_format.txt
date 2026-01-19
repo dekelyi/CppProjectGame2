@@ -1,22 +1,139 @@
-# Steps file
-the file named `adv-world.steps` describes keypress events for the adventure game.
-## Format
-Each character in the file represents a keypress event, and the special char `~` indicates a tick without a keypress.
-at EOF, the game ends
-## Example Content
-```W~~~~```
-indicates pressing the `W` key followed by 4 ticks without keypresses.
-## Input
-when input is requested, the next characters from the steps file is used as input, up until a `~` is encoutered.
-for example:
-```W~~~~28~~~```
-if a riddle is encountered at tick 5, the input `28` will be provided to the game.
-if no input is requested, the characters are regarded as keypresses.
+# Adventure game file formats
 
-# Result file
-the file named `adv-world.result` contains the expected output of the adventure game when run with the corresponding steps file.
-it is used to verify the correctness of the game's behavior.
-each line in the result file corresponds to an event produced by the game.
-## exmaples
-```101:: OBJ $ MODIFIED: LOST LIFE by 1```
-indicates that at tick 101, the object represented by `$` lost one life.
+This document describes the plain-text file formats used by the game runner and parser:
+- `adv-world.steps`  — recorded keypress timeline and input stream for automated runs
+- `adv-world.result` — expected event log used for test verification
+- `adv-world_<N>.screen` — level description files (one or more room files)
+- `riddles.txt`      — riddle definitions used by `RIDDLE` map objects
+
+General notes
+- All files are plain UTF-8 / ASCII-compatible text files, with conventional newline separators.
+- Lines beginning with comment markers are ignored by the appropriate parser: in level files `//` starts a comment line; in riddles file a leading `\` line is ignored.
+
+---
+adv-world.steps
+
+Purpose
+- Represents a recorded stream of keypresses and input for automated replay (used by `LoadedGameRunner` and `TestGameRunner`).
+
+Format
+- The file is a sequence of characters. Each printable character (e.g. `W`, `A`, `S`, `D`, digits etc.) is interpreted as a keypress event when read by the game runner.
+- The special character `~` (tilde) encodes a tick with NO keypress. It is used both as an explicit no-op tick and as an input delimiter (see below).
+- When the input stream reaches EOF the runner treats the run as finished.
+
+Input semantics
+- If the game requests textual input (e.g. answering a riddle), the runner supplies characters sequentially from the steps file until the next `~` is encountered. Characters consumed for input are not interpreted as keypresses.
+- If no input is requested, characters are treated as keypresses and each consumption may advance time depending on the runner tick loop.
+
+Examples
+- `W~~~~` — press `W`, then 4 ticks with no keypress.
+- `W~~~~28~~~` — press `W`, four idle ticks, then when input is requested the runner will return `28` (until `~`), then three more idle ticks.
+
+Notes
+- Use `~` to precisely control timing of automated tests. Absence of `~` characters means the file is interpreted as a compact stream of keypresses.
+
+---
+adv-world.result
+
+Purpose
+- Contains the chronological event log produced by the game during a recorded run. Used by `SavingGameRunner` to capture events and by `TestGameRunner` to assert expected behavior.
+
+Format
+- Each line represents a single event emitted by the game, prefixed with an integer tick/time and a separator `:: `.
+- General layout: `<time>:: <event-string>`
+- The `<event-string>` is produced by the `Event::to_string()` implementation and may include object glyphs, event type names, and contextual data.
+
+Common event examples
+- `101:: OBJ $ MODIFIED: LOST LIFE by 1` — at tick 101 an object rendered as `$` lost a life.
+- `45:: OBJ $ INTERACTED WITH RIDDLE How to cross?, ANSWER 2, CORRECT: yes` — riddle interaction event including answer and correctness.
+- `...:: GAME ENDED` — game ended event.
+
+Notes
+- `TestGameRunner` compares lines read from `adv-world.result` to events produced during the replay and throws on mismatch, so exact text and spacing must match the game's `to_string()` output.
+
+---
+adv-world_<N>.screen (level files)
+
+Purpose
+- Describe a single room's tile layout and room-level metadata. Multiple files named `.\adv-world_<N>.screen` are discovered and loaded in lexicographic order.
+
+Filename
+- Files must follow the pattern `adv-world_<N>.screen` where `<N>` is an integer used for ordering (the parser sorts files lexicographically before loading).
+
+Content model
+- The file is read line-by-line. There are several kinds of lines:
+  - Empty or comment lines (starting with `//`) are ignored.
+  - A line that begins with `L` marks that line's row as the HUD/legend position (`legend_position`).
+  - Lines of map tokens describe the room grid rows (each non-space character is a token or parameterized token).
+  - Directive lines starting with `:` or `::` set room-level properties or object-specific properties.
+
+Token syntax
+- Simple token: a single symbol character representing a map object type (see `ObjType` enum). Examples: `W` (wall), `D` (door), `!` (torch), `?` (riddle), `$` (player 1), `&` (player 2).
+- Parameterized token: `SYM(params)` where `params` is a comma-separated list. Example: `D(N)` or `K(2)`.
+  - Parameters are used for object ids and object-specific properties (e.g. door direction tokens `D(N)` and `D(P)` special-case to numeric ids -1 and -2 used by the parser to indicate NEXT/PREVP semantics).
+- Horizontal repeat: consecutive identical symbol characters (e.g. `WWW`) are interpreted as a horizontal span and translated into `S` size when building objects.
+
+Vertical extension rules
+- The parser performs a simple vertical-extension heuristic: single-cell vertical symbols can be extended into taller vertical objects when consecutive rows contain the same symbol; this reduces the need for explicit size syntax.
+
+Directives and properties
+- Room-level property directive: `: <key> <value>` stores a room property (e.g. `: width 100`, `: height 30`, `: is_dark true`, `: msg-on-enter Welcome to the cave`).
+- Object property selector: `:: <id>` selects the current object id that subsequent `: key value` directives apply to. The id may be numeric or extracted from a parameterized token.
+- Object properties are applied to all parsed objects matching the current id.
+
+Supported property keys (non-exhaustive)
+- `width` / `height` — override default room dimensions used when creating the `GameRoom`.
+- `legend` / `legend-position` — influence HUD placement (parser uses `L` line; property support may vary).
+- `msg-on-enter` — message text to display when the room is first entered.
+- `is_dark` — `true`/`1` enables darkness mode for the room (TorchProp uses this to apply SHADOW).
+- `condition-keys` — used by doors to set required key count.
+- `do-open-door` — used by switches to point to a door id (`N` or `P` or numeric id) to control.
+- `area` — used by torches to control light radius.
+
+Object creation semantics
+- Some object tokens map to multiple runtime MapObject instances (e.g. a `W` spanning an S-size block may be materialized as many 1x1 wall MapObjects).
+- Special tokens:
+  - Players (`$`, `&`) reference the global `GameView` player objects and don’t create new heap objects.
+  - `D(N)` and `D(P)` are parsed into Door objects with dest = NEXT / PREV respectively.
+  - `?` creates a `Riddle` which refers to an entry in `riddles.txt` by the token id if present.
+
+Example fragment
+```
+: width 80
+: height 20
+L
+WWWWWWWWWW
+W  ?(1)  W
+W   D(N) W
+W  $   & W
+```
+This defines a room 80x20, marks the legend line, renders walls and places a riddle with id=1 and a next-door token.
+
+---
+riddles.txt
+
+Purpose
+- Defines riddle questions and answers used by `Riddle` objects in level files.
+
+Format
+- A new riddle starts with a line beginning with `?` followed immediately by the riddle id and a space, then the riddle question/title: `?<id> <title>`.
+- Lines beginning with `! ` (exclamation + space) add an answer and mark that answer as the correct one.
+- Other non-empty lines following a `?` riddle header are appended as regular answers.
+- Lines starting with a backslash `\` or blank lines are ignored.
+
+Example
+```
+?1 The Sphinx asks
+! The correct answer
+A wrong answer
+Another wrong answer
+```
+This defines riddle id `1` with a question `The Sphinx asks` and three answers; the first answer (preceded by `!`) is marked correct.
+
+---
+Notes for authors and testers
+- Use `adv-world.steps` and `adv-world.result` as a pair when creating deterministic tests. Record an initial `adv-world.steps` with a human playthrough (using `SavingGameRunner`) and the corresponding `adv-world.result` to capture expected events.
+- Keep spacing and exact event string formatting in `adv-world.result` stable — `TestGameRunner` compares lines literally.
+- When editing level files, prefer readable layout with spaces between tokens; use directives to set room properties rather than manually resizing text lines when possible.
+
+If you want, I can add a small reference table mapping map token characters to runtime classes and behaviors (e.g. `W -> MapObject/wall`, `D -> Door`, `! -> Torch`, `? -> Riddle`, etc.).

@@ -11,7 +11,9 @@ public:
 
 		V(const V& v) : x(v.getX()), y(v.getY()) {}
 
+		/** Return X coordinate (column) */
 		virtual inline int getX() const { return x; }
+		/** Return Y coordinate (row) */
 		virtual inline int getY() const { return y; }
 		inline void setX(int _x) { x = _x; }
 		inline void setY(int _y) { y = _y; }
@@ -38,6 +40,10 @@ public:
 			return (getX() < other.getX()) && (getY() < other.getY());
 		}
 
+		/**
+		 * Check whether this vector points in the same (non-orthogonal) direction
+		 * as `other` (dot product != 0).
+		 */
 		inline bool is_same_direction(const V& other) const {
 			return (*this * other) != 0;
 		}
@@ -46,28 +52,32 @@ public:
 // Size vector
 class S : public V {
 public:
-	enum SD {
-		SH, // horizontal
-		SV, // vertical
-		SB // block
-	} d;
-	unsigned length;
+    enum SD {
+        SH, // horizontal
+        SV, // vertical
+        SB // block
+    } d;
+    unsigned length;
 
-	S(unsigned _l, SD _d) : length(_l), d(_d) {}
-	S(SD _d) : S(1, _d) {}
+    S(unsigned _l, SD _d) : length(_l), d(_d) {}
+    S(SD _d) : S(1, _d) {}
 
-	virtual inline int getX() const override { return (d == SH || d == SB) ? length : 1; }
-	virtual inline int getY() const override { return (d == SV || d == SB) ? length : 1; }
+    virtual inline int getX() const override { return (d == SH || d == SB) ? length : 1; }
+    virtual inline int getY() const override { return (d == SV || d == SB) ? length : 1; }
 
-	void setX(unsigned _x) = delete;
-	void setY(unsigned _x) = delete;
+    void setX(unsigned _x) = delete;
+    void setY(unsigned _x) = delete;
 
-	void setLength(unsigned _x) { length = _x; }
+    void setLength(unsigned _x) { length = _x; }
 
-	inline bool is_ortho_direction(V v) {
-		return (d == SH) ? v.getY() && !v.getX() :
-			(d == SV) ? v.getX() && !v.getY() : true;
-	}
+    /**
+     * Check whether `v` is orthogonal to the size orientation. Used by doors
+     * to check movement direction validity.
+     */
+    inline bool is_ortho_direction(V v) {
+        return (d == SH) ? v.getY() && !v.getX() :
+            (d == SV) ? v.getX() && !v.getY() : true;
+    }
 };
 
 inline S S1 = S(1, S::SB);

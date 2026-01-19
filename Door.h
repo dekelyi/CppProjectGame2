@@ -29,15 +29,19 @@ inline std::string get_condition_str(Condition& c) {
 
 class Room;
 
+/**
+ * Door object that can transport players between rooms and be locked by
+ * conditions (keys or switches).
+ */
 class Door : public MapObject {
 public:
-	S size;
-	const DoorDest dest;
+	S size;                     // door size and orientation
+	const DoorDest dest;        // direction to which the door leads (next/prev room)
 	std::list<Condition*> conditions = {
-		new Condition(Condition::KEYS, 0) // keys
+		new Condition{Condition::KEYS, 0}
 	};
 
-	inline Door(V _pos, S _size, DoorDest _type, unsigned short keys=0)
+	inline Door(V _pos, S _size, DoorDest _type, unsigned short keys = 0)
 		: MapObject(_pos, _size, 'D'), dest(_type), size(_size) {
 		conditions.front()->required = keys;
 	}
@@ -46,6 +50,7 @@ public:
 		for (auto c : conditions) delete c;
 	}
 
+	/** Return true when any condition still lacks required collected items. */
 	inline bool isLocked() const {
 		for (auto c : conditions)
 			if (c->collected < c->required)
@@ -53,6 +58,7 @@ public:
 		return false;
 	}
 
+	/** Get a user-friendly message describing why door is locked. */
 	inline std::string getMsg() const {
 		for (auto c : conditions)
 			if (c->collected < c->required)

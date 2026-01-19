@@ -57,21 +57,24 @@ void main_loop(const GameParser& parser, GameRunner* runner) {
     }
 }
 
+// Main function: the entry point of the application. Parses command-line arguments
+// and starts the main loop of the game with the appropriate runner configuration.
 int main(int argc, char* argv[]) {
-	GameRunner* runner = nullptr;
-	GameParser parser;
+    GameRunner* runner = nullptr;
+    GameParser parser;
 
-	if (argc > 1) {
-		std::string arg = argv[1];
-		if (arg == "-load") {
-			if (argc > 2 && std::string(argv[2]) == "-silent") runner = new TestGameRunner();
-			else runner = new LoadedGameRunner();
-		}
-		else if (arg == "-save") runner = new SavingGameRunner();
-	}
+    if (argc > 1) {
+        std::string arg = argv[1];
+        if (arg == "-load") {
+            if (argc > 2 && std::string(argv[2]) == "-silent") runner = new TestGameRunner();
+            else runner = new LoadedGameRunner();
+        }
+        else if (arg == "-save") runner = new SavingGameRunner();
+    }
 
-	main_loop(parser, runner);
+    // Start the main loop of the application with the parser and runner instances.
+    main_loop(parser, runner);
 
-	delete runner;
-	return 0;
+    delete runner;
+    return 0;
 }
