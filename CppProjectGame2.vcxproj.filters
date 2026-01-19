@@ -141,6 +141,7 @@
     <Text Include="Riddles.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="files_format.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="adv-world_01.screen">

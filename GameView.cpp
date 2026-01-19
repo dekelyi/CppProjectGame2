@@ -66,7 +66,10 @@ Mode GameView::check_room() {
 			Console::init();
 			draw();
 		}
-		else return Mode::WINNING;
+		else {
+			runner->handle_event(new GameEndedEvent());
+			return Mode::WINNING;
+		};
 	}
 	return Mode::RUNNING;
 }

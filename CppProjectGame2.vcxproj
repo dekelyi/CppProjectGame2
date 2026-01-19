@@ -167,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="BONUS.txt" />
+    <Text Include="files_format.txt" />
     <Text Include="README.txt" />
     <Text Include="Riddles.txt" />
   </ItemGroup>

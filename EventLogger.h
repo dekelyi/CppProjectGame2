@@ -14,6 +14,8 @@ public:
 };
 
 class GameEndedEvent : public Event {
+public:
+	GameEndedEvent() : Event(nullptr) {};
 	virtual string to_string() override {
 		return "GAME ENDED";
 	};

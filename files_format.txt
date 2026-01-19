@@ -1,0 +1,22 @@
+# Steps file
+the file named `adv-world.steps` describes keypress events for the adventure game.
+## Format
+Each character in the file represents a keypress event, and the special char `~` indicates a tick without a keypress.
+at EOF, the game ends
+## Example Content
+```W~~~~```
+indicates pressing the `W` key followed by 4 ticks without keypresses.
+## Input
+when input is requested, the next characters from the steps file is used as input, up until a `~` is encoutered.
+for example:
+```W~~~~28~~~```
+if a riddle is encountered at tick 5, the input `28` will be provided to the game.
+if no input is requested, the characters are regarded as keypresses.
+
+# Result file
+the file named `adv-world.result` contains the expected output of the adventure game when run with the corresponding steps file.
+it is used to verify the correctness of the game's behavior.
+each line in the result file corresponds to an event produced by the game.
+## exmaples
+```101:: OBJ $ MODIFIED: LOST LIFE by 1```
+indicates that at tick 101, the object represented by `$` lost one life.
