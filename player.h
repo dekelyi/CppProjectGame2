@@ -5,8 +5,9 @@
 
 class Player : public MapObject {
 public:
+	static const unsigned DEFAULT_LIVES = 3;
 	Collectible* collectible = nullptr;
-	unsigned lives = LIVES_DEFAULT;
+	unsigned lives = DEFAULT_LIVES;
 	unsigned score = 0;
 
 	Player(char _glyph) : MapObject(V(1, 1), _glyph) { attr = A_FOREGROUND_CYAN; }

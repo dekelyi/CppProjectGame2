@@ -61,7 +61,7 @@ V Player::getNextPosition(GameRoom* room) {
 	//arr.erase(std::remove(arr.begin(), arr.end(), this->direction), arr.end());
 	for (V v : arr) {
 		V p = this->getPosition() + v;
-		if (!p.is_out_of_bounds() && room->get_object_at(p) == nullptr)
+		if (!room->is_out_of_bounds(p) && room->get_object_at(p) == nullptr)
 			return v;
 	}
 	return V(0, 0);

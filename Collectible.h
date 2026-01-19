@@ -28,6 +28,8 @@ public:
 
 class Bomb : public Collectible {
 public:
+	static const unsigned short BOMB_TIMER = 3, BOMB_AREA = 5;
+
     int bomb_timer = BOMB_NOT_SET;
 
     Bomb(V _pos) : Collectible(_pos, V(1, 1), (char)ObjType::BOMB) { attr = A_FOREGROUND_RED; }

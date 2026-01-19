@@ -22,6 +22,11 @@ class GameView {
 		i = 1; // current room
 
 public:
+	static const unsigned DEFAULT_X = 80,
+		DEFAULT_Y = 20,
+		HUD_PADDING = 3,
+		MSG_TICKS = 10;
+
 	GameRunner* runner = nullptr;
 	GameRoom* current = nullptr; // current room
 	Player* player1;
@@ -91,7 +96,7 @@ public:
 	 * @param legend_pos Y position of the legend line.
 	 * @returns pointer to the newly created GameRoom.
 	 */
-	GameRoom* add_room(const unsigned X = SIZE_X, const unsigned Y = SIZE_Y, const unsigned legend_pos = 0);
+	GameRoom* add_room(const unsigned X = DEFAULT_X, const unsigned Y = DEFAULT_Y, const unsigned legend_pos = 0);
 
 	/** Move to the next room in the linked list (if any). */
 	void advance_room();

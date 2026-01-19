@@ -3,6 +3,7 @@
 #include <filesystem>
 
 #include "prelude.h"
+#include "GameView.h"
 #include "Collectible.h"
 #include "Door.h"
 #include "Obstacle.h"
@@ -93,7 +94,7 @@ void LevelParser::build_room(GameView* game) {
 		}
 		};
 
-	auto room = game->add_room(get_prop("width", SIZE_X), get_prop("height", SIZE_Y), legend_position);
+	auto room = game->add_room(get_prop("width", GameView::DEFAULT_X), get_prop("height", GameView::DEFAULT_Y), legend_position);
 	for (auto& obj_data : objects) {
 		ObjectData& od = obj_data;
 		std::vector<MapObject*> objs = obj_data.into_map_objects(game, room, *this);
@@ -102,7 +103,7 @@ void LevelParser::build_room(GameView* game) {
 	for (const auto& [key, value] : room_properties) {
 		if (key == "msg-on-enter") {
 			room->msg->text = value;
-			room->msg->ticks_left = MSG_TICKS;
+			room->msg->ticks_left = GameView::MSG_TICKS;
 		}
 		else if (key == "is_dark") {
 			if (value == "true" || value == "1") {

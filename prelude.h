@@ -1,22 +1,4 @@
 #pragma once
-#include <string>
-/**
-* Constant values and game settings
-*/
-
-/** --- CONSTANTS ---- */
-#define HUD_SPACE_TOP 3 // size of top bar HUD
-#define SIZE_X 80 // Size of the game view
-#define SIZE_Y 20\
-
-#define TICK 100 // nanoseconds per 1 game tick
-#define MSG_TICKS 10 // numbers of tick to display a message
-
-#define N_MAX_PLAYERS 2 // number of players
-
-#define LIVES_DEFAULT 3
-#define BOMB_AREA 3
-#define BOMB_TIMER 5
 
 /**
 * Represent the current runner mode

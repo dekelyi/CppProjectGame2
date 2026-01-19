@@ -2,12 +2,13 @@
 #include "Door.h"
 #include "Collectible.h"
 #include "Room.h"
+#include "GameView.h"
 
 M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
 	// If door is locked, block passage
 	if (isLocked()) {
 		if (!try_unlock(obj)) {
-			room->msg = new Msg(getMsg(), MSG_TICKS);
+			room->msg = new Msg(getMsg(), GameView::MSG_TICKS);
 			return M_CODE::CANT_MOVE;
 		}
 	}

@@ -1,6 +1,4 @@
 #pragma once
-#include <algorithm>
-#include "prelude.h"
 
 // A vector in R^2 representing position/size
 class V {
@@ -42,10 +40,6 @@ public:
 
 		inline bool is_same_direction(const V& other) const {
 			return (*this * other) != 0;
-		}
-
-		inline bool is_out_of_bounds() const {
-			return this->getX() < 0 || this->getY() < 0 || this->getX() >= SIZE_X || this->getY() >= SIZE_Y;
 		}
 };
 

@@ -9,7 +9,7 @@
 M_CODE MapObject::can_move(GameRoom* room, Move& move) {
 	V dest = pos + move.dir;
 	// check if in bounds
-	if (dest.is_out_of_bounds())
+	if (room->is_out_of_bounds(dest))
 		return M_CODE::CANT_MOVE;
 
 	auto obj = room->get_object_at(dest);

@@ -97,6 +97,10 @@ public:
 		return nullptr;
 	}
 
+	inline bool is_out_of_bounds(const V& v) const {
+		return (unsigned)v.getX() >= X || (unsigned)v.getY() >= Y;
+	}
+
 	/********* DRAWING ********/
 
 	/**
