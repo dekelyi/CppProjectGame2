@@ -5,22 +5,6 @@
 
 class GameRoom;
 
-enum class M_CODE {
-	CAN_MOVE,
-	CANT_MOVE,
-	MOVED
-};
-
-struct Move {
-	V dir;
-	unsigned duration = 1,
-		speed  = 1;
-
-	enum Kind {KEYPRESS, EVENT} kind;
-
-	bool operator==(const Move& m) const = default;
-};
-
 /**
  * MapObject - base class for all objects placed on the map.
  *
@@ -32,6 +16,28 @@ struct Move {
 class MapObject {
 protected:
 	friend class Spring;
+
+	/**
+	* A code representing the result of a moving operation
+	*/
+	enum class M_CODE {
+		CAN_MOVE,
+		CANT_MOVE,
+		MOVED
+	};
+
+	/**
+	* A move order
+	*/
+	struct Move {
+		V dir;
+		unsigned duration = 1,
+			speed = 1;
+
+		enum Kind { KEYPRESS, EVENT } kind;
+
+		bool operator==(const Move& m) const = default;
+	};
 
 	V pos;
 	V size;
@@ -81,7 +87,7 @@ public:
 
 	/**
 	 * Check whether the object can move according to current room state.
-	 * Returns an M_CODE describing the result.
+	 * Returns an MapObject::M_CODE describing the result.
 	 */
 	M_CODE can_move(GameRoom* game, Move& move);
 

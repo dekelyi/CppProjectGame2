@@ -24,7 +24,7 @@
 
 class GameView;
 class GameRunner;
-class ParserFactory;
+class GameParser;
 
 /**
  * Console - static helper class that replaces previous free functions.
@@ -103,13 +103,6 @@ public:
     static Mode pause();
     /** Main menu dialog that returns the selected mode. */
     static Mode menu();
-
-    /**
-     * Run the top-level main loop which drives the entire application.
-     * The provided init callback is used to configure a newly created
-     * GameView before starting the game.
-     */
-    static void main_loop(const ParserFactory& factory, GameRunner* runner);
 
     /**
      * Poll for a keypress and convert it to a Keypress enum. Returns

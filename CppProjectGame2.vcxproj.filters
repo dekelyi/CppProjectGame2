@@ -72,7 +72,7 @@
     <ClCompile Include="Msg.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="LevelParser.cpp">
+    <ClCompile Include="GameParser.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="prelude.h">
@@ -125,7 +125,7 @@
     <ClInclude Include="Msg.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="LevelParser.h">
+    <ClInclude Include="GameParser.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="DrawingBuffer.h">

@@ -5,13 +5,10 @@
 #include <cstdlib>
 #include <conio.h>
 #include <format>
-#include <functional>
-#include "Vector.h"
+
 #include "Console.h"
 #include "prelude.h"
-#include "GameView.h"
-#include "GameRunner.h"
-#include "LevelParser.h"
+#include "Vector.h"
 
 using std::cout, std::endl, std::string, std::format;
 
@@ -144,57 +141,4 @@ Mode ConsoleMenu::menu() {
         if (e == Keypress::_9 || e == Keypress::ESC) m = Mode::EXIT;
     }
     return m;
-}
-
-
-
-// Application top-level main loop. init callback configures a new GameView.
-void ConsoleMenu::main_loop(const ParserFactory& factory, GameRunner* runner) {
-    Mode mode = runner->get_mode(Mode::MENU);
-    GameView* game = nullptr;
-    std::string exit_msg = runner->get_exit_msg();
-    try {
-        while ((bool)mode) {
-            switch (mode) {
-            case Mode::RUNNING:
-                if (game) delete game;
-                game = new GameView(runner);
-				factory.init_game(game);
-                mode = game->run();
-                break;
-            case Mode::CONTINUE:
-                if (game) mode = game->run();
-                else mode = Mode::RUNNING;
-                break;
-            case Mode::PAUSED:
-                mode = ConsoleMenu::pause();
-                break;
-            case Mode::MENU:
-                if (game) delete game;
-                game = nullptr;
-                mode = ConsoleMenu::menu();
-                break;
-            case Mode::WINNING:
-                ConsoleMenu::won_game();
-                while (ConsoleMenu::get_keypress() == Keypress::NONE);
-                mode = Mode::MENU;
-                break;
-            default:
-                mode = Mode::EXIT;
-                break;
-            }
-        }
-	} catch (const EventAssertionError& e) {
-		exit_msg = format("Event assertion error: {}\n", e.what());
-    }
-    catch (const std::runtime_error& e) {
-        exit_msg = format("Runtime error: {}\n", e.what());
-    } catch (const std::exception& e) {
-        exit_msg = format("Fatal error: {}\n", e.what());
-	}
-    if (game) delete game;
-    Console::deinit();
-	if (!exit_msg.empty()) {
-        std::cout << exit_msg;
-    }
 }

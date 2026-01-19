@@ -4,18 +4,18 @@
 
 /**
  * Checks if the object can move in a specific way, considering other objects in the way.
- * Returns M_CODE::CAN_MOVE, CANT_MOVE or MOVED.
+ * Returns MapObject::M_CODE::CAN_MOVE, CANT_MOVE or MOVED.
  */
-M_CODE MapObject::can_move(GameRoom* room, Move& move) {
+MapObject::M_CODE MapObject::can_move(GameRoom* room, Move& move) {
 	V dest = pos + move.dir;
 	// check if in bounds
 	if (room->is_out_of_bounds(dest))
-		return M_CODE::CANT_MOVE;
+		return MapObject::M_CODE::CANT_MOVE;
 
 	auto obj = room->get_object_at(dest);
 	if (obj)
 		return obj->handle_collision(room, this, move);
-	else return M_CODE::CAN_MOVE;
+	else return MapObject::M_CODE::CAN_MOVE;
 }
 
 /**
@@ -34,13 +34,13 @@ bool MapObject::try_move(GameRoom* room, Move& m) {
 		m.speed = i - 1;
 		return (m.speed) ? true : false;
 	}
-	M_CODE c = can_move(room, m);
-	if (c == M_CODE::CAN_MOVE) {
+	MapObject::M_CODE c = can_move(room, m);
+	if (c == MapObject::M_CODE::CAN_MOVE) {
 		room->clear(*this);
 		move(m.dir * m.speed);
 		return true;
 	}
-	else if (c == M_CODE::MOVED) return true;
+	else if (c == MapObject::M_CODE::MOVED) return true;
 	return false;
 }
 
@@ -60,11 +60,11 @@ void MapObject::handle_tick(GameRoom* room) {
  * Default collision handler: prefer movement when queued moves match direction,
  * otherwise block.
  */
-M_CODE MapObject::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
+MapObject::M_CODE MapObject::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
 	bool can_move = false;
 	for (auto& m : moves)
 		if (m.dir.is_same_direction(move.dir))
 			//can_move = can_move || try_move(room, m);
 			can_move = true;
-	return can_move ? M_CODE::CAN_MOVE : M_CODE::CANT_MOVE;
+	return can_move ? MapObject::M_CODE::CAN_MOVE : MapObject::M_CODE::CANT_MOVE;
 }

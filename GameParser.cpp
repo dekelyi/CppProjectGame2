@@ -10,9 +10,63 @@
 #include "Spring.h"
 #include "Switch.h"
 #include "Riddle.h"
-#include "LevelParser.h"
+#include "GameParser.h"
 
-std::vector<MapObject*> ObjectData::into_map_objects(GameView* game, GameRoom* room, const LevelParser& parser) const {
+/**
+ * Discover, parse and build all level files in `path` following the naming:
+ * ".\adv-world_<N>.screen".
+ *
+ * - Files are sorted lexicographically before loading.
+ * - After all rooms are created, player placement and initialization are adjusted
+ *   based on the entry/exit doors.
+ *
+ * Throws runtime_error when no matching level files are found.
+ */
+void GameParser::parse_files(const string& path) {
+	vector<filesystem::directory_entry> files;
+	for (const auto& entry : filesystem::directory_iterator(path)) {
+		string filename = entry.path().string();
+		if (filename.starts_with(".\\adv-world_") && filename.ends_with(".screen")) {
+			string index = filename.substr(12, filename.size() - 19);
+			try {
+				int n = stoi(index);
+				files.push_back(entry);
+			}
+			catch (...) {}
+		}
+	}
+
+	if (files.size() == 0) throw runtime_error("No level files found.");
+
+	sort(files.begin(), files.end(), [](const filesystem::directory_entry& a, const filesystem::directory_entry& b) {
+		return a.path().string() < b.path().string();
+		});
+
+	for (const auto& entry : files) {
+		GameParser::LevelParser* parser = new GameParser::LevelParser(entry.path().string(), riddles);
+		parser->parse();
+		parsers.push_back(parser);
+	}
+}
+
+void GameParser::init_game(GameView* game) const {
+	for (auto& parser : parsers) {
+		parser->build_room(game);
+	}
+
+	if (game->current->p_doors.entry_point) {
+		game->player1->setPosition(game->current->p_doors.entry_point->getPosition());
+		game->player2->setPosition(game->player1->getNextPosition(game->current));
+		game->current->add_object(game->player1);
+		game->current->add_object(game->player2);
+		game->current->remove_object(game->current->p_doors.entry_point);
+		game->current->p_doors.entry_point = nullptr;
+	}
+	game->init_rooms();
+}
+
+
+std::vector<MapObject*> GameParser::LevelParser::ObjectData::into_map_objects(GameView* game, GameRoom* room, const GameParser::LevelParser& parser) const {
 	switch (type) {
 	case ObjType::PLAYER_1:
 	case ObjType::PLAYER_2: {
@@ -83,7 +137,7 @@ std::vector<MapObject*> ObjectData::into_map_objects(GameView* game, GameRoom* r
  * - Adds each created MapObject to the room.
  * - Applies special room-level properties (e.g. msg-on-enter, is_dark).
  */
-void LevelParser::build_room(GameView* game) const {
+void GameParser::LevelParser::build_room(GameView* game) const {
 	auto get_prop = [&](string key, int _default) -> int {
 		try {
 			string val = this->room_properties.at(key);
@@ -114,11 +168,11 @@ void LevelParser::build_room(GameView* game) const {
 }
 
 /**
- * Parse the file associated with this LevelParser.
+ * Parse the file associated with this GameParser::LevelParser.
  *
- * See LevelParser::parse() declaration for line semantics.
+ * See GameParser::LevelParser::parse() declaration for line semantics.
  */
-void LevelParser::parse() {
+void GameParser::LevelParser::parse() {
 	while (!file.eof()) {
 		string line;
 		getline(file, line);
@@ -145,7 +199,7 @@ void LevelParser::parse() {
  *   determines type, id and size, and either extends an existing vertical object
  *   or adds a new ObjectData to `objects`.
  */
-void LevelParser::parse_objects(const string& line) {
+void GameParser::LevelParser::parse_objects(const string& line) {
 	size_t index = line.find_first_not_of(' ');
 	size_t x_offset = 0;
 	while (index != string::npos) {
@@ -169,7 +223,7 @@ void LevelParser::parse_objects(const string& line) {
  * If a match is found the existing object's size is increased and the function
  * returns true. Otherwise returns false.
  */
-bool LevelParser::try_extend_vertical_object(ObjType type, int id, V pos, S size) {
+bool GameParser::LevelParser::try_extend_vertical_object(ObjType type, int id, V pos, S size) {
 	for (auto& obj : objects) {
 		if (obj.type != type || (id != 0 && obj.id != id)) continue;
 
@@ -190,7 +244,7 @@ bool LevelParser::try_extend_vertical_object(ObjType type, int id, V pos, S size
  * Accepts either a numeric id or a parameterized token string from which the id
  * will be extracted.
  */
-void LevelParser::parse_object_data(const string& line) {
+void GameParser::LevelParser::parse_object_data(const string& line) {
 	int id;
 	try {
 		id = stoi(line);
@@ -205,7 +259,7 @@ void LevelParser::parse_object_data(const string& line) {
  * Parse a key/value directive and apply it either as a room property or to all
  * objects matching the current_property_id.
  */
-void LevelParser::parse_data(const string& line) {
+void GameParser::LevelParser::parse_data(const string& line) {
 	string key, value;
 	key = line.substr(0, line.find(' '));
 	value = line.substr(line.find(' ') + 1);
@@ -225,7 +279,7 @@ void LevelParser::parse_data(const string& line) {
  * - Returns 0 if there is no parameter or if conversion fails.
  * - Special door tokens: "D(N)" -> -1, "D(P)" -> -2.
  */
-int LevelParser::get_id_from_parameterized(const Parameterized& p) {
+int GameParser::LevelParser::get_id_from_parameterized(const Parameterized& p) {
 	if (p.params.size() < 1) return 0;
 	try {
 		return stoi(p.params[0]);
@@ -244,7 +298,7 @@ int LevelParser::get_id_from_parameterized(const Parameterized& p) {
 /**
  * Split a comma-separated string into individual parameter substrings.
  */
-vector<string> LevelParser::parse_params(const string& str) {
+vector<string> GameParser::LevelParser::parse_params(const string& str) {
 	vector<string> params;
 	size_t start = 0;
 	size_t end = str.find(',');
@@ -265,7 +319,7 @@ vector<string> LevelParser::parse_params(const string& str) {
  * - params: vector of strings extracted between parentheses if present
  * - length: number of characters consumed for this token when parsing the row
  */
-Parameterized LevelParser::parse_parameterized(const string& str) {
+GameParser::LevelParser::Parameterized GameParser::LevelParser::parse_parameterized(const string& str) {
 	Parameterized p = { str[0] };
 	size_t open_paren = str.find('('),
 		next_symbol = str.find_first_not_of(p.symbol, 1);
@@ -294,7 +348,7 @@ Parameterized LevelParser::parse_parameterized(const string& str) {
  * - Other lines belonging to a riddle are stored as answers
  * - Blank lines or lines starting with '\' are ignored
  */
-void RiddleParser::parse() {
+void GameParser::RiddleParser::parse() {
 	while (!file.eof()) {
 		string line;
 		getline(file, line);
@@ -314,57 +368,4 @@ void RiddleParser::parse() {
 		}
 		else if (current) current->answers.push_back(line);
 	}
-}
-
-/**
- * Discover, parse and build all level files in `path` following the naming:
- * ".\adv-world_<N>.screen".
- *
- * - Files are sorted lexicographically before loading.
- * - After all rooms are created, player placement and initialization are adjusted
- *   based on the entry/exit doors.
- *
- * Throws runtime_error when no matching level files are found.
- */
-void ParserFactory::parse_files(const string& path) {
-	vector<filesystem::directory_entry> files;
-	for (const auto& entry : filesystem::directory_iterator(path)) {
-		string filename = entry.path().string();
-		if (filename.starts_with(".\\adv-world_") && filename.ends_with(".screen")) {
-			string index = filename.substr(12, filename.size() - 19);
-			try {
-				int n = stoi(index);
-				files.push_back(entry);
-			}
-			catch (...) {}
-		}
-	}
-
-	if (files.size() == 0) throw runtime_error("No level files found.");
-
-	sort(files.begin(), files.end(), [](const filesystem::directory_entry& a, const filesystem::directory_entry& b) {
-		return a.path().string() < b.path().string();
-		});
-
-	for (const auto& entry : files) {
-		LevelParser* parser = new LevelParser(entry.path().string(), riddles);
-		parser->parse();
-		parsers.push_back(parser);
-	}
-}
-
-void ParserFactory::init_game(GameView* game) const {
-	for (auto& parser : parsers) {
-		parser->build_room(game);
-	}
-
-	if (game->current->p_doors.entry_point) {
-		game->player1->setPosition(game->current->p_doors.entry_point->getPosition());
-		game->player2->setPosition(game->player1->getNextPosition(game->current));
-		game->current->add_object(game->player1);
-		game->current->add_object(game->player2);
-		game->current->remove_object(game->current->p_doors.entry_point);
-		game->current->p_doors.entry_point = nullptr;
-	}
-	game->init_rooms();
 }

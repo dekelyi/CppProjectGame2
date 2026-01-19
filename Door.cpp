@@ -4,18 +4,18 @@
 #include "Room.h"
 #include "GameView.h"
 
-M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
+MapObject::M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
 	// If door is locked, block passage
 	if (isLocked()) {
 		if (!try_unlock(obj)) {
 			room->msg = new Msg(getMsg(), GameView::MSG_TICKS);
-			return M_CODE::CANT_MOVE;
+			return MapObject::M_CODE::CANT_MOVE;
 		}
 	}
 
 	// get in only in the direction of the door
 	if (!this->size.is_ortho_direction(move.dir)) {
-		return M_CODE::CANT_MOVE;
+		return MapObject::M_CODE::CANT_MOVE;
 	}
 
 	// redraw
@@ -24,7 +24,7 @@ M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
 
 	// move object to next/prev room
 	GameRoom* other_room = (dest == DoorDest::NEXT) ? room->next : room->prev;
-	if (other_room == nullptr) return M_CODE::MOVED;
+	if (other_room == nullptr) return MapObject::M_CODE::MOVED;
 	Door* other_door = (dest == DoorDest::NEXT) ? other_room->p_doors.entry_point : other_room->p_doors.exit_point;
 
 	other_room->add_object(obj);
@@ -33,7 +33,7 @@ M_CODE Door::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
 
 	// move the object in the next room
 	obj->try_move(other_room, move);
-	return M_CODE::MOVED;
+	return MapObject::M_CODE::MOVED;
 }
 
 bool Door::try_unlock(MapObject* obj) {

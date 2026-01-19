@@ -30,7 +30,7 @@ void RiddleMsg::on_input(string str) {
 	}
 }
 
-M_CODE Riddle::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
+MapObject::M_CODE Riddle::handle_collision(GameRoom* room, MapObject* obj, Move& move) {
 	room->msg = new RiddleMsg(room, this, dynamic_cast<Player*>(obj));
-	return M_CODE::CANT_MOVE;
+	return MapObject::M_CODE::CANT_MOVE;
 }

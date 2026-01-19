@@ -50,19 +50,23 @@ void GameView::goback_room() {
 Mode GameView::check_room() {
 	if (current->p_players.count_players() == 0) {
 		GameRoom* room = this->head;
-		// check if we won thr game
+		// check if we won the game
 		int count_rooms_with_players = 0;
 		while (room) {
 			if (room->p_players.count_players() > 0) count_rooms_with_players++;
 			room = room->next;
 		};
-		if (count_rooms_with_players == 0) return Mode::WINNING;
+		if (count_rooms_with_players == 0) {
+			runner->handle_event(new GameEndedEvent());
+			return Mode::WINNING;
+
+		}
 		// else, move to the rooms
 		if (current->p_doors.last_moved_through->dest == DoorDest::PREV)
 			goback_room();
 		else advance_room();
 		// redraw room
-		if (current != nullptr) {
+		if (current) {
 			Console::init();
 			draw();
 		}

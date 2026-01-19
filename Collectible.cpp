@@ -5,15 +5,15 @@
 
 using std::set;
 
-M_CODE Collectible::handle_collision(GameRoom* room, MapObject* other, Move& move) {
+MapObject::M_CODE Collectible::handle_collision(GameRoom* room, MapObject* other, Move& move) {
 	// If collided with a player, give the collectible to the player
 	Player* p = dynamic_cast<Player*>(other);
 	if (p != nullptr && p->collectible == nullptr) {
 		p->collectible = this;
 		room->remove_object(this, false);
-		return M_CODE::CAN_MOVE;
+		return MapObject::M_CODE::CAN_MOVE;
 	}
-	return M_CODE::CANT_MOVE;
+	return MapObject::M_CODE::CANT_MOVE;
 }
 
 void Bomb::handle_dump(GameRoom* room) {
