@@ -5,8 +5,9 @@
 
 
 // Application top-level main loop. init callback configures a new GameView.
-void main_loop(const GameParser& parser, GameRunner* runner) {
-    ConsoleMenu::Mode mode = runner->get_mode(ConsoleMenu::Mode::MENU);
+void main_loop(const GameParser& parser, GameRunner*& runner) {
+    if (!runner) runner = new KeyboardGameRunner();
+    ConsoleMenu::Mode mode = ConsoleMenu::menu(runner);
     GameView* game = nullptr;
     std::string exit_msg = runner->get_exit_msg();
     try {
@@ -23,12 +24,12 @@ void main_loop(const GameParser& parser, GameRunner* runner) {
                 else mode = ConsoleMenu::Mode::RUNNING;
                 break;
             case ConsoleMenu::Mode::PAUSED:
-                mode = ConsoleMenu::pause();
+                mode = ConsoleMenu::pause(runner);
                 break;
             case ConsoleMenu::Mode::MENU:
                 if (game) delete game;
                 game = nullptr;
-                mode = ConsoleMenu::menu();
+                mode = ConsoleMenu::menu(runner);
                 break;
             case ConsoleMenu::Mode::WINNING:
                 ConsoleMenu::won_game();
@@ -67,7 +68,7 @@ int main(int argc, char* argv[]) {
         std::string arg = argv[1];
         if (arg == "-load") {
             if (argc > 2 && std::string(argv[2]) == "-silent") runner = new TestGameRunner();
-            else runner = new LoadedGameRunner();
+            else runner = new HybridGameRunner();
         }
         else if (arg == "-save") runner = new SavingGameRunner();
     }

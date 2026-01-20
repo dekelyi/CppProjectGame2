@@ -126,6 +126,11 @@ public:
 
         // Numbers (main menu)
         _1 = '1',
+        _2 = '2',
+        _3 = '3',
+        _4 = '4',
+        _5 = '5',
+        _6 = '6',
         _7 = '7',
         _8 = '8',
         _9 = '9',
@@ -143,9 +148,9 @@ public:
     /** Show the "won game" screen (non-blocking). */
     static void won_game();
     /** Pause dialog that returns the mode to switch to. */
-    static Mode pause();
+    static Mode pause(GameRunner* runner = nullptr);
     /** Main menu dialog that returns the selected mode. */
-    static Mode menu();
+    static Mode menu(GameRunner*& runner);
 
     /**
      * Poll for a keypress and convert it to a Keypress enum. Returns

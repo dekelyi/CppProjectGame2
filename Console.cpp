@@ -5,11 +5,15 @@
 #include <cstdlib>
 #include <conio.h>
 #include <format>
+#include <filesystem>
+#include <vector>
 
 #include "Console.h"
 #include "Vector.h"
+#include "GameRunner.h"
 
 using std::cout, std::endl, std::string, std::format;
+namespace fs = std::filesystem;
 
 // --------- Console (static helpers) --------------------
 
@@ -90,17 +94,38 @@ bool ConsoleMenu::colors = true;
 
 /**
  * Pause dialog: blocking loop that returns selected next mode.
+ * Offers saving via 'S' key which calls runner->save_steps().
  */
-ConsoleMenu::Mode ConsoleMenu::pause() {
-    Console::cls();
-    Console::gotoxy(V(10, 5));
-    cout << "Game paused, press ESC again to continue or H to go back to the main menu" << endl;
-
+ConsoleMenu::Mode ConsoleMenu::pause(GameRunner* runner) {
     Mode m = Mode::PAUSED;
     while (m == Mode::PAUSED) {
-        Keypress e = ConsoleMenu::get_keypress();
+        Console::init();
+		Writer wr = { V(10, 5) };
+		wr.writeline("Game paused: ");
+		wr.writeline("(ESC) to continue");
+		wr.writeline("(H) to go back to the main menu");
+		wr.writeline("(S) to save the current game to file");
+
+        Keypress e;
+        while (!(bool)(e = ConsoleMenu::get_keypress()));
         if (e == Keypress::ESC) m = Mode::CONTINUE;
         if (e == Keypress::H) m = Mode::MENU;
+        if (e == Keypress::STAY_1) { // 'S' pressed
+            try {
+                Console::showCursor(true);
+                cout << "Enter filename to save (or press Enter for " << STEPS_FILENAME << "): ";
+                std::string fname;
+                std::getline(std::cin, fname);
+                if (fname.empty()) fname = STEPS_FILENAME;
+                runner->save_steps(fname);
+                cout << "Saved steps to " << fname << "\n";
+                Console::showCursor(false);
+                Console::sleep(500);
+            }
+            catch (const std::exception& ex) {
+                cout << "Failed to save steps: " << ex.what() << "\n";
+            }
+        }
     }
     return m;
 }
@@ -142,28 +167,65 @@ ConsoleMenu::Keypress ConsoleMenu::get_keypress() {
 /**
  * Main menu flow; returns chosen Mode.
  */
-ConsoleMenu::Mode ConsoleMenu::menu() {
-    Console::init();
-    Writer w = { V(10, 5) };
-    w.writeline("Welcome to the Game!");
-    w.writeline("(1) Start a new game");
-    w.writeline(format("(7) Colors: turn {}", colors ? "off" : "on"));
-    w.writeline("(8) Instruction and manual");
-    w.writeline("(9) Exit");
-
+ConsoleMenu::Mode ConsoleMenu::menu(GameRunner*& runner) {
     Mode m = Mode::MENU;
     while (m == Mode::MENU) {
-        Keypress e = ConsoleMenu::get_keypress();
+        Console::init();
+        Writer w = { V(10, 5) };
+        w.writeline("Welcome to the Game!");
+        w.writeline("(1) Start a new game");
+        w.writeline("(2) Load game from saved states");
+        w.writeline(format("(7) Colors: turn {}", colors ? "off" : "on"));
+        w.writeline("(8) Instruction and manual");
+        w.writeline("(9) Exit");
+
+        Keypress e;
+		while (!(bool)(e = ConsoleMenu::get_keypress()));
+
         if (e == Keypress::_1) m = Mode::RUNNING;
         if (e == Keypress::_7) { // disable/enable colors
             ConsoleMenu::colors = !ConsoleMenu::colors;
-            ConsoleMenu::menu();
         }
         if (e == Keypress::_8) { // print manual
             ConsoleMenu::manual();
-            ConsoleMenu::menu();
         }
         if (e == Keypress::_9 || e == Keypress::ESC) m = Mode::EXIT;
+        if (e == Keypress::_2) {
+            // list .steps files in current directory
+            std::vector<std::string> files;
+            for (auto& p : fs::directory_iterator(fs::current_path())) {
+                if (!p.is_regular_file()) continue;
+                if (p.path().extension() == ".steps") files.push_back(p.path().string());
+            }
+            if (files.empty()) {
+                Console::gotoxy(V(10, 12));
+                cout << "No saved states found (no .steps files)." << endl;
+                continue;
+            }
+            // display files numbered 1..n (up to 9)
+            Console::cls();
+            Console::gotoxy(V(10, 5));
+            cout << "Select saved state to load (press number 1-9):" << endl;
+            size_t maxShow = std::min(files.size(), (size_t)9);
+            for (size_t i = 0; i < maxShow; ++i) {
+                cout << "(" << (i+1) << ") " << files[i] << endl;
+            }
+            // wait for numeric selection
+            while (true) {
+                Keypress k = ConsoleMenu::get_keypress();
+                if (k == Keypress::NONE) continue;
+                if (k >= Keypress::_1 && k <= Keypress::_9) {
+                    int idx = (int)k - (int)Keypress::_1;
+                    if ((size_t)idx < files.size()) {
+                        if (runner) delete runner;
+                        runner = new HybridGameRunner(files[idx]);
+                        m = Mode::RUNNING;
+                        break;
+                    }
+                }
+				if (k == Keypress::ESC) break; // cancel loading
+            }
+        }
     }
     return m;
 }

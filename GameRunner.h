@@ -20,7 +20,7 @@ class GameRunner {
 protected:
     unsigned time = 0;
 public:
-    ~GameRunner() { deinit(); }
+    virtual ~GameRunner() { this->deinit(); }
     virtual void init() {};
     virtual void deinit() {};
 
@@ -34,23 +34,45 @@ public:
     virtual ConsoleMenu::Keypress get_keypress() = 0;
     virtual string get_input() = 0;
     virtual void handle_event(Event* e) {};
+
+    // Allow runners to provide saving capability; default is unsupported.
+    virtual void save_steps(const string& filename) { throw std::runtime_error("save not supported"); }
 };
 
 /**
  * Keyboard runner that reads input from the console using ConsoleMenu helpers.
+ * Also keeps an internal buffer of steps/key presses which can be saved to a file.
  */
 class KeyboardGameRunner : virtual public GameRunner {
+protected:
+    std::string steps_buffer; // internal buffer for recorded steps
 public:
     inline virtual ConsoleMenu::Keypress get_keypress() override {
-        return ConsoleMenu::get_keypress();
+        ConsoleMenu::Keypress e = ConsoleMenu::get_keypress();
+        if (e == ConsoleMenu::Keypress::ESC) return e;
+        char ch = (bool)e ? (char)e : NO_KEYPRESS;
+        steps_buffer.push_back(ch);
+        return e;
     }
 
     inline virtual string get_input() override {
         Console::showCursor(true);
         string str;
         std::cin >> str;
+        steps_buffer += str;
         return str;
     }
+
+    // Save the internal steps buffer to a file. Throws on error opening the file.
+    inline virtual void save_steps(const string& filename = STEPS_FILENAME) override {
+        std::ofstream out(filename);
+        if (!out.is_open()) throw std::runtime_error("error open file");
+        out << steps_buffer;
+        out.close();
+    }
+
+    inline const std::string& get_steps_buffer() const { return steps_buffer; }
+    inline void clear_steps_buffer() { steps_buffer.clear(); }
 };
 
 /**
@@ -102,7 +124,7 @@ public:
 /**
  * Runner that replays input from a saved steps file.
  */
-class LoadedGameRunner : public GameRunner {
+class LoadedGameRunner : virtual public GameRunner {
     string filename;
     std::ifstream steps;
 public:
@@ -179,4 +201,53 @@ public:
 
     virtual bool should_draw_screen() const override { return false; }
     virtual string get_exit_msg() const override { return "All tests passed"; };
+};
+
+/**
+ * Hybrid runner that replays from a steps file and, after the file ends, falls back to keyboard input.
+ */
+class HybridGameRunner : public LoadedGameRunner, public KeyboardGameRunner {
+public:
+    HybridGameRunner(const string& filename = STEPS_FILENAME)
+        : LoadedGameRunner(filename) {}
+
+    virtual void init() override {
+        LoadedGameRunner::init();
+        KeyboardGameRunner::init();
+    }
+
+    virtual void deinit() override {
+        LoadedGameRunner::deinit();
+        KeyboardGameRunner::deinit();
+    }
+
+    virtual ConsoleMenu::Mode get_mode(ConsoleMenu::Mode mode) const override {
+        ConsoleMenu::Mode loadedMode = LoadedGameRunner::get_mode(mode);
+        if (loadedMode == ConsoleMenu::Mode::RUNNING) return ConsoleMenu::Mode::RUNNING;
+        return KeyboardGameRunner::get_mode(mode);
+    }
+
+    inline virtual ConsoleMenu::Keypress get_keypress() override {
+        // If the loaded runner still has input, use it; otherwise use keyboard
+        if (LoadedGameRunner::get_mode(ConsoleMenu::Mode::RUNNING) == ConsoleMenu::Mode::RUNNING) {
+            return LoadedGameRunner::get_keypress();
+        }
+        return KeyboardGameRunner::get_keypress();
+    }
+
+    inline virtual string get_input() override {
+        if (LoadedGameRunner::get_mode(ConsoleMenu::Mode::RUNNING) == ConsoleMenu::Mode::RUNNING) {
+            return LoadedGameRunner::get_input();
+        }
+        return KeyboardGameRunner::get_input();
+    }
+
+    virtual unsigned get_tick_time_ms() const override {
+        return LoadedGameRunner::get_tick_time_ms();
+    }
+
+    // Prevent Hybrid runner from saving event logs
+    inline virtual void handle_event(Event* e) override {}
+
+	using KeyboardGameRunner::save_steps;
 };
