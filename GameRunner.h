@@ -124,11 +124,11 @@ public:
 /**
  * Runner that replays input from a saved steps file.
  */
-class LoadedGameRunner : virtual public GameRunner {
+class LoadedThenExitGameRunner : virtual public GameRunner {
     string filename;
     std::ifstream steps;
 public:
-    LoadedGameRunner(const string& _filename = STEPS_FILENAME) :filename(_filename) {};
+    LoadedThenExitGameRunner(const string& _filename = STEPS_FILENAME) :filename(_filename) {};
 
     virtual void init() override {
         steps.open(filename);
@@ -170,21 +170,21 @@ public:
 /**
  * Test runner that compares runtime events to an expected log file; throws on mismatch.
  */
-class TestGameRunner : public LoadedGameRunner {
+class TestGameRunner : public LoadedThenExitGameRunner {
     const string log_filename;
     std::ifstream log;
 public:
     TestGameRunner(const string& sfn = STEPS_FILENAME, const string& lfn = LOG_FILENAME)
-        : LoadedGameRunner(sfn), log_filename(lfn) {
+        : LoadedThenExitGameRunner(sfn), log_filename(lfn) {
     };
 
     virtual void init() override {
-        LoadedGameRunner::init();
+        LoadedThenExitGameRunner::init();
         log.open(log_filename);
         if (!log.is_open()) throw std::runtime_error("error open file");
     }
     virtual void deinit() override {
-        LoadedGameRunner::deinit();
+        LoadedThenExitGameRunner::deinit();
         log.close();
     }
 
@@ -206,44 +206,44 @@ public:
 /**
  * Hybrid runner that replays from a steps file and, after the file ends, falls back to keyboard input.
  */
-class HybridGameRunner : public LoadedGameRunner, public KeyboardGameRunner {
+class LoadedThenContinueGameRunner : public LoadedThenExitGameRunner, public KeyboardGameRunner {
 public:
-    HybridGameRunner(const string& filename = STEPS_FILENAME)
-        : LoadedGameRunner(filename) {}
+    LoadedThenContinueGameRunner(const string& filename = STEPS_FILENAME)
+        : LoadedThenExitGameRunner(filename) {}
 
     virtual void init() override {
-        LoadedGameRunner::init();
+        LoadedThenExitGameRunner::init();
         KeyboardGameRunner::init();
     }
 
     virtual void deinit() override {
-        LoadedGameRunner::deinit();
+        LoadedThenExitGameRunner::deinit();
         KeyboardGameRunner::deinit();
     }
 
     virtual ConsoleMenu::Mode get_mode(ConsoleMenu::Mode mode) const override {
-        ConsoleMenu::Mode loadedMode = LoadedGameRunner::get_mode(mode);
+        ConsoleMenu::Mode loadedMode = LoadedThenExitGameRunner::get_mode(mode);
         if (loadedMode == ConsoleMenu::Mode::RUNNING) return ConsoleMenu::Mode::RUNNING;
         return KeyboardGameRunner::get_mode(mode);
     }
 
     inline virtual ConsoleMenu::Keypress get_keypress() override {
         // If the loaded runner still has input, use it; otherwise use keyboard
-        if (LoadedGameRunner::get_mode(ConsoleMenu::Mode::RUNNING) == ConsoleMenu::Mode::RUNNING) {
-            return LoadedGameRunner::get_keypress();
+        if (LoadedThenExitGameRunner::get_mode(ConsoleMenu::Mode::RUNNING) == ConsoleMenu::Mode::RUNNING) {
+            return LoadedThenExitGameRunner::get_keypress();
         }
         return KeyboardGameRunner::get_keypress();
     }
 
     inline virtual string get_input() override {
-        if (LoadedGameRunner::get_mode(ConsoleMenu::Mode::RUNNING) == ConsoleMenu::Mode::RUNNING) {
-            return LoadedGameRunner::get_input();
+        if (LoadedThenExitGameRunner::get_mode(ConsoleMenu::Mode::RUNNING) == ConsoleMenu::Mode::RUNNING) {
+            return LoadedThenExitGameRunner::get_input();
         }
         return KeyboardGameRunner::get_input();
     }
 
     virtual unsigned get_tick_time_ms() const override {
-        return LoadedGameRunner::get_tick_time_ms();
+        return LoadedThenExitGameRunner::get_tick_time_ms();
     }
 
     // Prevent Hybrid runner from saving event logs

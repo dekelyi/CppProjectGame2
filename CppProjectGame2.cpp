@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
         std::string arg = argv[1];
         if (arg == "-load") {
             if (argc > 2 && std::string(argv[2]) == "-silent") runner = new TestGameRunner();
-            else runner = new HybridGameRunner();
+            else runner = new LoadedThenContinueGameRunner();
         }
         else if (arg == "-save") runner = new SavingGameRunner();
     }

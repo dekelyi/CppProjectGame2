@@ -218,7 +218,7 @@ ConsoleMenu::Mode ConsoleMenu::menu(GameRunner*& runner) {
                     int idx = (int)k - (int)Keypress::_1;
                     if ((size_t)idx < files.size()) {
                         if (runner) delete runner;
-                        runner = new HybridGameRunner(files[idx]);
+                        runner = new LoadedThenContinueGameRunner(files[idx]);
                         m = Mode::RUNNING;
                         break;
                     }
