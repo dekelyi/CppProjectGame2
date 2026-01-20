@@ -60,7 +60,7 @@
     <ClCompile Include="GameParser.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="EventLogger.h">
+    <ClCompile Include="Events.h">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="mapobjects\ObjTypes.h">
@@ -131,29 +131,26 @@
     <ClInclude Include="runners\LoadedThenContinueGameRunner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="mapobjects\Spring.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="mapobjects\Collectible.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="types\Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mapobjects\Switch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mapobjects\Player.h">
-      <Filter>Header Files</Filter>
+      <Filter>Types</Filter>
     </ClInclude>
     <ClInclude Include="mapobjects\Door.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mapobjects\Obstacle.h">
-      <Filter>Header Files</Filter>
+      <Filter>Types</Filter>
     </ClInclude>
     <ClInclude Include="props\DoorProp.h">
-      <Filter>Header Files</Filter>
+      <Filter>Props</Filter>
+    </ClInclude>
+    <ClInclude Include="mapobjects\Obstacle.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="mapobjects\Player.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="mapobjects\Spring.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="mapobjects\Switch.h">
+      <Filter>Types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

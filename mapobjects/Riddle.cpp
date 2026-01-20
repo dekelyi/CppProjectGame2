@@ -1,6 +1,6 @@
 #include "Riddle.h"
 #include "../Room.h"
-#include "../EventLogger.h"
+#include "../Events.h"
 
 void RiddleMsg::on_input(string str) {
 	int answer_index;

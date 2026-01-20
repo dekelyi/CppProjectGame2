@@ -1,7 +1,7 @@
 #pragma once
 #include "ObjTypes.h"
 #include "../Object.h"
-#include "../EventLogger.h"
+#include "../Events.h"
 
 #define BOMB_NOT_SET -1
 

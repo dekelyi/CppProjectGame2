@@ -6,7 +6,7 @@
 #include "player.h"
 #include "../Object.h"
 #include "../Msg.h"
-#include "../EventLogger.h"
+#include "../Events.h"
 
 class GameRoom;
 

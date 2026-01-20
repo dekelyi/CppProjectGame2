@@ -1,7 +1,7 @@
 #include "Spring.h"
 #include "../types/Player.h"
 #include "../Room.h"
-#include "../EventLogger.h"
+#include "../Events.h"
 
 MapObject::M_CODE Spring::handle_collision(GameRoom* room, MapObject* other, Move& move) {
 	if (

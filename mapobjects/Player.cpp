@@ -1,6 +1,6 @@
 #include "Player.h"
 #include "../Room.h"
-#include "../EventLogger.h"
+#include "../Events.h"
 
 MapObject::M_CODE Player::handle_collision(GameRoom* room, MapObject* other, Move& move) {
     return MapObject::handle_collision(room, other, move);

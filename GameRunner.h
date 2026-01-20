@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include "Console.h"
-#include "EventLogger.h"
+#include "Events.h"
 
 #define STEPS_FILENAME "adv-world.steps"
 #define LOG_FILENAME "adv-world.result"

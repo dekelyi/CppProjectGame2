@@ -1,7 +1,7 @@
 #pragma once
 #include "../Object.h"
 #include <format>
-#include "../EventLogger.h"
+#include "../Events.h"
 
 enum class DoorState {
 	UNLOCKED,

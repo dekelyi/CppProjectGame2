@@ -129,7 +129,7 @@
   <ItemGroup>
     <ClCompile Include="CppProjectGame2.cpp" />
     <ClCompile Include="mapobjects\Door.cpp" />
-    <ClCompile Include="EventLogger.h" />
+    <ClCompile Include="Events.h" />
     <ClCompile Include="GameParser.cpp" />
     <ClCompile Include="mapobjects\Collectible.cpp" />
     <ClCompile Include="mapobjects\Player.cpp" />
@@ -169,7 +169,6 @@
     <ClInclude Include="runners\LoadedThenExitGameRunner.h" />
     <ClInclude Include="runners\SavingGameRunner.h" />
     <ClInclude Include="runners\TestGameRunner.h" />
-    <ClInclude Include="types\Player.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,7 @@
 #include "Door.h"
 #include "../Room.h"
 #include <functional>
-#include "../EventLogger.h"
+#include "../Events.h"
 
 typedef std::function<void(bool)> CallbackFn;
 
