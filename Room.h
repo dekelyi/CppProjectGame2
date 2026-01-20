@@ -1,14 +1,14 @@
 #pragma once
 #include <vector>
+#include <functional>
+#include <algorithm>
 #include "Object.h"
 #include "Msg.h"
 #include "GameRunner.h"
 #include "DrawingBuffer.h"
-#include "PlayersProp.h"
-#include "DoorProp.h"
-#include "TorchProp.h"
-#include <functional>
-#include <algorithm>
+#include "props/PlayersProp.h"
+#include "props/DoorProp.h"
+#include "props/TorchProp.h"
 
 class GameView;
 

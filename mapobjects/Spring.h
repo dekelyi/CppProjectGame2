@@ -1,8 +1,8 @@
 #pragma once
 #include "ObjTypes.h"
-#include "Vector.h"
-#include "Object.h"
-#include "EventLogger.h"
+#include "../Vector.h"
+#include "../Object.h"
+#include "../EventLogger.h"
 #include <format>
 
 /**
@@ -41,13 +41,10 @@ public:
 	}
 
 	// Events
-	virtual void handle_tick(GameRoom* room) override;
-	virtual M_CODE handle_collision(GameRoom* room, MapObject* other, Move& move) override;
+	void handle_tick(GameRoom* room) override;
+	M_CODE handle_collision(GameRoom* room, MapObject* other, Move& move) override;
 };
 
-/**
- * Event emitted when a spring decompresses or launches an object.
- */
 class SpringDecompressed : public Event {
 public:
 	const MapObject* target;

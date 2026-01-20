@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "BaseProp.h"
-#include "player.h"
+#include "../mapobjects/Player.h"
 
 using std::vector;
 

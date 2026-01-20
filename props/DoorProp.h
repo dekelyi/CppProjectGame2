@@ -1,6 +1,6 @@
 #pragma once
+#include "../mapobjects/Door.h"
 #include "BaseProp.h"
-#include "Door.h"
 
 class DoorProp : public BaseProp {
 public:
@@ -8,9 +8,6 @@ public:
 	Door* exit_point = nullptr;
 	Door* last_moved_through = nullptr;
 
-	/**
-	 * Inspect `obj` and register it if it's a Door (sets entry/exit pointers)
-	 */
 	inline void add_object(MapObject* obj) {
 		Door* door = dynamic_cast<Door*>(obj);
 		if (door) {
@@ -21,11 +18,7 @@ public:
 		}
 	}
 
-	/**
-	 * Initialize door glyphs for the current room index `i`.
-	 */
 	inline void init(unsigned int i) {
-		// set current doors glyphs
 		if (entry_point) entry_point->setGlyph('0' + i - 1);
 		if (exit_point) exit_point->setGlyph('0' + i + 1);
 	}

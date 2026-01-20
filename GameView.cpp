@@ -1,7 +1,7 @@
-#include "GameView.h"
-#include "player.h"
-#include "Console.h"
 #include <format>
+#include "GameView.h"
+#include "Console.h"
+#include "mapobjects/player.h"
 
 using namespace std;
 

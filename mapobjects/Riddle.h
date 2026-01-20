@@ -3,10 +3,10 @@
 #include <format>
 #include <vector>
 #include "ObjTypes.h"
-#include "Object.h"
 #include "player.h"
-#include "Msg.h"
-#include "EventLogger.h"
+#include "../Object.h"
+#include "../Msg.h"
+#include "../EventLogger.h"
 
 class GameRoom;
 

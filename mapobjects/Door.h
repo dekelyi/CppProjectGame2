@@ -1,7 +1,7 @@
 #pragma once
-#include "Object.h"
+#include "../Object.h"
 #include <format>
-#include "EventLogger.h"
+#include "../EventLogger.h"
 
 enum class DoorState {
 	UNLOCKED,
@@ -29,10 +29,6 @@ inline std::string get_condition_str(Condition& c) {
 
 class Room;
 
-/**
- * Door object that can transport players between rooms and be locked by
- * conditions (keys or switches).
- */
 class Door : public MapObject {
 public:
 	S size;                     // door size and orientation
@@ -50,7 +46,6 @@ public:
 		for (auto c : conditions) delete c;
 	}
 
-	/** Return true when any condition still lacks required collected items. */
 	inline bool isLocked() const {
 		for (auto c : conditions)
 			if (c->collected < c->required)
@@ -58,7 +53,6 @@ public:
 		return false;
 	}
 
-	/** Get a user-friendly message describing why door is locked. */
 	inline std::string getMsg() const {
 		for (auto c : conditions)
 			if (c->collected < c->required)
@@ -74,10 +68,6 @@ public:
 	virtual M_CODE handle_collision(GameRoom* room, MapObject* other, Move& move) override;
 };
 
-/**
- * Event emitted when an object moves between rooms through a door.
- * Reports whether the object moved to the NEXT room or the PREV room.
- */
 class RoomTransitionEvent : public Event {
 public:
 	DoorDest dir;

@@ -2,15 +2,15 @@
 #include <vector>
 #include <filesystem>
 
-#include "ObjTypes.h"
 #include "GameView.h"
-#include "Collectible.h"
-#include "Door.h"
-#include "Obstacle.h"
-#include "Spring.h"
-#include "Switch.h"
-#include "Riddle.h"
 #include "GameParser.h"
+#include "mapobjects/ObjTypes.h"
+#include "mapobjects/Collectible.h"
+#include "mapobjects/Door.h"
+#include "mapobjects/Obstacle.h"
+#include "mapobjects/Spring.h"
+#include "mapobjects/Switch.h"
+#include "mapobjects/Riddle.h"
 
 /**
  * Discover, parse and build all level files in `path` following the naming:

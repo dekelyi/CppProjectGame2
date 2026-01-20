@@ -1,7 +1,7 @@
 #include <vector>
 #include "PlayersProp.h"
-#include "Room.h"
-#include "player.h"
+#include "../Room.h"
+#include "../mapobjects/Player.h"
 
 using std::vector;
 

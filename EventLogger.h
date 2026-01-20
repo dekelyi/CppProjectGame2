@@ -1,8 +1,8 @@
 #pragma once
 #include <string>
+#include <format>
 #include <stdexcept>
 #include "Object.h"
-#include <format>
 
 using std::string;
 

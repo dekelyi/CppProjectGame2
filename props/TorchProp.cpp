@@ -1,6 +1,6 @@
 #include "TorchProp.h"
-#include "Collectible.h"
-#include "Room.h"
+#include "../Room.h"
+#include "../mapobjects/Collectible.h"
 
 MapBuffer TorchProp::manipulate_buffer() const
 {

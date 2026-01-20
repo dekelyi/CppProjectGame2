@@ -39,34 +39,19 @@
     <ClCompile Include="GameView.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Collectible.cpp">
+    <ClCompile Include="mapobjects\Door.cpp">
       <Filter>Types</Filter>
     </ClCompile>
-    <ClCompile Include="Door.cpp">
-      <Filter>Types</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Types</Filter>
-    </ClCompile>
-    <ClCompile Include="Spring.h">
-      <Filter>Types</Filter>
-    </ClCompile>
-    <ClCompile Include="Spring.cpp">
-      <Filter>Types</Filter>
-    </ClCompile>
-    <ClCompile Include="DoorProp.h">
+    <ClCompile Include="props\PlayersProp.cpp">
       <Filter>Props</Filter>
     </ClCompile>
-    <ClCompile Include="PlayersProp.cpp">
+    <ClCompile Include="props\TorchProp.h">
       <Filter>Props</Filter>
     </ClCompile>
-    <ClCompile Include="TorchProp.h">
+    <ClCompile Include="props\TorchProp.cpp">
       <Filter>Props</Filter>
     </ClCompile>
-    <ClCompile Include="TorchProp.cpp">
-      <Filter>Props</Filter>
-    </ClCompile>
-    <ClCompile Include="Riddle.cpp">
+    <ClCompile Include="mapobjects\Riddle.cpp">
       <Filter>Types</Filter>
     </ClCompile>
     <ClCompile Include="Msg.cpp">
@@ -78,8 +63,20 @@
     <ClCompile Include="EventLogger.h">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="ObjTypes.h">
+    <ClCompile Include="mapobjects\ObjTypes.h">
       <Filter>Types</Filter>
+    </ClCompile>
+    <ClCompile Include="mapobjects\Spring.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mapobjects\Collectible.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mapobjects\Switch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mapobjects\Player.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -92,34 +89,19 @@
     <ClInclude Include="Vector.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Types</Filter>
-    </ClInclude>
-    <ClInclude Include="Obstacle.h">
-      <Filter>Types</Filter>
-    </ClInclude>
     <ClInclude Include="GameView.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Room.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="Collectible.h">
-      <Filter>Types</Filter>
-    </ClInclude>
-    <ClInclude Include="Door.h">
-      <Filter>Types</Filter>
-    </ClInclude>
-    <ClInclude Include="Switch.h">
-      <Filter>Types</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayersProp.h">
+    <ClInclude Include="props\PlayersProp.h">
       <Filter>Props</Filter>
     </ClInclude>
-    <ClInclude Include="BaseProp.h">
+    <ClInclude Include="props\BaseProp.h">
       <Filter>Props</Filter>
     </ClInclude>
-    <ClInclude Include="Riddle.h">
+    <ClInclude Include="mapobjects\Riddle.h">
       <Filter>Types</Filter>
     </ClInclude>
     <ClInclude Include="Msg.h">
@@ -133,6 +115,45 @@
     </ClInclude>
     <ClInclude Include="GameRunner.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="runners\KeyboardGameRunner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="runners\SavingGameRunner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="runners\LoadedThenExitGameRunner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="runners\TestGameRunner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="runners\LoadedThenContinueGameRunner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mapobjects\Spring.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mapobjects\Collectible.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="types\Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mapobjects\Switch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mapobjects\Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mapobjects\Door.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mapobjects\Obstacle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="props\DoorProp.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

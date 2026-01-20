@@ -1,8 +1,8 @@
 #pragma once
 #include "Object.h"
-#include "player.h"
 #include "Room.h"
 #include "GameRunner.h"
+#include "mapobjects/player.h"
 
 /**
  * GameView - application-level game container

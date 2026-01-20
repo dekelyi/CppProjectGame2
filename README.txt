@@ -82,30 +82,21 @@ This order keeps the separation of concerns intact: `MapObject` decides collisio
 - Rendering & input:
   - `GameView.*`, `DrawingBuffer.*`, `Console.*`
 
-## Extending the system
+## Runners (input / timing abstractions)
 
-- Add a new Prop (behavioral):
-  1. Derive from `BaseProp` and implement any event handlers.
-  2. Register the prop in `Room.h` or the parser.
-  3. Add a call inside `Room.h` functions to the prop methods when needed (to be resolved with event handling)
-  4. Add a test placement in an `adv-world_*.screen` file.
+The game uses a `GameRunner` abstraction that encapsulates input sourcing, tick timing, and optional recording/replay behavior.
 
-- Add a new MapObject subclass (representation/collision):
-  1. Create a lightweight subclass undofer `MapObject` that defines placement and collision metadata.
-  2. Add a symbol in `ObjTypes::ObjType`.
-  3. Add factory mapping in `LevelParser.cpp` so `LevelParser` can instantiate it from `.screen`.
-  4. Keep it free of complex behavioral logic — delegate that to a Prop if needed.
+Implemented runners (now split into dedicated headers):
+- `KeyboardGameRunner.h` -- reads keypresses from the console and collects an internal steps buffer; supports saving steps.
+- `SavingGameRunner.h` -- extends the keyboard runner and records keypresses and emitted events to files for later replay and verification.
+- `LoadedThenExitGameRunner.h` -- replays keypresses from a steps file and exits when the file ends.
+- `LoadedThenContinueGameRunner.h` -- replays keypresses from a file and then falls back to live keyboard input.
+- `TestGameRunner.h` -- replays input and validates runtime events against a reference log; throws on mismatch.
 
-## Why this separation?
-- Testability: Props can be unit-tested independently of room orchestration.
-- Reuse: Same Prop can be reused in different rooms without duplicating room-specific code.
-- Clear responsibilities: `MapObject` = data/placement, `Prop` = behavior, `Room` = orchestration & event routing.
+These runner headers are included from `GameRunner.h` for convenience. Use whichever runner suits your needs by creating it in `main` and passing it to `GameView`.
 
-## Where to look
-- `Room.h` / `LevelParser.cpp` — how a room is composed from `.screen` files.
-- Prop implementations (e.g., `TorchProp.cpp`, `Door.cpp`, `Spring.cpp`) — pattern examples for Prop behavior.
-- `Msg.h` / `Msg.cpp` — event/messaging primitives used for decoupled interactions.
+Example usage:
 
-Build & run: open the solution in __Solution Explorer__ and use __Build > Build Solution__. Ensure MSVC toolset is correctly selected in project properties.
-
-For diagrams or a small refactor that enforces stricter interfaces between `Room`, `Prop`, and `MapObject`, indicate the scope and I will generate class/sequence diagrams plus code changes. concise guide. For specific diagrams, sequence details, or a request to generate class/sequence diagrams, provide the desired scope and a diagram will be added.
+- Run with recording enabled: `app.exe -save` (uses `SavingGameRunner`).
+- Replay a recording and continue: `app.exe -load` (uses `LoadedThenContinueGameRunner`).
+- Run tests in silent mode: `app.exe -load -silent` (uses `TestGameRunner`).

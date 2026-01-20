@@ -1,16 +1,14 @@
 #include <set>
 #include "Collectible.h"
-#include "Player.h"
-#include "Room.h"
+#include "../types/Player.h"
+#include "../Room.h"
 
 using std::set;
 
 MapObject::M_CODE Collectible::handle_collision(GameRoom* room, MapObject* other, Move& move) {
-	// If collided with a player, give the collectible to the player
 	Player* p = dynamic_cast<Player*>(other);
 	if (p != nullptr && p->collectible == nullptr) {
 		p->collectible = this;
-		// emit event before removing from room
 		room->runner->handle_event(new CollectibleCollected(p, this));
 		room->remove_object(this, false);
 		return MapObject::M_CODE::CAN_MOVE;
@@ -25,7 +23,6 @@ void Bomb::handle_dump(GameRoom* room) {
 void Bomb::handle_tick(GameRoom* room) {
 	MapObject::handle_tick(room);
 	if (bomb_timer == 0) {
-		// emit explosion event
 		room->runner->handle_event(new BombExploded(this, BOMB_AREA));
 		do_bomb(room);
 		room->clear(*this);
@@ -50,4 +47,3 @@ void Bomb::do_bomb(GameRoom* room) const {
 		room->remove_object(obj);
 	}
 }
-

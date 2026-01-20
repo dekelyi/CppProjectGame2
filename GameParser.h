@@ -3,10 +3,10 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "ObjTypes.h"
 #include "Vector.h"
 #include "GameView.h"
-#include "Riddle.h"
+#include "mapobjects/ObjTypes.h"
+#include "mapobjects/Riddle.h"
 
 using namespace std;
 
