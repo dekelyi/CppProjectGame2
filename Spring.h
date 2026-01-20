@@ -2,6 +2,8 @@
 #include "ObjTypes.h"
 #include "Vector.h"
 #include "Object.h"
+#include "EventLogger.h"
+#include <format>
 
 /**
  * Spring object that compresses when an object stands on it and propels
@@ -41,4 +43,18 @@ public:
 	// Events
 	virtual void handle_tick(GameRoom* room) override;
 	virtual M_CODE handle_collision(GameRoom* room, MapObject* other, Move& move) override;
+};
+
+/**
+ * Event emitted when a spring decompresses or launches an object.
+ */
+class SpringDecompressed : public Event {
+public:
+	const MapObject* target;
+	unsigned val;
+	SpringDecompressed(const MapObject* _actor, const MapObject* _target, unsigned _val) : Event(_actor), target(_target), val(_val) {}
+	virtual string to_string() override {
+		char t = target ? target->getGlyph() : ' ';
+		return std::format("OBJ {} DECOMPRESSED BY {} VAL {}", actor->getGlyph(), t, val);
+	}
 };

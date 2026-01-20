@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Collectible.h"
 #include "Room.h"
+#include "EventLogger.h"
 
 MapObject::M_CODE Player::handle_collision(GameRoom* room, MapObject* other, Move& move)
 {
@@ -37,6 +38,8 @@ void Player::dump_collectible(GameRoom* room) {
 	room->add_object(collectible);
 	room->draw((MapObject)*collectible);
 	collectible->handle_dump(room);
+	// emit event for dumped collectible
+	room->runner->handle_event(new CollectibleDumped(this, collectible));
 	collectible = nullptr;
 }
 

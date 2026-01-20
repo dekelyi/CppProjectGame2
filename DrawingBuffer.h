@@ -17,12 +17,10 @@ struct DrawingObject {
 
     bool operator==(const DrawingObject& other) const = default;
     explicit operator bool() const {
-        // true when equals default-constructed object? keep semantics as before
-        return *this == DrawingObject();
+        // false when equals default-constructed object
+        return *this != DrawingObject();
     }
 };
-
-static const DrawingObject DNULL = DrawingObject();
 
 /**
  * `MapBuffer` is a class that encapsulates a 2D buffer for rendering

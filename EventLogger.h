@@ -1,13 +1,10 @@
 #pragma once
 #include <string>
-#include "Object.h"
-#include "Riddle.h"
-#include <format>
-#include "Door.h"
 #include <stdexcept>
+#include "Object.h"
+#include <format>
 
 using std::string;
-
 
 /**
  * Base class for events emitted by game objects during runtime.
@@ -59,39 +56,6 @@ class GainedScore : public IntAttrModified {
 
     virtual string to_string() override {
         return IntAttrModified::to_string("GAINED SCORE");
-    }
-};
-
-
-class EventRiddleInteracted : public Event {
-public:
-    const Riddle* riddle;
-    const unsigned answer;
-
-    EventRiddleInteracted(const MapObject* _actor, const Riddle* _riddle, const unsigned _answer)
-        : Event(_actor), riddle(_riddle), answer(_answer) {
-    };
-
-    virtual string to_string() override {
-        return std::format("OBJ {} INTERACTED WITH RIDDLE {}, ANSWER {}, CORRECT: {}",
-            actor->getGlyph(), riddle->data.question,
-            riddle->data.answers[answer], (answer == riddle->data.correct_answer_index) ? "yes" : "no");
-    };
-};
-
-/**
- * Event emitted when an object moves between rooms through a door.
- * Reports whether the object moved to the NEXT room or the PREV room.
- */
-class RoomTransitionEvent : public Event {
-public:
-    DoorDest dir;
-
-    RoomTransitionEvent(const MapObject* _actor, DoorDest _dir)
-        : Event(_actor), dir(_dir) {}
-
-    virtual string to_string() override {
-        return std::format("OBJ {} MOVED: {}", actor->getGlyph(), (dir == DoorDest::NEXT) ? "NEXT" : "PREV");
     }
 };
 

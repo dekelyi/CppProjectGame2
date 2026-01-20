@@ -1,6 +1,7 @@
 #pragma once
 #include "ObjTypes.h"
 #include "Object.h"
+#include "EventLogger.h"
 
 #define BOMB_NOT_SET -1
 
@@ -50,4 +51,34 @@ public:
 
     void do_bomb(GameRoom* room) const;
     virtual void handle_dump(GameRoom* room) override;
+};
+
+/**
+ * Collectible-related events
+ */
+class CollectibleCollected : public Event {
+public:
+    const MapObject* collectible;
+    CollectibleCollected(const MapObject* _actor, const MapObject* _collectible) : Event(_actor), collectible(_collectible) {}
+    virtual string to_string() override {
+        return std::format("OBJ {} COLLECTED: {}", actor->getGlyph(), collectible->getGlyph());
+    }
+};
+
+class CollectibleDumped : public Event {
+public:
+    const MapObject* collectible;
+    CollectibleDumped(const MapObject* _actor, const MapObject* _collectible) : Event(_actor), collectible(_collectible) {}
+    virtual string to_string() override {
+        return std::format("OBJ {} DUMPED: {}", actor->getGlyph(), collectible->getGlyph());
+    }
+};
+
+class BombExploded : public Event {
+public:
+    const unsigned area;
+    BombExploded(const MapObject* _actor, unsigned _area) : Event(_actor), area(_area) {}
+    virtual string to_string() override {
+        return std::format("OBJ {} EXPLODED: AREA {}", actor->getGlyph(), area);
+    }
 };

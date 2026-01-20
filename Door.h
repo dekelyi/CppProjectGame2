@@ -1,6 +1,7 @@
 #pragma once
 #include "Object.h"
 #include <format>
+#include "EventLogger.h"
 
 enum class DoorState {
 	UNLOCKED,
@@ -71,4 +72,20 @@ public:
 
 	bool try_unlock(MapObject* obj);
 	virtual M_CODE handle_collision(GameRoom* room, MapObject* other, Move& move) override;
+};
+
+/**
+ * Event emitted when an object moves between rooms through a door.
+ * Reports whether the object moved to the NEXT room or the PREV room.
+ */
+class RoomTransitionEvent : public Event {
+public:
+	DoorDest dir;
+
+	RoomTransitionEvent(const MapObject* _actor, DoorDest _dir)
+		: Event(_actor), dir(_dir) {}
+
+	virtual string to_string() override {
+		return std::format("OBJ {} MOVED: {}", actor->getGlyph(), (dir == DoorDest::NEXT) ? "NEXT" : "PREV");
+	}
 };

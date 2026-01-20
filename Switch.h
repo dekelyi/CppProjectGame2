@@ -4,8 +4,19 @@
 #include "Door.h"
 #include "Room.h"
 #include <functional>
+#include "EventLogger.h"
 
 typedef std::function<void(bool)> CallbackFn;
+
+// Event emitted when a switch changes state
+class SwitchToggled : public Event {
+public:
+    bool on;
+    SwitchToggled(const MapObject* _actor, bool _on) : Event(_actor), on(_on) {}
+    virtual string to_string() override {
+        return std::format("OBJ {} SWITCHED: {}", actor->getGlyph(), on ? "ON" : "OFF");
+    }
+};
 
 /**
  * Create a callback that toggles a door's condition when a switch is toggled.
@@ -47,6 +58,8 @@ public:
 		switched = val;
 		if (callback) callback(switched);
 		setGlyph(val ? (char)ObjType::SWITCH_ON : (char)ObjType::SWITCH_OFF);
+		// emit event
+		room->runner->handle_event(new SwitchToggled(this, switched));
 	}
 
 	virtual M_CODE handle_collision(GameRoom* room, MapObject* other, Move& move) override {

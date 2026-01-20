@@ -132,7 +132,7 @@ public:
     }
 
     /** Clear object area from the drawing buffer. */
-    inline void clear(const MapObject& obj, const std::string attr = "") {
-        drawing_buffer.set_at(obj.getPosition(), obj.getSize(), DNULL);
+    inline void clear(const MapObject& obj) {
+        drawing_buffer.set_at(obj.getPosition(), obj.getSize(), DrawingObject());
     }
 };

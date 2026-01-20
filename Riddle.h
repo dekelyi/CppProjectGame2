@@ -6,6 +6,7 @@
 #include "Object.h"
 #include "player.h"
 #include "Msg.h"
+#include "EventLogger.h"
 
 class GameRoom;
 
@@ -28,6 +29,25 @@ public:
     }
 
     virtual M_CODE handle_collision(GameRoom* room, MapObject* obj, Move& move) override;
+};
+
+
+/**
+ * Event emitted when a player interacts with a riddle.
+ */
+class EventRiddleInteracted : public Event {
+public:
+    const Riddle* riddle;
+    const unsigned answer;
+
+    EventRiddleInteracted(const MapObject* _actor, const Riddle* _riddle, const unsigned _answer)
+        : Event(_actor), riddle(_riddle), answer(_answer) {}
+
+    virtual string to_string() override {
+        return std::format("OBJ {} RIDDLE INTERACTED WITH RIDDLE {}, ANSWER {}, CORRECT: {}",
+            actor->getGlyph(), riddle->data.question,
+            riddle->data.answers[answer], (answer == riddle->data.correct_answer_index) ? "yes" : "no");
+    }
 };
 
 

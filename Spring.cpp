@@ -1,6 +1,7 @@
 #include "Spring.h"
 #include "Player.h"
 #include "Room.h"
+#include "EventLogger.h"
 
 MapObject::M_CODE Spring::handle_collision(GameRoom* room, MapObject* other, Move& move) {
 	if (
@@ -38,6 +39,8 @@ void Spring::handle_tick(GameRoom* room) {
 		Move move = create_compressed_move();
 		force->moves.push_back(move);
 		force->try_move(room, move);
+		// emit decompressed event for the launched object
+		room->runner->handle_event(new SpringDecompressed(this, force, compressed));
 		force = nullptr;
 	}
 }

@@ -10,6 +10,8 @@ MapObject::M_CODE Collectible::handle_collision(GameRoom* room, MapObject* other
 	Player* p = dynamic_cast<Player*>(other);
 	if (p != nullptr && p->collectible == nullptr) {
 		p->collectible = this;
+		// emit event before removing from room
+		room->runner->handle_event(new CollectibleCollected(p, this));
 		room->remove_object(this, false);
 		return MapObject::M_CODE::CAN_MOVE;
 	}
@@ -23,6 +25,8 @@ void Bomb::handle_dump(GameRoom* room) {
 void Bomb::handle_tick(GameRoom* room) {
 	MapObject::handle_tick(room);
 	if (bomb_timer == 0) {
+		// emit explosion event
+		room->runner->handle_event(new BombExploded(this, BOMB_AREA));
 		do_bomb(room);
 		room->clear(*this);
 		room->remove_object(this);

@@ -1,7 +1,6 @@
 #pragma once
 #include "DrawingBuffer.h"
 #include "BaseProp.h"
-#include "Collectible.h"
 
 // Shadow drawing object used to darken non-visible cells
 static const DrawingObject SHADOW = DrawingObject(' ', A_BACKGROUND_GREY);
